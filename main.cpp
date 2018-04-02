@@ -32,26 +32,38 @@ int main() {
   float *Y;
   float *result_serial;
   float* result_avx;
-//  double start, end;
+  double start, end;
   initialize_saxpy(X, Y, result_serial, N);
 
   // Serial Saxpy
-  // TODO: Below throws a linker error - why??
-   currentSeconds();
-//  start = currentSeconds();
+  start = currentSeconds();
   saxpy_serial(N, scale, X, Y, result_serial);
-//  end = currentSeconds();
-//  printf("[Saxpy Serial] %d elements: %.5f seconds", N, end - start);
+  end = currentSeconds();
+  printf("[Saxpy Serial] %d elements: %.8f seconds\n", N, end - start);
 
 #ifdef __AVX__
   initialize_result(result_avx, N);
-//  start = currentSeconds();
+  start = currentSeconds();
   saxpy_avx(N, scale, X, Y, result_avx);
-//  end = currentSeconds();
+  end = currentSeconds();
   check_correctness(result_serial, result_avx, N);
-//  printf("[Saxpy AVX] %d elements: %.5f seconds", N, end - start);
+  delete result_avx;
+  printf("[Saxpy AVX] %d elements: %.8f seconds\n", N, end - start);
 #else
   std::cout << "Missing AVX instructions" << std::endl;
 #endif
+
+#ifdef __AVX2__
+  initialize_result(result_avx, N);
+  start = currentSeconds();
+  saxpy_avx2(N, scale, X, Y, result_avx);
+  end = currentSeconds();
+  check_correctness(result_serial, result_avx, N);
+  delete result_avx;
+  printf("[Saxpy AVX2] %d elements: %.8f seconds\n", N, end - start);
+#else
+  std::cout << "Missing AVX2 instructions" << std::endl;
+#endif
+
   return 0;
 }

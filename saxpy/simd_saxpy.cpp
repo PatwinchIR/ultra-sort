@@ -9,11 +9,9 @@ void saxpy_serial(int N, float scale, float X[], float Y[], float result[]) {
 
 #ifdef __AVX__
 void saxpy_avx(int N, float scale, float X[], float Y[], float result[]) {
-  float aVec[4] = {scale, scale, scale, scale};
+  float scale_arr[4] = {scale, scale, scale, scale};
   // Cast 'scale' to __m128
-  __m128* aVecMem = (__m128*)aVec;
-  __m128* scaleVec = aVecMem;
-  // Setup X/Y as __m128i(to allow for streaming load)
+  __m128* scaleVec = (__m128*)scale_arr;
   __m128* XVec = (__m128*)X;
   __m128* YVec = (__m128*)Y;
   int vecWidth = 4;
@@ -24,6 +22,29 @@ void saxpy_avx(int N, float scale, float X[], float Y[], float result[]) {
     __m128 res = _mm_add_ps(ax, *YVec);
     // Do a Stream store(direct write to memory)
     _mm_store_ps(&result[i], res);
+    // Increment to work on next 4 numbers
+    XVec++;
+    YVec++;
+  }
+}
+#endif
+
+#ifdef __AVX2__
+void saxpy_avx2(int N, float scale, float X[], float Y[], float result[]) {
+  float scale_arr[8] = {scale, scale, scale, scale,
+                        scale, scale, scale, scale};
+  // Cast 'scale' to __m128
+  __m256* scaleVec = (__m256*)scale_arr;
+  __m256* XVec = (__m256*)X;
+  __m256* YVec = (__m256*)Y;
+  int vecWidth = 8;
+  for(int i = 0; i < N; i+=vecWidth) {
+    // a*X
+    __m256 ax = _mm256_mul_ps(*XVec, *scaleVec);
+    // aX + Y
+    __m256 res = _mm256_add_ps(ax, *YVec);
+    // Do a store
+    _mm256_store_ps(&result[i], res);
     // Increment to work on next 4 numbers
     XVec++;
     YVec++;
