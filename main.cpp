@@ -65,5 +65,16 @@ int main() {
   std::cout << "Missing AVX2 instructions" << std::endl;
 #endif
 
+#ifdef __AVX512F__
+  initialize_result(result_avx, N);
+  start = currentSeconds();
+  saxpy_avx512(N, scale, X, Y, result_avx);
+  end = currentSeconds();
+  check_correctness(result_serial, result_avx, N);
+  delete result_avx;
+  printf("[Saxpy AVX512] %d elements: %.8f seconds\n", N, end - start);
+#else
+  std::cout << "Missing AVX512 instructions" << std::endl;
+#endif
   return 0;
 }
