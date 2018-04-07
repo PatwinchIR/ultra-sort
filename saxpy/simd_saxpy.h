@@ -14,3 +14,7 @@ void saxpy_avx(int N, float scale, float X[], float Y[], float result[]);
 #ifdef __AVX2__
 void saxpy_avx2(int N, float scale, float X[], float Y[], float result[]);
 #endif
+
+#ifdef __AVX512F__
+void saxpy_avx512(int N, float scale, float X[], float Y[], float result[]);
+#endif

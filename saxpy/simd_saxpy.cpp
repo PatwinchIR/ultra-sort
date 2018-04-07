@@ -21,7 +21,7 @@ void saxpy_avx(int N, float scale, float X[], float Y[], float result[]) {
     // aX + Y
     __m128 res = _mm_add_ps(ax, *YVec);
     // Do a Stream store(direct write to memory)
-    _mm_store_ps(&result[i], res);
+    _mm_storeu_ps(&result[i], res);
     // Increment to work on next 4 numbers
     XVec++;
     YVec++;
@@ -44,8 +44,33 @@ void saxpy_avx2(int N, float scale, float X[], float Y[], float result[]) {
     // aX + Y
     __m256 res = _mm256_add_ps(ax, *YVec);
     // Do a store
-    _mm256_storeu_ps(&result[i], res);
-    // Increment to work on next 4 numbers
+    _mm256_store_ps(&result[i], res);
+    // Increment to work on next 8 numbers
+    XVec++;
+    YVec++;
+  }
+}
+#endif
+
+#ifdef __AVX512F__
+void saxpy_avx512(int N, float scale, float X[], float Y[], float result[]) {
+  float scale_arr[16] = {scale, scale, scale, scale,
+                         scale, scale, scale, scale,
+                         scale, scale, scale, scale,
+                         scale, scale, scale, scale};
+  // Cast 'scale' to __m128
+  __m512* scaleVec = (__m512*)scale_arr;
+  __m512* XVec = (__m512*)X;
+  __m512* YVec = (__m512*)Y;
+  int vecWidth = 16;
+  for(int i = 0; i < N; i+=vecWidth) {
+    // a*X
+    __m512 ax = _mm512_mul_ps(*XVec, *scaleVec);
+    // aX + Y
+    __m512 res = _mm512_add_ps(ax, *YVec);
+    // Do a store
+    _mm512_store_ps(&result[i], res);
+    // Increment to work on next 16 numbers
     XVec++;
     YVec++;
   }
