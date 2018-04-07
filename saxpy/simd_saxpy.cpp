@@ -44,7 +44,7 @@ void saxpy_avx2(int N, float scale, float X[], float Y[], float result[]) {
     // aX + Y
     __m256 res = _mm256_add_ps(ax, *YVec);
     // Do a store
-    _mm256_store_ps(&result[i], res);
+    _mm256_storeu_ps(&result[i], res);
     // Increment to work on next 4 numbers
     XVec++;
     YVec++;
