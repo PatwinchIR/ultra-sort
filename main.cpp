@@ -67,7 +67,7 @@ int main() {
 #endif
 
 #ifdef __AVX512F__
-  initialize_result(result_avx, N);
+  aligned_init(result_avx, N);
   start = currentSeconds();
   saxpy_avx512(N, scale, X, Y, result_avx);
   end = currentSeconds();
