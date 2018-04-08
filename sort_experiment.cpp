@@ -3,6 +3,7 @@
 #include "metrics/cycletimer.h"
 #include "common.h"
 #include <random>
+#include "sort/simd_sort.h"
 
 void rand_gen(int* &arr, int N, int lo, int hi) {
   aligned_init<int>(arr, N);
@@ -30,7 +31,7 @@ int main() {
 
   // C++11 std::stable_sort
   aligned_init<int>(soln_arr, N);
-  std::copy(soln_arr, soln_arr + N, rand_arr);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
   std::stable_sort(soln_arr, soln_arr + N);
   end = currentSeconds();
@@ -39,7 +40,7 @@ int main() {
 
   // C++11 std::sort
   aligned_init<int>(soln_arr, N);
-  std::copy(soln_arr, soln_arr + N, rand_arr);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
   std::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
@@ -53,6 +54,7 @@ int main() {
 #endif
 
 #ifdef __AVX2__
+  sort_block_avx2(rand_arr, 0);
 #else
   printf("Missing AVX2 instructions\n");
 #endif
