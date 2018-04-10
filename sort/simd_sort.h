@@ -10,8 +10,9 @@
 
 #ifdef __AVX2__
 #define VECWIDTH_AVX2 256
-
 void sort_block_avx2(int *arr, int start, int network_size=8);
+void merge_block_avx2(int *arr, int start, int network_size=8);
+void sort_avx2(size_t N, int *arr, int network_size=8);
 #endif
 
 #ifdef __AVX512F__

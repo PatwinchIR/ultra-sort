@@ -15,10 +15,17 @@ void rand_gen(int* &arr, int N, int lo, int hi) {
   }
 }
 
+void print_arr(int* arr, int N) {
+  for(int i = 0; i < N; i++) {
+    printf("%d, ", arr[i]);
+  }
+  printf("\n");
+}
+
 
 int main() {
   // Initialization
-  int N = 65536;
+  int N = 64;
   int lo = -10;
   int hi = 10;
   int* rand_arr;
@@ -54,7 +61,9 @@ int main() {
 #endif
 
 #ifdef __AVX2__
-  sort_block_avx2(rand_arr, 0);
+  print_arr(rand_arr, N);
+  sort_avx2(N, rand_arr);
+  print_arr(rand_arr, N);
 #else
   printf("Missing AVX2 instructions\n");
 #endif
