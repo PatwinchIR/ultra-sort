@@ -1,6 +1,9 @@
 #include "simd_sort.h"
 #include <cassert>
 #include <cstdio>
+#include <algorithm>
+#include <string>
+#include "../common.h"
 
 
 #ifdef __AVX__
@@ -131,11 +134,9 @@ inline void intra_register_sort(__m256i& a8, __m256i& b8) {
 
   a8 = _mm256_blend_epi32(mina, maxa, 0xaa);
   b8 = _mm256_blend_epi32(minb, maxb, 0xaa);
-
-  print_avx2(&a8, &b8);
 }
 
-inline void bitonic_merge(__m256i& a, __m256i& b) {
+void bitonic_merge_avx2(__m256i& a, __m256i& b) {
   // phase 1 - 8 against 8
   b = reverse(b);
   minmax(a, b);
@@ -172,6 +173,94 @@ void sort_block_avx2(int *arr, int start, int network_size) {
   store_reg256(r7, arr + row_size*7);
 }
 
+void print_arr(int *arr, int i, int j, const std::string &tag="") {
+  printf("%s ", tag.c_str());
+  for(int idx = i; idx < j; idx++) {
+    printf("%d, ", arr[idx]);
+  }
+  printf("\n");
+}
+
+void merge_runs_avx2(int *arr, int N, int network_size) {
+  int unit_run_size = VECWIDTH_AVX2/NUMBITS(network_size);
+  int* buffer;
+  aligned_init<int>(buffer, N);
+  bool even_runs = true;
+  for(int run_size = unit_run_size, i = 0; run_size < N; run_size*=2, i++) {
+      merge_pass_avx2(arr, buffer, N, run_size);
+      std::swap(arr, buffer);
+      even_runs = ~even_runs;
+  }
+
+  // TODO: Handle odd-even case correctly!
+}
+
+
+
+/**
+ * Merges two runs of size 'run_size' throughout the data
+ * @param arr: pointer to the start of the array
+ * @param buffer: buffer to flush sorted output into
+ * @param N
+ * @param run_size
+ */
+void merge_pass_avx2(int *arr, int *buffer, int N, int run_size) {
+  __m256i ra, rb;
+  int network_size = 8;
+  int unit_run_size = VECWIDTH_AVX2/NUMBITS(network_size);
+  int buffer_offset = 0;
+  for(int i = 0; i < N; i += 2*run_size) {
+    int start = i;
+    int mid = i + run_size;
+    int end = i + 2*run_size;
+    int p1_ptr = start;
+    int p2_ptr = mid;
+    load_reg256(ra, &arr[p1_ptr]);
+    load_reg256(rb, &arr[p2_ptr]);
+    p1_ptr += unit_run_size;
+    p2_ptr += unit_run_size;
+
+    while (p1_ptr < mid && p2_ptr < end) {
+      bitonic_merge_avx2(ra, rb);
+
+      store_reg256(ra, &buffer[buffer_offset]);
+      buffer_offset += unit_run_size;
+
+      if(arr[p1_ptr] > arr[p2_ptr]) {
+        load_reg256(ra, &arr[p2_ptr]);
+        p2_ptr += unit_run_size;
+      } else {
+        load_reg256(ra, &arr[p1_ptr]);
+        p1_ptr += unit_run_size;
+      }
+    }
+
+    bitonic_merge_avx2(ra, rb);
+
+    store_reg256(ra, &buffer[buffer_offset]);
+    buffer_offset += unit_run_size;
+
+    while (p1_ptr < mid) {
+      load_reg256(ra, &arr[p1_ptr]);
+      p1_ptr += unit_run_size;
+      bitonic_merge_avx2(ra, rb);
+      store_reg256(ra, &buffer[buffer_offset]);
+      buffer_offset += unit_run_size;
+    }
+
+    while (p2_ptr < end) {
+      load_reg256(ra, &arr[p2_ptr]);
+      p2_ptr += unit_run_size;
+      bitonic_merge_avx2(ra, rb);
+      store_reg256(ra, &buffer[buffer_offset]);
+      buffer_offset += unit_run_size;
+    }
+
+    store_reg256(rb, &buffer[buffer_offset]);
+    buffer_offset += unit_run_size;
+  }
+}
+
 void sort_avx2(size_t N, int *arr, int network_size) {
   // Determine block size for the sorting network
   int block_size = network_size*(VECWIDTH_AVX2/NUMBITS(network_size));
@@ -181,6 +270,7 @@ void sort_avx2(size_t N, int *arr, int network_size) {
   }
 
   // Merge sorted runs
+  merge_runs_avx2(arr, N);
 
 }
 #endif
@@ -197,7 +287,6 @@ void minmax(__m512i &b, __m512i &a) {
     __m512i c = a;
     a = _mm512_max_epi32(a, b);
     b = _mm512_min_epi32(c, b);
->>>>>>> 4933e11bbc8c66bbe9c1cc20c9e188a5fe33f19b
 }
 
 void transpose16x16_ps(__m512i &r0, __m512i &r1, __m512i &r2, __m512i &r3,

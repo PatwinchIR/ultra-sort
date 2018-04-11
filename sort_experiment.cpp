@@ -7,11 +7,15 @@
 
 void rand_gen(int* &arr, int N, int lo, int hi) {
   aligned_init<int>(arr, N);
-  std::random_device rd;  //Will be used to obtain a seed for the random number engine
-  std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-  std::uniform_int_distribution<> dis(lo, hi);
-  for(size_t i = 0; i < N; i++) {
-    arr[i] = dis(gen);
+  // TODO: Super minor bug here
+//  std::random_device rd;  //Will be used to obtain a seed for the random number engine
+//  std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+//  std::uniform_int_distribution<> dis(lo, hi);
+//  for(size_t i = 0; i < N; i++) {
+//    arr[i] = dis(gen);
+//  }
+  for(int i = 0; i < N; i++) {
+    arr[i] = N - i;
   }
 }
 
@@ -25,7 +29,7 @@ void print_arr(int* arr, int N) {
 
 int main() {
   // Initialization
-  int N = 64;
+  int N = 128;
   int lo = -10;
   int hi = 10;
   int* rand_arr;

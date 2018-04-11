@@ -11,7 +11,9 @@
 #ifdef __AVX2__
 #define VECWIDTH_AVX2 256
 void sort_block_avx2(int *arr, int start, int network_size=8);
-void merge_block_avx2(int *arr, int start, int network_size=8);
+void merge_runs_avx2(int *arr, int N, int network_size=8);
+void merge_pass_avx2(int *arr, int *buffer, int N, int run_size);
+void bitonic_merge_avx2(__m256i& a, __m256i& b);
 void sort_avx2(size_t N, int *arr, int network_size=8);
 #endif
 
