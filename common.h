@@ -1,5 +1,14 @@
 #pragma once
 
+#include <iostream>
+#include <x86intrin.h>
+
+/**
+ * Common definitions
+ */
+
+#define NETWORK_SIZE 8
+
 /**
  * Common utility functions
  */
