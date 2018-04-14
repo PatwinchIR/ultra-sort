@@ -76,6 +76,7 @@ int main() {
 #endif
 
 #ifdef __AVX512F__
+
   sort_block_avx512(rand_arr, 0);
 #else
   printf("Missing AVX512 instructions\n");

@@ -10,6 +10,6 @@ file(GLOB_RECURSE SOURCE_FILES
 
 file(GLOB_RECURSE HEADER_FILES "src/include/*.h")
 
-add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES} src/include/common.cpp)
+add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES} src/include/common.cpp src/sort/simd_sort_avx512.cpp src/include/sort/simd_sort_avx512.h)
 
 # Read: https://stackoverflow.com/questions/28939652/how-to-detect-sse-sse2-avx-avx2-avx-512-avx-128-fma-kcvi-availability-at-compile
