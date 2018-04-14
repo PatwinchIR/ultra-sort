@@ -1,4 +1,4 @@
-#include "simd_saxpy.h"
+#include "saxpy/simd_saxpy.h"
 
 
 void saxpy_serial(int N, float scale, float X[], float Y[], float result[]) {

@@ -1,14 +1,6 @@
-#include "simd_sort_avx256.h"
+#include "sort/simd_sort_avx256.h"
 
 #ifdef __AVX2__
-
-void print_arr(int *arr, int i, int j, const std::string &tag="") {
-  printf("%s ", tag.c_str());
-  for(int idx = i; idx < j; idx++) {
-    printf("%d, ", arr[idx]);
-  }
-  printf("\n");
-}
 
 void load_reg256(__m256i &r, const int* arr) {
   r = *((__m256i*)arr);
@@ -128,8 +120,6 @@ void bitonic_merge_avx2(__m256i& a, __m256i& b) {
   b = reverse(b);
   minmax(a, b);
   intra_register_sort(a,b);
-//  print_arr((int*)(&a), 0, 8, "ra: ");
-//  print_arr((int*)(&b), 0, 8, "rb: ");
 }
 
 void sort_block_avx2(int *&arr, int start, int network_size) {
@@ -178,7 +168,6 @@ void merge_pass_avx2(int *&arr, int *buffer, int N, int run_size) {
     int start = i;
     int mid = i + run_size;
     int end = i + 2*run_size;
-//    printf("start: %d, mid: %d, end: %d\n", start, mid, end);
     int p1_ptr = start;
     int p2_ptr = mid;
     load_reg256(ra, &arr[p1_ptr]);
@@ -231,11 +220,9 @@ void merge_runs_avx2(int *&arr, int N, int network_size) {
   int unit_run_size = VECWIDTH_AVX2/NUMBITS(network_size);
   int* buffer;
   aligned_init<int>(buffer, N);
-  bool even_runs = true;
-  for(int run_size = unit_run_size, i = 0; run_size < N; run_size*=2, i++) {
+  for(int run_size = unit_run_size; run_size < N; run_size*=2) {
     merge_pass_avx2(arr, buffer, N, run_size);
     std::swap(arr, buffer);
-    even_runs = !even_runs;
   }
 }
 

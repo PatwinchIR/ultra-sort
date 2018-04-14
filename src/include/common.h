@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <x86intrin.h>
+#include <string>
 
 /**
  * Common definitions
@@ -21,8 +22,6 @@
  * @param alignment_size: alignment chunk size
  */
 template <typename T>
-void aligned_init(T* &ptr, int N, size_t alignment_size=64) {
-  if (posix_memalign((void **)&ptr, alignment_size, N*sizeof(T)) != 0) {
-    throw std::bad_alloc();
-  }
-}
+void aligned_init(T* &ptr, int N, size_t alignment_size=64);
+
+void print_arr(int *arr, int i, int j, const std::string &tag="");

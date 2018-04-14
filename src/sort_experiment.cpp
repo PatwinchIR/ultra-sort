@@ -1,8 +1,8 @@
 #include <cassert>
 #include "metrics/cycletimer.h"
-#include "common.h"
 #include <random>
 #include "sort/simd_sort_avx256.h"
+//#include "common.h"
 
 void rand_gen(int* &arr, int N, int lo, int hi) {
   aligned_init<int>(arr, N);
@@ -17,13 +17,6 @@ void rand_gen(int* &arr, int N, int lo, int hi) {
 //  }
 }
 
-void print_arr(int* arr, int N) {
-  for(int i = 0; i < N; i++) {
-    printf("%d, ", arr[i]);
-  }
-  printf("\n");
-}
-
 void check_correctness(int* cand, int N) {
   for(int i = 1; i < N; i++) {
     assert(cand[i] >= cand[i - 1]);
@@ -34,16 +27,15 @@ void check_correctness(int* cand, int N) {
 int main() {
   // Initialization
   // Need to resolve pass buffer problem for all multiples of 2
-  int N = 128;
-  int lo = -500;
-  int hi = 500;
+  int N = 65536*2;
+  int lo = -10;
+  int hi = 10;
   int *rand_arr;
   int *soln_arr;
   double start, end;
 
   // Initialization
   rand_gen(rand_arr, N, lo, hi);
-
 
   // C++11 std::stable_sort
   aligned_init<int>(soln_arr, N);
@@ -71,13 +63,12 @@ int main() {
 #endif
 
 #ifdef __AVX2__
-  // TODO: Minor bug - we need to initialize and pass buffer here itself!!
   aligned_init<int>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
   sort_avx2(N, soln_arr);
   end = currentSeconds();
-  print_arr(soln_arr, N);
+  print_arr(soln_arr, 0, N);
   check_correctness(soln_arr, N);
   printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
 #else
