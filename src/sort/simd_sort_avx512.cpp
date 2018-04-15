@@ -20,8 +20,8 @@ void transpose16x16_ps(__m512i &r0, __m512i &r1, __m512i &r2, __m512i &r3,
                        __m512i &r4, __m512i &r5, __m512i &r6, __m512i &r7,
                        __m512i &r8, __m512i &r9, __m512i &r10, __m512i &r11,
                        __m512i &r12, __m512i &r13, __m512i &r14, __m512i &r15) {
-    __m512 __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
-    __m512 __t8, __t9, __ta, __tb, __tc, __td, __te, __tf;
+    __m512i __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
+    __m512i __t8, __t9, __ta, __tb, __tc, __td, __te, __tf;
 
     __t0 = _mm512_unpacklo_epi32(r0,r1);   //   0  16   1  17   4  20   5  21   8  24   9  25  12  28  13  29
     __t1 = _mm512_unpackhi_epi32(r0,r1);   //   2  18   3  19   6  22   7  23  10  26  11  27  14  30  15  31
@@ -93,8 +93,11 @@ void transpose16x16_ps(__m512i &r0, __m512i &r1, __m512i &r2, __m512i &r3,
 }
 
 inline __m512i reverse(__m512i& v) {
-    int rev_idx_mask[8] = {7, 6, 5, 4, 3, 2, 1, 0};
-    return _mm512_permutevar8x32_epi32(v, *((__m512i *) rev_idx_mask));
+    int rev_idx_mask[16] = {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+    return _mm512_permutevar8x32_epi32(*((__m512i *) rev_idx_mask), v);
+}
+
+void intra_register_sort(__m512i& a, __m512i& b) {
 }
 
 inline void bitonic_merge(__m512i& a, __m512i& b) {
@@ -171,4 +174,13 @@ void sort_block_avx512(int *arr, int start, int network_size) {
         printf("%d ", arr_int[i]);
         if (i % 16 == 0) printf("\n");
     }
+    int rev_idx_mask[16] = {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+    __m512i rev = *((__m512i *) rev_idx_mask);
+    __m512i revrev =  reverse(rev);
+    int *rev_print = (int *)(&revrev);
+    printf("\nreverse test: \n");
+    for (int i = 0; i < 16; i ++) {
+    	prinf("%d ", rev_prinf[i]);
+    }    
+
 }
