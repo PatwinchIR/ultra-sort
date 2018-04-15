@@ -4,6 +4,8 @@
 
 #include "sort/simd_sort_avx512.h"
 
+#ifdef __AVX512F__
+
 inline void minmax(const __m512i& a, const __m512i& b,
                    __m512i& minab, __m512i& maxab){
     minab = _mm512_min_epi32(a, b);
@@ -184,3 +186,5 @@ void sort_block_avx512(int *arr, int start, int network_size) {
     }    
 
 }
+
+#endif

@@ -68,7 +68,6 @@ int main() {
   start = currentSeconds();
   sort_avx2(N, soln_arr);
   end = currentSeconds();
-  print_arr(soln_arr, 0, N);
   check_correctness(soln_arr, N);
   printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
 #else
