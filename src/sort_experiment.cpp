@@ -1,8 +1,8 @@
 #include <cassert>
 #include "metrics/cycletimer.h"
 #include <random>
-#include "sort/simd_sort_avx256.h"
-//#include "common.h"
+#include "common.h"
+#include "avx256/simd_sort.h"
 
 void rand_gen(int* &arr, int N, int lo, int hi) {
   aligned_init<int>(arr, N);
@@ -12,9 +12,17 @@ void rand_gen(int* &arr, int N, int lo, int hi) {
   for(size_t i = 0; i < N; i++) {
     arr[i] = dis(gen);
   }
-//  for(int i = 0; i < N; i++) {
-//    arr[i] = N - i;
-//  }
+}
+
+void rand_pairgen(std::pair<int,int>** &arr, int N, int lo_key, int hi_key, int lo_value, int hi_value) {
+  aligned_init<std::pair<int,int>*>(arr, N);
+  std::random_device rd;  //Will be used to obtain a seed for the random number engine
+  std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+  std::uniform_int_distribution<> dis_key(lo_key, hi_key);
+  std::uniform_int_distribution<> dis_value(lo_value, hi_value);
+  for(size_t i = 0; i < N; i++) {
+    arr[i] = new std::pair<int, int>(dis_key(gen), dis_value(gen));
+  }
 }
 
 void check_correctness(int* cand, int N) {
@@ -27,15 +35,19 @@ void check_correctness(int* cand, int N) {
 int main() {
   // Initialization
   // Need to resolve pass buffer problem for all multiples of 2
-  int N = 65536*2;
+  int N = 64;
   int lo = -10;
   int hi = 10;
+  int lo_val = 0;
+  int hi_val = 100;
   int *rand_arr;
+  std::pair<int,int>** rand_pair_arr;
   int *soln_arr;
   double start, end;
 
   // Initialization
   rand_gen(rand_arr, N, lo, hi);
+  rand_pairgen(rand_pair_arr, N, lo, hi, lo_val, hi_val);
 
   // C++11 std::stable_sort
   aligned_init<int>(soln_arr, N);
@@ -57,28 +69,20 @@ int main() {
   printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-#ifdef __AVX__
-#else
-  printf("Missing AVX instructions\n");
-#endif
-
-#ifdef __AVX2__
+#ifdef AVX2
   aligned_init<int>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
-  sort_avx2(N, soln_arr);
+  SIMDSorter::SIMDSort32(N, soln_arr);
   end = currentSeconds();
   check_correctness(soln_arr, N);
   printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
-#else
-  printf("Missing AVX2 instructions\n");
+//  sortkv_avx2(N, rand_pair_arr);
 #endif
 
-#ifdef __AVX512F__
+#ifdef AVX512
 
   sort_block_avx512(rand_arr, 0);
-#else
-  printf("Missing AVX512 instructions\n");
 #endif
   return 0;
 }
