@@ -3,7 +3,7 @@ project(UltraSort)
 
 set(CMAKE_CXX_STANDARD 11)
 include_directories(${CMAKE_SOURCE_DIR}/src/include)
-set(CMAKE_CXX_FLAGS "-g -O3 -Wall -march=native -DDEBUG=0")
+set(CMAKE_CXX_FLAGS "-g -O0 -Wall -march=native -DDEBUG=0")
 
 file(GLOB_RECURSE SOURCE_FILES
         "src/*.cpp")

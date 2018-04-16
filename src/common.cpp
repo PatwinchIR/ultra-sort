@@ -23,11 +23,10 @@ void print_arr(int *arr, int i, int j, const std::string &tag) {
   printf("\n");
 }
 
-void printkv_arr(int64_t *arr, int i, int j, const std::string &tag) {
+void print_arr(int64_t *arr, int i, int j, const std::string &tag) {
   printf("%s ", tag.c_str());
   for(int idx = i; idx < j; idx++) {
-    int *arr_print = (int *)&arr[idx];
-    printf("(%d|%d)", arr_print[1], arr_print[0]);
+    printf("%lld, ", arr[idx]);
   }
   printf("\n");
 }
