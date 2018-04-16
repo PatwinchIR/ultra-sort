@@ -70,13 +70,16 @@ int main() {
   delete soln_arr;
 
 #ifdef AVX2
-  aligned_init<int>(soln_arr, N);
-  std::copy(rand_arr, rand_arr + N, soln_arr);
-  start = currentSeconds();
-  SIMDSorter::SIMDSort32(N, soln_arr);
-  end = currentSeconds();
-  check_correctness(soln_arr, N);
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  int64_t x1[4] = {1, 3, 5, 7};
+  int64_t x2[4] = {2, 4, 6, 8};
+  AVX256Util::IntraRegisterSort4x4(*(__m256i*)&x1, *(__m256i*)&x2);
+//  aligned_init<int>(soln_arr, N);
+//  std::copy(rand_arr, rand_arr + N, soln_arr);
+//  start = currentSeconds();
+//  SIMDSorter::SIMDSort32(N, soln_arr);
+//  end = currentSeconds();
+//  check_correctness(soln_arr, N);
+//  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
 //  sortkv_avx2(N, rand_pair_arr);
 #endif
 
