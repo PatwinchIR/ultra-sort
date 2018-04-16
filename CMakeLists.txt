@@ -2,14 +2,22 @@ cmake_minimum_required(VERSION 3.5)
 project(UltraSort)
 
 set(CMAKE_CXX_STANDARD 11)
+
+add_subdirectory(third_party/googletest)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/include)
+include_directories(third_party/googletest/googletest/include)
+include_directories(third_party/googletest/googlemock/include)
+
 set(CMAKE_CXX_FLAGS "-g -O0 -Wall -march=native -DDEBUG=0")
 
 file(GLOB_RECURSE SOURCE_FILES
-        "src/*.cpp")
+        "src/*.cpp" "test/*.cpp")
 
 file(GLOB_RECURSE HEADER_FILES "src/include/*.h")
 
 add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES})
+target_link_libraries(ultrasort gtest gtest_main)
+target_link_libraries(ultrasort gmock gmock_main)
 
 # Read: https://stackoverflow.com/questions/28939652/how-to-detect-sse-sse2-avx-avx2-avx-512-avx-128-fma-kcvi-availability-at-compile

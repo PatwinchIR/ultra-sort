@@ -30,8 +30,8 @@ void AVX256Util::MinMax8(__m256i &a, __m256i &b) {
 
 void AVX256Util::MinMax4(__m256i &a, __m256i &b) {
   __m256i c = a;
-  a = _mm256_min_epi64(a, b);
-  b = _mm256_max_epi64(c, b);
+  a = _mm256_min_pd(a, b);
+  b = _mm256_max_pd(c, b);
 }
 
 void AVX256Util::BitonicSort8x8(__m256i &r0,
@@ -140,8 +140,8 @@ void AVX256Util::MinMax8(const __m256i &a, const __m256i &b, __m256i &minab, __m
 }
 
 void AVX256Util::MinMax4(const __m256i &a, const __m256i &b, __m256i &minab, __m256i &maxab) {
-  minab = _mm256_min_epi64(a, b);
-  maxab = _mm256_max_epi64(a, b);
+  minab = _mm256_min_pd(a, b);
+  maxab = _mm256_max_pd(a, b);
 }
 
 void AVX256Util::IntraRegisterSort8x8(__m256i &a8, __m256i &b8) {
