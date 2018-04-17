@@ -17,7 +17,7 @@ file(GLOB_RECURSE SOURCE_FILES
 
 file(GLOB_RECURSE HEADER_FILES "src/include/*.h")
 
-add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES} src/avx512/merge_util.cpp src/avx512/simd_sort.cpp src/avx512/sort_util.cpp src/avx512/utils.cpp src/include/avx512/merge_util.h src/include/avx512/simd_sort.h src/include/avx512/sort_util.h src/include/avx512/utils.h)
 target_link_libraries(ultrasort gtest gtest_main)
 target_link_libraries(ultrasort gmock gmock_main)
 
