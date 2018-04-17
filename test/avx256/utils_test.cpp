@@ -1,34 +1,14 @@
-#include <random>
 #include "gtest/gtest.h"
-#include "common.h"
+#include "test_util.h"
 #include "avx256/utils.h"
-
-template <typename T = int>
-void PopulateSeqArray(T *&arr, int start, int end, int step=1) {
-  int idx = 0;
-  for(int i = start; i < end; i+=step) {
-    arr[idx++] = i;
-  }
-}
-
-template <typename T = int>
-void rand_gen(T* &arr, int N, int lo, int hi) {
-  aligned_init<T>(arr, N);
-  std::random_device rd;  //Will be used to obtain a seed for the random number engine
-  std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-  std::uniform_int_distribution<> dis(lo, hi);
-  for(size_t i = 0; i < N; i++) {
-    arr[i] = dis(gen);
-  }
-}
 
 TEST(UtilsTest, LoadStore32BitTest) {
   int *a;
   int *b;
   aligned_init(a, 8);
   aligned_init(b, 8);
-  PopulateSeqArray(a, 0, 8);
-  PopulateSeqArray(b, 8, 16);
+  TestUtil::PopulateSeqArray(a, 0, 8);
+  TestUtil::PopulateSeqArray(b, 8, 16);
   __m256i ra, rb;
   AVX256Util::LoadReg(ra, a);
   AVX256Util::LoadReg(rb, b);
@@ -47,8 +27,8 @@ TEST(UtilsTest, LoadStore64BitTest) {
   int64_t *b;
   aligned_init<int64_t>(a, 4);
   aligned_init<int64_t>(b, 4);
-  PopulateSeqArray<int64_t>(a, 0, 4);
-  PopulateSeqArray<int64_t>(b, 4, 8);
+  TestUtil::PopulateSeqArray<int64_t>(a, 0, 4);
+  TestUtil::PopulateSeqArray<int64_t>(b, 4, 8);
   __m256i ra, rb;
   AVX256Util::LoadReg(ra, a);
   AVX256Util::LoadReg(rb, b);
@@ -67,8 +47,8 @@ TEST(UtilsTest, MinMax8Test) {
   int *b;
   aligned_init<int>(a, 8);
   aligned_init<int>(b, 8);
-  rand_gen(a, 8, -10, 10);
-  rand_gen(b, 8, -10, 10);
+  TestUtil::RandGen(a, 8, -10, 10);
+  TestUtil::RandGen(b, 8, -10, 10);
   __m256i ra, rb;
   AVX256Util::LoadReg(ra, a);
   AVX256Util::LoadReg(rb, b);
@@ -87,8 +67,8 @@ TEST(UtilsTest, MinMax4Test) {
   int64_t *b;
   aligned_init<int64_t>(a, 4);
   aligned_init<int64_t>(b, 4);
-  rand_gen<int64_t>(a, 4, -10, 10);
-  rand_gen<int64_t>(b, 4, -10, 10);
+  TestUtil::RandGen<int64_t>(a, 4, -10, 10);
+  TestUtil::RandGen<int64_t>(b, 4, -10, 10);
   __m256i ra, rb;
   AVX256Util::LoadReg(ra, a);
   AVX256Util::LoadReg(rb, b);
@@ -105,7 +85,7 @@ TEST(UtilsTest, MinMax4Test) {
 TEST(UtilsTest, BitonicSort8x8Test) {
   int *arr;
   aligned_init(arr, 64);
-  rand_gen(arr, 64, -10, 10);
+  TestUtil::RandGen(arr, 64, -10, 10);
   __m256i r[8];
   for(int i = 0; i < 8; i++) {
     AVX256Util::LoadReg(r[i], arr + i*8);
@@ -126,7 +106,7 @@ TEST(UtilsTest, BitonicSort8x8Test) {
 TEST(UtilsTest, BitonicSort4x4Test) {
   int64_t *arr;
   aligned_init<int64_t>(arr, 16);
-  rand_gen<int64_t>(arr, 64, -10, 10);
+  TestUtil::RandGen<int64_t>(arr, 64, -10, 10);
   __m256i r[4];
   for(int i = 0; i < 4; i++) {
     AVX256Util::LoadReg(r[i], arr + i*4);
@@ -148,8 +128,8 @@ TEST(UtilsTest, BitonicMerge8Test) {
   int *b;
   aligned_init<int>(a, 8);
   aligned_init<int>(b, 8);
-  PopulateSeqArray(a, 0, 16, 2);
-  PopulateSeqArray(b, 1, 16, 2);
+  TestUtil::PopulateSeqArray(a, 0, 16, 2);
+  TestUtil::PopulateSeqArray(b, 1, 16, 2);
   __m256i ra, rb;
   AVX256Util::LoadReg(ra, a);
   AVX256Util::LoadReg(rb, b);
@@ -176,8 +156,8 @@ TEST(UtilsTest, BitonicMerge4Test) {
   int64_t *b;
   aligned_init<int64_t>(a, 8);
   aligned_init<int64_t>(b, 8);
-  PopulateSeqArray<int64_t>(a, 0, 8, 2);
-  PopulateSeqArray<int64_t>(b, 1, 8, 2);
+  TestUtil::PopulateSeqArray<int64_t>(a, 0, 8, 2);
+  TestUtil::PopulateSeqArray<int64_t>(b, 1, 8, 2);
   __m256i ra, rb;
   AVX256Util::LoadReg(ra, a);
   AVX256Util::LoadReg(rb, b);
@@ -191,9 +171,7 @@ TEST(UtilsTest, BitonicMerge4Test) {
     } else {
       ab[i] = b[i/2];
     }
-    if(i > 1) {
-      EXPECT_LE(ab[i - 1], ab[i]);
-    }
+    EXPECT_EQ(ab[i], i);
   }
   delete[](a);
   delete[](b);

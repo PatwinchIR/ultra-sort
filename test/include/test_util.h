@@ -1,0 +1,25 @@
+#pragma once
+
+#include "common.h"
+#include <random>
+
+struct TestUtil{
+  template <typename T=int>
+  static void PopulateSeqArray(T *&arr, int start, int end, int step=1) {
+    int idx = 0;
+    for(int i = start; i < end; i+=step) {
+      arr[idx++] = i;
+    }
+  }
+
+  template <typename T=int>
+  static void RandGen(T* &arr, int N, int lo, int hi) {
+    aligned_init<T>(arr, N);
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<> dis(lo, hi);
+    for(size_t i = 0; i < N; i++) {
+      arr[i] = dis(gen);
+    }
+  }
+};

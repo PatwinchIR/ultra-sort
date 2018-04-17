@@ -7,15 +7,16 @@ set(CMAKE_CXX_STANDARD 11)
 add_subdirectory(third_party/googletest)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/include)
+include_directories(${CMAKE_SOURCE_DIR}/test/include)
 include_directories(third_party/googletest/googletest/include)
 include_directories(third_party/googletest/googlemock/include)
 
-set(CMAKE_CXX_FLAGS "-g -O0 -Wall -march=native -DDEBUG=0")
+set(CMAKE_CXX_FLAGS "-g -O3 -Wall -march=native -DDEBUG=0")
 
 file(GLOB_RECURSE SOURCE_FILES
         "src/*.cpp" "test/*.cpp")
 
-file(GLOB_RECURSE HEADER_FILES "src/include/*.h")
+file(GLOB_RECURSE HEADER_FILES "src/include/*.h" "test/include/*.h")
 
 add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(ultrasort gtest gtest_main)
