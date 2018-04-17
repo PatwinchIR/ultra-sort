@@ -3,14 +3,15 @@
 //
 
 #include "avx256/utils.h"
+#include "common.h"
 
 #ifdef AVX2
 
-void AVX256Util::LoadReg(__m256i &r, const int *arr) {
+void AVX256Util::LoadReg(__m256i &r, int *arr) {
   r = *((__m256i*)arr);
 }
 
-void AVX256Util::LoadReg(__m256i &r, const int64_t *arr) {
+void AVX256Util::LoadReg(__m256i &r, int64_t *arr) {
   r = *((__m256i*)arr);
 }
 

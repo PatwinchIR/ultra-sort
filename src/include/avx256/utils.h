@@ -6,9 +6,9 @@
 
 class AVX256Util{
  public:
-  static void LoadReg(__m256i &r, const int* arr);
+  static void LoadReg(__m256i &r, int* arr);
   static void StoreReg(const __m256i &r, int* arr);
-  static void LoadReg(__m256i &r, const int64_t* arr);
+  static void LoadReg(__m256i &r, int64_t* arr);
   static void StoreReg(const __m256i &r, int64_t* arr);
   static void MinMax8(__m256i &a, __m256i &b);
   static void MinMax4(__m256i &a, __m256i &b);
