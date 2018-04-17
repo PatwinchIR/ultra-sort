@@ -210,7 +210,6 @@ void AVX256Util::BitonicMerge8(__m256i &a, __m256i &b) {
 void AVX256Util::BitonicMerge4(__m256i &a, __m256i &b) {
   b = Reverse4(b);
   IntraRegisterSort4x4(a,b);
-
 }
 
 #endif
