@@ -5,8 +5,8 @@
 
 TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   int N = 65536;
-  int lo = -10;
-  int hi = 10;
+  int lo = -1000;
+  int hi = 1000;
   int *rand_arr;
   int *soln_arr;
   double start, end;
@@ -48,7 +48,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
 }
 
 TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
-  int N = 64;
+  int N = 65536;
   int lo = -10000;
   int hi = 10000;
   int64_t *rand_arr;

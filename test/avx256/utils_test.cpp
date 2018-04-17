@@ -141,11 +141,9 @@ TEST(UtilsTest, BitonicMerge8Test) {
     if(i < 8) {
       ab[i] = a[i];
     } else {
-      ab[i] = b[i/2];
+      ab[i] = b[i - 8];
     }
-    if(i > 1) {
-      EXPECT_LE(ab[i - 1], ab[i]);
-    }
+    EXPECT_EQ(ab[i], i);
   }
   delete[](a);
   delete[](b);
@@ -169,7 +167,7 @@ TEST(UtilsTest, BitonicMerge4Test) {
     if(i < 4) {
       ab[i] = a[i];
     } else {
-      ab[i] = b[i/2];
+      ab[i] = b[i - 4];
     }
     EXPECT_EQ(ab[i], i);
   }

@@ -15,12 +15,32 @@ void AVX256Util::LoadReg(__m256i &r, int64_t *arr) {
   r = *((__m256i*)arr);
 }
 
+void AVX256Util::LoadReg(__m256d &r, double *arr) {
+  r = *((__m256d*)arr);
+}
+
 void AVX256Util::StoreReg(const __m256i &r, int *arr) {
   *((__m256i*)arr) = r;
 }
 
 void AVX256Util::StoreReg(const __m256i &r, int64_t *arr) {
   *((__m256i*)arr) = r;
+}
+
+void AVX256Util::StoreReg(const __m256d &r, double *arr) {
+  *((__m256d*)arr) = r;
+}
+
+__m256d AVX256Util::Int64ToDoubleReg(const __m256i &repi64) {
+  int64_t temp[4];
+  StoreReg(repi64, temp);
+  return _mm256_set_pd((double)temp[0], (double)temp[1], (double)temp[2], (double)temp[3]);
+}
+
+__m256i AVX256Util::DoubleToInt64Reg(const __m256d &rd) {
+  double temp[4];
+  StoreReg(rd, temp);
+  return _mm256_set_epi64x((int64_t)temp[0], (int64_t)temp[1], (int64_t)temp[2], (int64_t)temp[3]);
 }
 
 void AVX256Util::MinMax8(__m256i &a, __m256i &b) {
@@ -30,15 +50,13 @@ void AVX256Util::MinMax8(__m256i &a, __m256i &b) {
 }
 
 void AVX256Util::MinMax4(__m256i &a, __m256i &b) {
-  __m256i c = a;
-  a = (__m256i)_mm256_min_pd((__m256d)a, (__m256d)b);
-  b = (__m256i)_mm256_max_pd((__m256d)c, (__m256d)b);
-}
-
-void AVX256Util::MinMax4(__m256d &a, __m256d &b) {
-  __m256d c = a;
-  a = _mm256_min_pd(a, b);
-  b = _mm256_max_pd(c, b);
+  __m256d a_d = Int64ToDoubleReg(a);
+  __m256d b_d = Int64ToDoubleReg(b);
+  __m256d  c_d = a_d;
+  a_d = _mm256_min_pd(a_d, b_d);
+  b_d = _mm256_max_pd(c_d, b_d);
+  a = DoubleToInt64Reg(a_d);
+  b = DoubleToInt64Reg(b_d);
 }
 
 void AVX256Util::BitonicSort8x8(__m256i &r0,
@@ -183,22 +201,22 @@ void AVX256Util::IntraRegisterSort8x8(__m256i &a8, __m256i &b8) {
 void AVX256Util::IntraRegisterSort4x4(__m256i &a4, __m256i &b4) {
   // Level 1
   MinMax4(a4, b4);
-  auto l1p = _mm256_permute2f128_pd((__m256d)a4, (__m256d)b4, 0x31);
-  auto h1p = _mm256_permute2f128_pd((__m256d)a4, (__m256d)b4, 0x20);
+  auto l1p = (__m256i)_mm256_permute2f128_pd((__m256d)a4, (__m256d)b4, 0x31);
+  auto h1p = (__m256i)_mm256_permute2f128_pd((__m256d)a4, (__m256d)b4, 0x20);
 
   // Level 2
   MinMax4(l1p, h1p);
-  auto l2p = _mm256_shuffle_pd(l1p, h1p, 0x0);
-  auto h2p = _mm256_shuffle_pd(l1p, h1p, 0xF);
+  auto l2p = (__m256i)_mm256_shuffle_pd((__m256d)l1p, (__m256d)h1p, 0x0);
+  auto h2p = (__m256i)_mm256_shuffle_pd((__m256d)l1p, (__m256d)h1p, 0xF);
 
   // Level 3
   MinMax4(l2p, h2p);
-  auto l3p = _mm256_unpacklo_pd(l2p, h2p);
-  auto h3p = _mm256_unpackhi_pd(l2p, h2p);
+  auto l3p = (__m256i)_mm256_unpacklo_pd((__m256d)l2p, (__m256d)h2p);
+  auto h3p = (__m256i)_mm256_unpackhi_pd((__m256d)l2p, (__m256d)h2p);
 
   // Finally
-  a4 = (__m256i)_mm256_permute2f128_pd(l3p, h3p, 0x20);
-  b4 = (__m256i)_mm256_permute2f128_pd(l3p, h3p, 0x31);
+  a4 = (__m256i)_mm256_permute2f128_pd((__m256d)l3p, (__m256d)h3p, 0x20);
+  b4 = (__m256i)_mm256_permute2f128_pd((__m256d)l3p, (__m256d)h3p, 0x31);
 
 }
 

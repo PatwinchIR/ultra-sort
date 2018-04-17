@@ -10,8 +10,12 @@ class AVX256Util{
   static void StoreReg(const __m256i &r, int* arr);
   static void LoadReg(__m256i &r, int64_t* arr);
   static void StoreReg(const __m256i &r, int64_t* arr);
+  static void LoadReg(__m256d &r, double* arr);
+  static void StoreReg(const __m256d &r, double* arr);
+  static __m256d Int64ToDoubleReg(const __m256i &repi64);
+  static __m256i DoubleToInt64Reg(const __m256d &rd);
+
   static void MinMax8(__m256i &a, __m256i &b);
-  static void MinMax4(__m256d &a, __m256d &b);
   static void MinMax4(__m256i &a, __m256i &b);
   static void BitonicSort8x8(__m256i &r0, __m256i &r1, __m256i &r2, __m256i &r3,
                              __m256i &r4, __m256i &r5, __m256i &r6, __m256i &r7);
