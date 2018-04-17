@@ -134,8 +134,7 @@ void AVX256Util::Transpose4x4(__m256i &row0,
 }
 
 __m256i AVX256Util::Reverse8(__m256i &v) {
-  int rev_idx_mask[8] = {7, 6, 5, 4, 3, 2, 1, 0};
-  return _mm256_permutevar8x32_epi32(v, *((__m256i *) rev_idx_mask));
+  return _mm256_permutevar8x32_epi32(v, _mm256_set_epi32(0, 1, 2, 3, 4, 5, 6, 7));
 }
 
 __m256i AVX256Util::Reverse4(__m256i &v) {
@@ -151,9 +150,8 @@ void AVX256Util::IntraRegisterSort8x8(__m256i &a8, __m256i &b8) {
   __m256i mina, maxa, minb, maxb;
   // phase 1
   MinMax8(a8, b8);
-  int swap_128[8] = {4, 5, 6, 7, 0, 1, 2, 3};
-  auto a8_1 = _mm256_permutevar8x32_epi32(a8, *((__m256i *) swap_128));
-  auto b8_1 = _mm256_permutevar8x32_epi32(b8, *((__m256i *) swap_128));
+  auto a8_1 = _mm256_permutevar8x32_epi32(a8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
+  auto b8_1 = _mm256_permutevar8x32_epi32(b8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
