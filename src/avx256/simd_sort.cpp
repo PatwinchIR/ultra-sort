@@ -22,4 +22,18 @@ void SIMDSorter::SIMDSort64(size_t N, int64_t *&arr) {
   // Merge sorted runs
   MergeUtil::MergeRuns4(arr, N);
 }
+
+void SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
+  int64_t* kv_arr;
+  aligned_init<int64_t>(kv_arr, N);
+  for(int i = 0; i < N; i++) {
+    kv_arr[i] = ((((int64_t)arr[i].first) << 32) | (0x00000000ffffffff & arr[i].second));
+  }
+  SIMDSort64(N, kv_arr);
+  for(int i = 0; i < N; i++) {
+    auto kv = (int*)&kv_arr[i];
+    arr[i].first = kv[1];
+    arr[i].second = kv[0];
+  }
+}
 #endif

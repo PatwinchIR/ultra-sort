@@ -11,7 +11,7 @@ include_directories(${CMAKE_SOURCE_DIR}/test/include)
 include_directories(third_party/googletest/googletest/include)
 include_directories(third_party/googletest/googlemock/include)
 
-set(CMAKE_CXX_FLAGS "-g -O3 -Wall -march=native -DDEBUG=0")
+set(CMAKE_CXX_FLAGS "-g -O0 -Wall -march=native -DDEBUG=0")
 
 file(GLOB_RECURSE SOURCE_FILES
         "src/*.cpp" "test/*.cpp")
