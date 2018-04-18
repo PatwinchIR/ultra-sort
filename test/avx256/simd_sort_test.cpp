@@ -4,11 +4,15 @@
 #include "avx256/simd_sort.h"
 #include <algorithm>
 #include <iterator>
+#include "ips4o.hpp"
+#include "pdqsort.h"
+
+// TODO: Separate tests from benchmarks
 
 TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   int N = 65536;
-  int lo = -1000;
-  int hi = 1000;
+  int lo = -10000;
+  int hi = 10000;
   int *rand_arr;
   int *soln_arr;
   double start, end;
@@ -16,7 +20,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   // Initialization
   TestUtil::RandGen(rand_arr, N, lo, hi);
 
-  // C++11 std::stable_sort
+  // C++ std::stable_sort
   aligned_init<int>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
@@ -25,7 +29,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // C++11 std::sort
+  // C++ std::sort
   aligned_init<int>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
@@ -34,6 +38,25 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
+  // C++ ips4o::sort
+  aligned_init<int>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ pqd::sort
+  aligned_init<int>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // AVX256 Sort
   aligned_init<int>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<int> check_arr(rand_arr, rand_arr + N);
@@ -41,6 +64,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   SIMDSorter::SIMDSort32(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
+  // First perform a correctness check
   for(int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
@@ -60,7 +84,7 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   // Initialization
   TestUtil::RandGen<int64_t>(rand_arr, N, lo, hi);
 
-  // C++11 std::stable_sort
+  // C++ std::stable_sort
   aligned_init<int64_t>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
@@ -69,7 +93,7 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // C++11 std::sort
+  // C++ std::sort
   aligned_init<int64_t>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
@@ -78,6 +102,25 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
+  // C++ ips4o::sort
+  aligned_init<int64_t>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ pqd::sort
+  aligned_init<int64_t>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // AVX256 sort
   aligned_init<int64_t>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<int64_t> check_arr(rand_arr, rand_arr + N);
@@ -94,9 +137,9 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
 }
 
 TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
-  int N = 65536;
-  int lo = -10000;
-  int hi = 10000;
+  int N = 64;
+  int lo = -10;
+  int hi = 10;
   std::pair<int,int> *rand_arr;
   std::pair<int,int> *soln_arr;
   double start, end;
@@ -104,7 +147,7 @@ TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
   // Initialization
   TestUtil::RandPairGen(rand_arr, N, lo, hi);
 
-  // C++11 std::stable_sort
+  // C++ std::stable_sort
   aligned_init<std::pair<int,int>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
@@ -115,7 +158,7 @@ TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
   printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // C++11 std::sort
+  // C++ std::sort
   aligned_init<std::pair<int,int>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
@@ -126,6 +169,8 @@ TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
   printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
+  // TODO: Add ips4o and pdqsort benchmarks
+  // AVX256 sort
   aligned_init<std::pair<int,int>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<std::pair<int,int>> check_arr(rand_arr, rand_arr + N);
