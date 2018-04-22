@@ -8,8 +8,10 @@
 
 class SortUtil{
  public:
-  static void SortBlock64(int *&arr, int offset);
-  static void SortBlock16(int64_t *&arr, int offset);
+  template <typename InType, typename RegType>
+  static void SortBlock64(InType *&arr, int offset);
+  template <typename InType, typename RegType>
+  static void SortBlock16(InType *&arr, int offset);
 };
 
 #endif

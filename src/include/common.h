@@ -40,5 +40,8 @@
 template <typename T>
 void aligned_init(T* &ptr, int N, size_t alignment_size=64);
 
-void print_arr(int *arr, int i, int j, const std::string &tag="");
-void print_arr(int64_t *arr, int i, int j, const std::string &tag="");
+template <typename T>
+void print_arr(T *arr, int i, int j, const std::string &tag="");
+
+void print_kvarr(std::pair<int,int> *arr, int i, int j, const std::string &tag="");
+void print_kvarr(int64_t *arr, int i, int j, const std::string &tag="");
