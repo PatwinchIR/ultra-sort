@@ -4,7 +4,7 @@
 #include <random>
 
 struct TestUtil{
-  template <typename T=int>
+  template <typename T>
   static void PopulateSeqArray(T *&arr, int start, int end, int step=1) {
     int idx = 0;
     for(int i = start; i < end; i+=step) {
@@ -12,8 +12,8 @@ struct TestUtil{
     }
   }
 
-  template <typename T=int>
-  static void RandGen(T* &arr, int N, int lo, int hi) {
+  template <typename T>
+  static void RandGen(T* &arr, int N, T lo, T hi) {
     aligned_init<T>(arr, N);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()

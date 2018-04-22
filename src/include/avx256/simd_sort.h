@@ -9,8 +9,9 @@
 #ifdef AVX2
 class SIMDSorter{
  public:
-  static void SIMDSort32(size_t N, int *&arr);
+  static void SIMDSort(size_t N, int *&arr);
+  static void SIMDSort(size_t N, int64_t *&arr);
+  static void SIMDSort(size_t N, float *&arr);
   static void SIMDSort32KV(size_t N, std::pair<int,int> *&arr);
-  static void SIMDSort64(size_t N, int64_t *&arr);
 };
 #endif

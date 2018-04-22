@@ -2,29 +2,35 @@
 
 #ifdef AVX2
 
-void MergeUtil::MergeRuns8(int *&arr, int N) {
-  int* buffer;
+template <typename InType, typename RegType>
+void MergeUtil::MergeRuns8(InType *&arr, int N) {
+  InType* buffer;
   int UNIT_RUN_SIZE=8;
-  aligned_init<int>(buffer, N);
+  aligned_init(buffer, N);
   for(int run_size = UNIT_RUN_SIZE; run_size < N; run_size*=2) {
-    MergePass8(arr, buffer, N, run_size);
+    MergePass8<InType,RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
 }
+template void MergeUtil::MergeRuns8<int,__m256i>(int *&arr, int N);
+template void MergeUtil::MergeRuns8<float,__m256>(float *&arr, int N);
 
-void MergeUtil::MergeRuns4(int64_t *&arr, int N) {
-  int64_t* buffer;
+template <typename InType, typename RegType>
+void MergeUtil::MergeRuns4(InType *&arr, int N) {
+  InType* buffer;
   int UNIT_RUN_SIZE=4;
-  aligned_init<int64_t>(buffer, N);
+  aligned_init(buffer, N);
   for(int run_size = UNIT_RUN_SIZE; run_size < N; run_size*=2) {
-    MergePass4(arr, buffer, N, run_size);
+    MergePass4<InType,RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
 }
+template void MergeUtil::MergeRuns4<int64_t,__m256i>(int64_t *&arr, int N);
 
-void MergeUtil::MergePass8(int *&arr, int *buffer, int N, int run_size) {
+template <typename InType, typename RegType>
+void MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
   int UNIT_RUN_SIZE=8;
-  __m256i ra, rb;
+  RegType ra, rb;
   int buffer_offset = 0;
   for(int i = 0; i < N; i += 2*run_size) {
     int start = i;
@@ -78,9 +84,13 @@ void MergeUtil::MergePass8(int *&arr, int *buffer, int N, int run_size) {
   }
 }
 
-void MergeUtil::MergePass4(int64_t *&arr, int64_t *buffer, int N, int run_size) {
+template void MergeUtil::MergePass8<int,__m256i>(int *&arr, int *buffer, int N, int run_size);
+template void MergeUtil::MergePass8<float,__m256>(float *&arr, float *buffer, int N, int run_size);
+
+template <typename InType, typename RegType>
+void MergeUtil::MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
   int UNIT_RUN_SIZE=4;
-  __m256i ra, rb;
+  RegType ra, rb;
   int buffer_offset = 0;
   for(int i = 0; i < N; i += 2*run_size) {
     int start = i;
@@ -133,5 +143,7 @@ void MergeUtil::MergePass4(int64_t *&arr, int64_t *buffer, int N, int run_size) 
     buffer_offset += UNIT_RUN_SIZE;
   }
 }
+
+template void MergeUtil::MergePass4<int64_t,__m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
 
 #endif
