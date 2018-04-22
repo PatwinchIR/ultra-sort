@@ -1,12 +1,11 @@
 #pragma once
 
-#include "avx256/merge_util.h"
 #include "avx256/utils.h"
 #include "common.h"
 
 #ifdef AVX2
 
-class MergeUtil{
+class AVX256MergeUtil{
  public:
   template <typename InType, typename RegType>
   static void MergeRuns8(InType *&arr, int N);

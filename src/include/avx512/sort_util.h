@@ -1,8 +1,14 @@
-//
-// Created by Dee Dong on 4/16/18.
-//
+#pragma once
 
-#ifndef ULTRASORT_SORT_UTIL_H
-#define ULTRASORT_SORT_UTIL_H
+#include "avx512/utils.h"
+#include "common.h"
 
-#endif //ULTRASORT_SORT_UTIL_H
+#ifdef AVX512
+
+class AVX512SortUtil{
+ public:
+  static void SortBlock256(int *&arr, int offset);
+  static void SortBlock64(int64_t *&arr, int offset);
+};
+
+#endif
