@@ -26,6 +26,7 @@ void MergeUtil::MergeRuns4(InType *&arr, int N) {
   }
 }
 template void MergeUtil::MergeRuns4<int64_t,__m256i>(int64_t *&arr, int N);
+template void MergeUtil::MergeRuns4<double,__m256d>(double *&arr, int N);
 
 template <typename InType, typename RegType>
 void MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
@@ -145,5 +146,6 @@ void MergeUtil::MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
 }
 
 template void MergeUtil::MergePass4<int64_t,__m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
+template void MergeUtil::MergePass4<double,__m256d>(double *&arr, double *buffer, int N, int run_size);
 
 #endif

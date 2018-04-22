@@ -60,7 +60,7 @@ void SortUtil::SortBlock16(InType *&arr, int offset) {
 }
 
 template void SortUtil::SortBlock16<int64_t, __m256i>(int64_t *&arr, int offset);
-//template void SortUtil::SortBlock16<double, __m256d>(double *&arr, int offset);
+template void SortUtil::SortBlock16<double, __m256d>(double *&arr, int offset);
 
 #endif
 

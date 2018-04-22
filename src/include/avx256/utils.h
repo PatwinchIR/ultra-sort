@@ -47,10 +47,10 @@ class AVX256Util{
   static void IntraRegisterSort8x8(__m256& a8, __m256& b8);
   static void IntraRegisterSort4x4(__m256i& a4, __m256i& b4);
   static void IntraRegisterSort4x4(__m256d& a4, __m256d& b4);
-  static void BitonicMerge8(__m256i& a, __m256i& b);
-  static void BitonicMerge8(__m256& a, __m256& b);
-  static void BitonicMerge4(__m256i& a, __m256i& b);
-  static void BitonicMerge4(__m256d& a, __m256d& b);
+  template <typename T>
+  static void BitonicMerge8(T& a, T& b);
+  template <typename T>
+  static void BitonicMerge4(T& a, T& b);
 };
 
 #endif

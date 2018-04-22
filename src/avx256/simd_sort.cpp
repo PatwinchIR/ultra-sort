@@ -34,6 +34,17 @@ void SIMDSorter::SIMDSort(size_t N, float *&arr) {
   MergeUtil::MergeRuns8<float,__m256>(arr, N);
 }
 
+void SIMDSorter::SIMDSort(size_t N, double *&arr) {
+  // Determine block size for the sorting network
+  int BLOCK_SIZE = 16;
+  assert(N % BLOCK_SIZE == 0);
+  for(int i = 0; i < N; i+=BLOCK_SIZE) {
+    SortUtil::SortBlock16<double,__m256d>(arr, i);
+  }
+  // Merge sorted runs
+  MergeUtil::MergeRuns4<double,__m256d>(arr, N);
+}
+
 void SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
   int64_t* kv_arr;
   aligned_init<int64_t>(kv_arr, N);
