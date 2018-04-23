@@ -2,7 +2,7 @@
 
 #ifdef AVX2
 template <typename InType, typename RegType>
-void SortUtil::SortBlock64(InType *&arr, int offset) {
+void AVX256Util::SortBlock64(InType *&arr, int offset) {
   int ROW_SIZE = 8;
   // Put into registers
   RegType r0, r1, r2, r3, r4, r5, r6, r7;
@@ -33,11 +33,11 @@ void SortUtil::SortBlock64(InType *&arr, int offset) {
   AVX256Util::StoreReg(r7, arr + offset + ROW_SIZE*7);
 }
 
-template void SortUtil::SortBlock64<int, __m256i>(int *&arr, int offset);
-template void SortUtil::SortBlock64<float, __m256>(float *&arr, int offset);
+template void AVX256Util::SortBlock64<int, __m256i>(int *&arr, int offset);
+template void AVX256Util::SortBlock64<float, __m256>(float *&arr, int offset);
 
 template <typename InType, typename RegType>
-void SortUtil::SortBlock16(InType *&arr, int offset) {
+void AVX256Util::SortBlock16(InType *&arr, int offset) {
   int ROW_SIZE = 4;
   // Put into registers
   RegType r0, r1, r2, r3;
@@ -59,7 +59,7 @@ void SortUtil::SortBlock16(InType *&arr, int offset) {
   AVX256Util::StoreReg(r3, arr + offset + ROW_SIZE*3);
 }
 
-template void SortUtil::SortBlock16<int64_t, __m256i>(int64_t *&arr, int offset);
+template void AVX256Util::SortBlock16<int64_t, __m256i>(int64_t *&arr, int offset);
 //template void SortUtil::SortBlock16<double, __m256d>(double *&arr, int offset);
 
 #endif

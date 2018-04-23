@@ -1,18 +1,18 @@
 #include "avx256/simd_sort.h"
 
 #ifdef AVX2
-void SIMDSorter::SIMDSort(size_t N, int *&arr) {
+void AVX256SIMDSorter::SIMDSort(size_t N, int *&arr) {
   // Determine block size for the sorting network
   int BLOCK_SIZE = 64;
   assert(N % BLOCK_SIZE == 0);
   for(int i = 0; i < N; i+=BLOCK_SIZE) {
-    SortUtil::SortBlock64<int,__m256i>(arr, i);
+    AVX256SortUtil::SortBlock64<int,__m256i>(arr, i);
   }
   // Merge sorted runs
-  MergeUtil::MergeRuns8<int,__m256i>(arr, N);
+  AVX256MergeUtil::MergeRuns8<int,__m256i>(arr, N);
 }
 
-void SIMDSorter::SIMDSort(size_t N, int64_t *&arr) {
+void AVX256SIMDSorter::SIMDSort(size_t N, int64_t *&arr) {
   // Determine block size for the sorting network
   int BLOCK_SIZE = 16;
   assert(N % BLOCK_SIZE == 0);
@@ -23,7 +23,7 @@ void SIMDSorter::SIMDSort(size_t N, int64_t *&arr) {
   MergeUtil::MergeRuns4<int64_t,__m256i>(arr, N);
 }
 
-void SIMDSorter::SIMDSort(size_t N, float *&arr) {
+void AVX256SIMDSorter::SIMDSort(size_t N, float *&arr) {
   // Determine block size for the sorting network
   int BLOCK_SIZE = 64;
   assert(N % BLOCK_SIZE == 0);
@@ -34,7 +34,7 @@ void SIMDSorter::SIMDSort(size_t N, float *&arr) {
   MergeUtil::MergeRuns8<float,__m256>(arr, N);
 }
 
-void SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
+void AVX256SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
   int64_t* kv_arr;
   aligned_init<int64_t>(kv_arr, N);
   for(int i = 0; i < N; i++) {

@@ -8,7 +8,8 @@
 #ifdef AVX512
 class AVX512SIMDSorter{
  public:
-  static void SIMDSort32(size_t N, int *&arr);
-  static void SIMDSort64(size_t N, int64_t *&arr);
+  static void SIMDSort(size_t N, int *&arr);
+  static void SIMDSort(size_t N, int64_t *&arr);
+  static void SIMDSort(size_t N, float *&arr);
 };
 #endif

@@ -1,7 +1,3 @@
-//
-// Created by Saatvik Shah on 4/15/18.
-//
-
 #include "avx256/utils.h"
 #include "common.h"
 

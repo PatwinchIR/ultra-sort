@@ -7,8 +7,10 @@
 
 class AVX512SortUtil{
  public:
-  static void SortBlock256(int *&arr, int offset);
-  static void SortBlock64(int64_t *&arr, int offset);
+  template <typename InType, typename RegType>
+  static void SortBlock256(InType *&arr, int offset);
+  template <typename InType, typename RegType>
+  static void SortBlock64(InType *&arr, int offset);
 };
 
 #endif
