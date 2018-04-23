@@ -13,11 +13,22 @@ struct TestUtil{
   }
 
   template <typename T>
-  static void RandGen(T* &arr, int N, T lo, T hi) {
+  static void RandGenInt(T* &arr, int N, T lo, T hi) {
     aligned_init<T>(arr, N);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_int_distribution<> dis(lo, hi);
+    std::uniform_int_distribution<T> dis(lo, hi);
+    for(size_t i = 0; i < N; i++) {
+      arr[i] = dis(gen);
+    }
+  }
+
+  template <typename T>
+  static void RandGenFloat(T* &arr, int N, T lo, T hi) {
+    aligned_init<T>(arr, N);
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_real_distribution<T> dis(lo, hi);
     for(size_t i = 0; i < N; i++) {
       arr[i] = dis(gen);
     }

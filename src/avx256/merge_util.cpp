@@ -25,7 +25,9 @@ void AVX256MergeUtil::MergeRuns4(InType *&arr, int N) {
     std::swap(arr, buffer);
   }
 }
+
 template void AVX256MergeUtil::MergeRuns4<int64_t,__m256i>(int64_t *&arr, int N);
+template void AVX256MergeUtil::MergeRuns4<double,__m256d>(double *&arr, int N);
 
 template <typename InType, typename RegType>
 void AVX256MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
@@ -84,8 +86,8 @@ void AVX256MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_si
   }
 }
 
-template void AVX256Util::MergePass8<int,__m256i>(int *&arr, int *buffer, int N, int run_size);
-template void AVX256Util::MergePass8<float,__m256>(float *&arr, float *buffer, int N, int run_size);
+template void AVX256MergeUtil::MergePass8<int,__m256i>(int *&arr, int *buffer, int N, int run_size);
+template void AVX256MergeUtil::MergePass8<float,__m256>(float *&arr, float *buffer, int N, int run_size);
 
 template <typename InType, typename RegType>
 void AVX256Util::MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
@@ -144,6 +146,8 @@ void AVX256Util::MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
   }
 }
 
-template void AVX256Util::MergePass4<int64_t,__m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
+
+template void AVX256MergeUtil::MergePass4<int64_t,__m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
+template void AVX256MergeUtil::MergePass4<double,__m256d>(double *&arr, double *buffer, int N, int run_size);
 
 #endif

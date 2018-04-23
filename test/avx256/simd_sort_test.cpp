@@ -18,7 +18,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   double start, end;
 
   // Initialization
-  TestUtil::RandGen(rand_arr, N, lo, hi);
+  TestUtil::RandGenInt(rand_arr, N, lo, hi);
 
   // C++ std::stable_sort
   aligned_init<int>(soln_arr, N);
@@ -82,7 +82,7 @@ TEST(SIMDSortTests, SIMDSort32BitFloatTest) {
   double start, end;
 
   // Initialization
-  TestUtil::RandGen(rand_arr, N, lo, hi);
+  TestUtil::RandGenFloat<float>(rand_arr, N, lo, hi);
 
   // C++ std::stable_sort
   aligned_init(soln_arr, N);
@@ -146,7 +146,7 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   double start, end;
 
   // Initialization
-  TestUtil::RandGen<int64_t>(rand_arr, N, lo, hi);
+  TestUtil::RandGenInt<int64_t>(rand_arr, N, lo, hi);
 
   // C++ std::stable_sort
   aligned_init<int64_t>(soln_arr, N);
@@ -188,6 +188,69 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   aligned_init<int64_t>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<int64_t> check_arr(rand_arr, rand_arr + N);
+  start = currentSeconds();
+  SIMDSorter::SIMDSort(N, soln_arr);
+  end = currentSeconds();
+  std::sort(check_arr.begin(), check_arr.end());
+  for(int i = 0; i < N; i++) {
+    EXPECT_EQ(check_arr[i], soln_arr[i]);
+  }
+  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete rand_arr;
+  delete soln_arr;
+}
+
+TEST(SIMDSortTests, SIMDSort64BitFloatTest) {
+  int N = 65536;
+  double lo = -10000;
+  double hi = 10000;
+  double *rand_arr;
+  double *soln_arr;
+  double start, end;
+
+  // Initialization
+  TestUtil::RandGenFloat<double>(rand_arr, N, lo, hi);
+
+  // C++ std::stable_sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::stable_sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ std::sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ ips4o::sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ pqd::sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // AVX256 sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  std::vector<double> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
   SIMDSorter::SIMDSort(N, soln_arr);
   end = currentSeconds();
