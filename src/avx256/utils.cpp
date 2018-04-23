@@ -38,13 +38,15 @@ template void AVX256Util::StoreReg<double, __m256d>(const __m256d &r, double *ar
  */
 
 __m256d AVX256Util::Int64ToDoubleReg(const __m256i &repi64) {
-  int64_t temp[4];
+  int64_t* temp;
+  aligned_init(temp, 4);
   StoreReg(repi64, temp);
   return _mm256_setr_pd(temp[0], temp[1], temp[2], temp[3]);
 }
 
 __m256i AVX256Util::DoubleToInt64Reg(const __m256d &rd) {
-  double temp[4];
+  double* temp;
+  aligned_init(temp, 4);
   StoreReg(rd, temp);
   return _mm256_setr_epi64x((int64_t)temp[0], (int64_t)temp[1], (int64_t)temp[2], (int64_t)temp[3]);
 }
@@ -328,8 +330,8 @@ void AVX256Util::IntraRegisterSort8x8(__m256 &a8, __m256 &b8) {
   MinMax8(a4, a4_1, mina, maxa);
   MinMax8(b4, b4_1, minb, maxb);
 
-  auto a2 = _mm256_unpacklo_pd(mina, maxa);
-  auto b2 = _mm256_unpacklo_pd(minb, maxb);
+  auto a2 = (__m256)_mm256_unpacklo_pd((__m256d)mina, (__m256d)maxa);
+  auto b2 = (__m256)_mm256_unpacklo_pd((__m256d)minb, (__m256d)maxb);
 
   // phase 3
   auto a2_1 = _mm256_shuffle_ps(a2, a2, 0xb1);
