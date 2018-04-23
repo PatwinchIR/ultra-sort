@@ -61,7 +61,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<int> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDSorter::SIMDSort(N, soln_arr);
+  AVX256SIMDSorter::SIMDSort(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
   // First perform a correctness check
@@ -125,7 +125,7 @@ TEST(SIMDSortTests, SIMDSort32BitFloatTest) {
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<float> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDSorter::SIMDSort(N, soln_arr);
+  AVX256SIMDSorter::SIMDSort(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
   // First perform a correctness check
@@ -189,7 +189,7 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<int64_t> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDSorter::SIMDSort(N, soln_arr);
+  AVX256SIMDSorter::SIMDSort(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
   for(int i = 0; i < N; i++) {
@@ -252,7 +252,7 @@ TEST(SIMDSortTests, SIMDSort64BitFloatTest) {
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<double> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDSorter::SIMDSort(N, soln_arr);
+  AVX256SIMDSorter::SIMDSort(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
   for(int i = 0; i < N; i++) {
@@ -302,7 +302,7 @@ TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<std::pair<int,int>> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDSorter::SIMDSort32KV(N, soln_arr);
+  AVX256SIMDSorter::SIMDSort32KV(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end(), [](std::pair<int,int> &left, std::pair<int,int> &right) {
     return left.first < right.first;

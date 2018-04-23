@@ -17,10 +17,10 @@ void AVX256SIMDSorter::SIMDSort(size_t N, int64_t *&arr) {
   int BLOCK_SIZE = 16;
   assert(N % BLOCK_SIZE == 0);
   for(int i = 0; i < N; i+=BLOCK_SIZE) {
-    SortUtil::SortBlock16<int64_t,__m256i>(arr, i);
+    AVX256SortUtil::SortBlock16<int64_t,__m256i>(arr, i);
   }
   // Merge sorted runs
-  MergeUtil::MergeRuns4<int64_t,__m256i>(arr, N);
+  AVX256MergeUtil::MergeRuns4<int64_t,__m256i>(arr, N);
 }
 
 void AVX256SIMDSorter::SIMDSort(size_t N, float *&arr) {
@@ -28,10 +28,10 @@ void AVX256SIMDSorter::SIMDSort(size_t N, float *&arr) {
   int BLOCK_SIZE = 64;
   assert(N % BLOCK_SIZE == 0);
   for(int i = 0; i < N; i+=BLOCK_SIZE) {
-    SortUtil::SortBlock64<float,__m256>(arr, i);
+    AVX256SortUtil::SortBlock64<float,__m256>(arr, i);
   }
   // Merge sorted runs
-  MergeUtil::MergeRuns8<float,__m256>(arr, N);
+  AVX256MergeUtil::MergeRuns8<float,__m256>(arr, N);
 }
 
 void AVX256SIMDSorter::SIMDSort(size_t N, double *&arr) {
@@ -39,10 +39,10 @@ void AVX256SIMDSorter::SIMDSort(size_t N, double *&arr) {
   int BLOCK_SIZE = 16;
   assert(N % BLOCK_SIZE == 0);
   for(int i = 0; i < N; i+=BLOCK_SIZE) {
-    SortUtil::SortBlock16<double,__m256d>(arr, i);
+    AVX256SortUtil::SortBlock16<double,__m256d>(arr, i);
   }
   // Merge sorted runs
-  MergeUtil::MergeRuns4<double,__m256d>(arr, N);
+  AVX256MergeUtil::MergeRuns4<double,__m256d>(arr, N);
 }
 
 void AVX256SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {

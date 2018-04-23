@@ -90,7 +90,7 @@ template void AVX256MergeUtil::MergePass8<int,__m256i>(int *&arr, int *buffer, i
 template void AVX256MergeUtil::MergePass8<float,__m256>(float *&arr, float *buffer, int N, int run_size);
 
 template <typename InType, typename RegType>
-void AVX256Util::MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
+void AVX256MergeUtil::MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
   int UNIT_RUN_SIZE=4;
   RegType ra, rb;
   int buffer_offset = 0;
