@@ -169,7 +169,7 @@ TEST(UtilsTest, BitonicSort8x8Float32BitTest) {
 TEST(UtilsTest, BitonicSort4x4Int64BitTest) {
   int64_t *arr;
   aligned_init<int64_t>(arr, 16);
-  TestUtil::RandGenInt<int64_t>(arr, 64, -10, 10);
+  TestUtil::RandGenInt<int64_t>(arr, 16, -10, 10);
   __m256i r[4];
   for(int i = 0; i < 4; i++) {
     AVX256Util::LoadReg(r[i], arr + i*4);
@@ -189,7 +189,7 @@ TEST(UtilsTest, BitonicSort4x4Int64BitTest) {
 TEST(UtilsTest, BitonicSort4x4Float64BitTest) {
   double *arr;
   aligned_init(arr, 16);
-  TestUtil::RandGenFloat<double>(arr, 64, -10, 10);
+  TestUtil::RandGenFloat<double>(arr, 16, -10, 10);
   __m256d r[4];
   for(int i = 0; i < 4; i++) {
     AVX256Util::LoadReg(r[i], arr + i*4);
