@@ -2,7 +2,7 @@
 #include "test_util.h"
 #include "avx256/utils.h"
 
-TEST(UtilsTest, LoadStore32BitTest) {
+TEST(UtilsTest, AVX256LoadStore32BitTest) {
   int *a;
   int *b;
   aligned_init(a, 8);
@@ -22,7 +22,7 @@ TEST(UtilsTest, LoadStore32BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, LoadStore64BitTest) {
+TEST(UtilsTest, AVX256LoadStore64BitTest) {
   int64_t *a;
   int64_t *b;
   aligned_init<int64_t>(a, 4);
@@ -42,7 +42,7 @@ TEST(UtilsTest, LoadStore64BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, MinMax8Int32BitTest) {
+TEST(UtilsTest, AVX256MinMax8Int32BitTest) {
   int *a;
   int *b;
   aligned_init(a, 8);
@@ -62,7 +62,7 @@ TEST(UtilsTest, MinMax8Int32BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, MinMax8Float32BitTest) {
+TEST(UtilsTest, AVX256MinMax8Float32BitTest) {
   float *a;
   float *b;
   aligned_init(a, 8);
@@ -84,7 +84,7 @@ TEST(UtilsTest, MinMax8Float32BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, MinMax4Int64BitTest) {
+TEST(UtilsTest, AVX256MinMax4Int64BitTest) {
   int64_t *a;
   int64_t *b;
   aligned_init<int64_t>(a, 4);
@@ -104,7 +104,7 @@ TEST(UtilsTest, MinMax4Int64BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, MinMax4Float64BitTest) {
+TEST(UtilsTest, AVX256MinMax4Float64BitTest) {
   double *a;
   double *b;
   aligned_init<double>(a, 4);
@@ -124,7 +124,7 @@ TEST(UtilsTest, MinMax4Float64BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, BitonicSort8x8Int32BitTest) {
+TEST(UtilsTest, AVX256BitonicSort8x8Int32BitTest) {
   int *arr;
   aligned_init(arr, 64);
   TestUtil::RandGenInt(arr, 64, -10, 10);
@@ -145,7 +145,7 @@ TEST(UtilsTest, BitonicSort8x8Int32BitTest) {
   delete[](arr);
 }
 
-TEST(UtilsTest, BitonicSort8x8Float32BitTest) {
+TEST(UtilsTest, AVX256BitonicSort8x8Float32BitTest) {
   float *arr;
   aligned_init(arr, 64);
   TestUtil::RandGenFloat<float>(arr, 64, -10, 10);
@@ -166,7 +166,7 @@ TEST(UtilsTest, BitonicSort8x8Float32BitTest) {
   delete[](arr);
 }
 
-TEST(UtilsTest, BitonicSort4x4Int64BitTest) {
+TEST(UtilsTest, AVX256BitonicSort4x4Int64BitTest) {
   int64_t *arr;
   aligned_init<int64_t>(arr, 16);
   TestUtil::RandGenInt<int64_t>(arr, 16, -10, 10);
@@ -186,7 +186,7 @@ TEST(UtilsTest, BitonicSort4x4Int64BitTest) {
   delete[](arr);
 }
 
-TEST(UtilsTest, BitonicSort4x4Float64BitTest) {
+TEST(UtilsTest, AVX256BitonicSort4x4Float64BitTest) {
   double *arr;
   aligned_init(arr, 16);
   TestUtil::RandGenFloat<double>(arr, 16, -10, 10);
@@ -206,7 +206,7 @@ TEST(UtilsTest, BitonicSort4x4Float64BitTest) {
   delete[](arr);
 }
 
-TEST(UtilsTest, BitonicMerge8Int32BitTest) {
+TEST(UtilsTest, AVX256BitonicMerge8Int32BitTest) {
   int *a;
   int *b;
   aligned_init<int>(a, 8);
@@ -232,7 +232,7 @@ TEST(UtilsTest, BitonicMerge8Int32BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, BitonicMerge8Float32BitTest) {
+TEST(UtilsTest, AVX256BitonicMerge8Float32BitTest) {
   float *a;
   float *b;
   aligned_init(a, 8);
@@ -258,7 +258,7 @@ TEST(UtilsTest, BitonicMerge8Float32BitTest) {
   delete(b);
 }
 
-TEST(UtilsTest, BitonicMerge4Int64BitTest) {
+TEST(UtilsTest, AVX256BitonicMerge4Int64BitTest) {
   int64_t *a;
   int64_t *b;
   aligned_init<int64_t>(a, 8);
@@ -284,7 +284,7 @@ TEST(UtilsTest, BitonicMerge4Int64BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, BitonicMerge4Float64BitTest) {
+TEST(UtilsTest, AVX256BitonicMerge4Float64BitTest) {
   double *a;
   double *b;
   aligned_init(a, 8);

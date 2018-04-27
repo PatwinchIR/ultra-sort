@@ -7,7 +7,7 @@
 #include "ips4o.hpp"
 #include "pdqsort.h"
 
-TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
+TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
   int N = 65536;
   int lo = -10000;
   int hi = 10000;
@@ -71,7 +71,7 @@ TEST(SIMDSortTests, SIMDSort32BitIntegerTest) {
   delete soln_arr;
 }
 
-TEST(SIMDSortTests, SIMDSort32BitFloatTest) {
+TEST(SIMDSortTests, AVX512SIMDSort32BitFloatTest) {
   int N = 65536;
   float lo = -10000;
   float hi = 10000;
@@ -135,7 +135,7 @@ TEST(SIMDSortTests, SIMDSort32BitFloatTest) {
   delete soln_arr;
 }
 
-TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
+TEST(SIMDSortTests, AVX512SIMDSort64BitIntegerTest) {
   int N = 65536;
   int lo = -10000;
   int hi = 10000;
@@ -198,7 +198,7 @@ TEST(SIMDSortTests, SIMDSort64BitIntegerTest) {
   delete soln_arr;
 }
 
-TEST(SIMDSortTests, SIMDSort64BitFloatTest) {
+TEST(SIMDSortTests, AVX512SIMDSort64BitFloatTest) {
   int N = 65536;
   double lo = -10000;
   double hi = 10000;
@@ -261,7 +261,7 @@ TEST(SIMDSortTests, SIMDSort64BitFloatTest) {
   delete soln_arr;
 }
 
-TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
+TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntegerTest) {
   int N = 65536;
   int lo = -10;
   int hi = 10;
