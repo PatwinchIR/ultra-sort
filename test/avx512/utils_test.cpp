@@ -264,54 +264,54 @@ TEST(UtilsTest, AVX512BitonicMerge16Float32BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, AVX512BitonicMerge8Int64BitTest) {
-  int64_t *a;
-  int64_t *b;
-  aligned_init<int64_t>(a, 8);
-  aligned_init<int64_t>(b, 8);
-  TestUtil::PopulateSeqArray<int64_t>(a, 0, 8, 2);
-  TestUtil::PopulateSeqArray<int64_t>(b, 1, 8, 2);
-  __m512i ra, rb;
-  AVX512Util::LoadReg(ra, a);
-  AVX512Util::LoadReg(rb, b);
-  AVX512Util::BitonicMerge8(ra, rb);
-  AVX512Util::StoreReg(ra, a);
-  AVX512Util::StoreReg(rb, b);
-  int64_t ab[8];
-  for(int i = 0; i < 8; i++) {
-    if(i < 4) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 4];
-    }
-    EXPECT_EQ(ab[i], i);
-  }
-  delete[](a);
-  delete[](b);
-}
+//TEST(UtilsTest, AVX512BitonicMerge8Int64BitTest) {
+//  int64_t *a;
+//  int64_t *b;
+//  aligned_init<int64_t>(a, 8);
+//  aligned_init<int64_t>(b, 8);
+//  TestUtil::PopulateSeqArray<int64_t>(a, 0, 8, 2);
+//  TestUtil::PopulateSeqArray<int64_t>(b, 1, 8, 2);
+//  __m512i ra, rb;
+//  AVX512Util::LoadReg(ra, a);
+//  AVX512Util::LoadReg(rb, b);
+//  AVX512Util::BitonicMerge8(ra, rb);
+//  AVX512Util::StoreReg(ra, a);
+//  AVX512Util::StoreReg(rb, b);
+//  int64_t ab[8];
+//  for(int i = 0; i < 8; i++) {
+//    if(i < 4) {
+//      ab[i] = a[i];
+//    } else {
+//      ab[i] = b[i - 4];
+//    }
+//    EXPECT_EQ(ab[i], i);
+//  }
+//  delete[](a);
+//  delete[](b);
+//}
 
-TEST(UtilsTest, AVX512BitonicMerge8Float64BitTest) {
-  double *a;
-  double *b;
-  aligned_init(a, 8);
-  aligned_init(b, 8);
-  TestUtil::PopulateSeqArray(a, 0, 8, 2);
-  TestUtil::PopulateSeqArray(b, 1, 8, 2);
-  __m512d ra, rb;
-  AVX512Util::LoadReg(ra, a);
-  AVX512Util::LoadReg(rb, b);
-  AVX512Util::BitonicMerge8(ra, rb);
-  AVX512Util::StoreReg(ra, a);
-  AVX512Util::StoreReg(rb, b);
-  double ab[8];
-  for(int i = 0; i < 8; i++) {
-    if(i < 4) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 4];
-    }
-    EXPECT_EQ(ab[i], i);
-  }
-  delete[](a);
-  delete[](b);
-}
+//TEST(UtilsTest, AVX512BitonicMerge8Float64BitTest) {
+//  double *a;
+//  double *b;
+//  aligned_init(a, 8);
+//  aligned_init(b, 8);
+//  TestUtil::PopulateSeqArray(a, 0, 8, 2);
+//  TestUtil::PopulateSeqArray(b, 1, 8, 2);
+//  __m512d ra, rb;
+//  AVX512Util::LoadReg(ra, a);
+//  AVX512Util::LoadReg(rb, b);
+//  AVX512Util::BitonicMerge8(ra, rb);
+//  AVX512Util::StoreReg(ra, a);
+//  AVX512Util::StoreReg(rb, b);
+//  double ab[8];
+//  for(int i = 0; i < 8; i++) {
+//    if(i < 4) {
+//      ab[i] = a[i];
+//    } else {
+//      ab[i] = b[i - 4];
+//    }
+//    EXPECT_EQ(ab[i], i);
+//  }
+//  delete[](a);
+//  delete[](b);
+//}
