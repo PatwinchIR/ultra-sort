@@ -52,7 +52,7 @@ TEST(UtilsTest, AVX512MinMax16Int32BitTest) {
   __m512i ra, rb;
   AVX512Util::LoadReg(ra, a);
   AVX512Util::LoadReg(rb, b);
-  AVX512Util::MinMax8(ra, rb);
+  AVX512Util::MinMax16(ra, rb);
   AVX512Util::StoreReg(ra, a);
   AVX512Util::StoreReg(rb, b);
   for(int i = 0; i < 16; i++) {
