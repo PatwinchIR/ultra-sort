@@ -247,7 +247,7 @@ void AVX512Util::Transpose8x8(__m512d &row0,
 //  row7 = _mm512_permute2f128_ps(__tt3, __tt7, 0x31);
 }
 
-void Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
+void AVX512Util::Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
                     __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7,
                     __m512i &row8, __m512i &row9, __m512i &row10, __m512i &row11,
                     __m512i &row12, __m512i &row13, __m512i &row14, __m512i &row15) {
@@ -322,7 +322,7 @@ void Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
   row15 = _mm512_shuffle_i32x4(t7, tf, 0xdd); //  15  31  47  63  79  96 111 127 ... 255
 }
 
-void Transpose16x16(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
+void AVX512Util::Transpose16x16(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
                     __m512 &row4, __m512 &row5, __m512 &row6, __m512 &row7,
                     __m512 &row8, __m512 &row9, __m512 &row10, __m512 &row11,
                     __m512 &row12, __m512 &row13, __m512 &row14, __m512 &row15) {
