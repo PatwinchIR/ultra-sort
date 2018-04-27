@@ -119,7 +119,7 @@ void AVX512Util::BitonicSort8x8(T &r0,
 
 // 64 bit ints, doubles
 template void AVX512Util::BitonicSort8x8<__m512i>(__m512i&, __m512i&, __m512i&, __m512i&, __m512i&, __m512i&, __m512i&, __m512i&);
-template void AVX512Util::BitonicSort8x8<__m512>(__m512&, __m512&, __m512&, __m512&, __m512&, __m512&, __m512&, __m512&);
+template void AVX512Util::BitonicSort8x8<__m512d>(__m512d&, __m512d&, __m512d&, __m512d&, __m512d&, __m512d&, __m512d&, __m512d&);
 
 template <typename T>
 void AVX512Util::BitonicSort16x16(T &r0, T &r1, T &r2, T &r3,
@@ -159,10 +159,10 @@ template void AVX512Util::BitonicSort16x16<__m512i>(__m512i&, __m512i&, __m512i&
                                                     __m512i&, __m512i&, __m512i&, __m512i&,
                                                     __m512i&, __m512i&, __m512i&, __m512i&,
                                                     __m512i&, __m512i&, __m512i&, __m512i&);
-template void AVX512Util::BitonicSort16x16<__m512d>(__m512d&, __m512d&, __m512d&, __m512d&,
-                                                    __m512d&, __m512d&, __m512d&, __m512d&,
-                                                    __m512d&, __m512d&, __m512d&, __m512d&,
-                                                    __m512d&, __m512d&, __m512d&, __m512d&);
+template void AVX512Util::BitonicSort16x16<__m512>(__m512&, __m512&, __m512&, __m512&,
+                                                   __m512&, __m512&, __m512&, __m512&,
+                                                   __m512&, __m512&, __m512&, __m512&,
+                                                   __m512&, __m512&, __m512&, __m512&);
 
 /**
  * Bitonic Transpose:
