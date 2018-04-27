@@ -245,7 +245,7 @@ TEST(UtilsTest, AVX512BitonicMerge16Float32BitTest) {
   aligned_init(b, 16);
   TestUtil::PopulateSeqArray(a, 0, 32, 2);
   TestUtil::PopulateSeqArray(b, 1, 32, 2);
-  __m512i ra, rb;
+  __m512 ra, rb;
   AVX512Util::LoadReg(ra, a);
   AVX512Util::LoadReg(rb, b);
   AVX512Util::BitonicMerge16(ra, rb);
