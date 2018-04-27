@@ -124,6 +124,19 @@ TEST(UtilsTest, AVX512MinMax8Float64BitTest) {
   delete[](b);
 }
 
+TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
+  int *arr;
+  aligned_init(arr, 256);
+  TestUtil::RandGenInt(arr, 256, -10, 10);
+  __m512i r[16];
+  AVX512SortUtil::SortBlock256<int, __m512i>(arr, 0);
+  for(int i = 0; i < 16; i++) {
+    for(int j = 1; j < 16; j++) {
+      EXPECT_LE(arr[j - 1], arr[j]);
+    }
+  }
+}
+
 TEST(UtilsTest, AVX512BitonicSort16x16Int32BitTest) {
   int *arr;
   aligned_init(arr, 256);
