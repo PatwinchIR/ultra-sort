@@ -19,12 +19,16 @@ class AVX512Util{
   // Min/Max
   static void MinMax16(__m512i &a, __m512i &b);
   static void MinMax16(const __m512i& a, const __m512i& b,
-                      __m512i& minab, __m512i& maxab);
+                       __m512i& minab, __m512i& maxab);
   static void MinMax16(__m512 &a, __m512 &b);
   static void MinMax16(const __m512& a, const __m512& b,
-                      __m512& minab, __m512& maxab);
+                       __m512& minab, __m512& maxab);
   static void MinMax8(__m512i &a, __m512i &b);
+  static void MinMax8(const __m512i &a, const __m512i &b,
+                         __m512i& minab, __m512i& maxab);
   static void MinMax8(__m512d &a, __m512d &b);
+  static void MinMax8(const __m512d &a, const __m512d &b,
+                      __m512d& minab, __m512d& maxab);
 
   // BitonicSort(Sorting Networks)
   template <typename T>
@@ -51,9 +55,9 @@ class AVX512Util{
                              __m512 &row12, __m512 &row13, __m512 &row14, __m512 &row15);
 
   static __m512i Reverse8(__m512i& v);
-  static __m512i Reverse8(__m512d& v);
+  static __m512d Reverse8(__m512d& v);
   static __m512i Reverse16(__m512i& v);
-  static __m512i Reverse16(__m512& v);
+  static __m512 Reverse16(__m512& v);
 
   static void IntraRegisterSort8x8(__m512i& a8, __m512i& b8);
   static void IntraRegisterSort8x8(__m512d& a8, __m512d& b8);

@@ -35,36 +35,51 @@ template void AVX512Util::StoreReg<double, __m512d>(const __m512d &r, double *ar
  */
 
 void AVX512Util::MinMax16(__m512i &a, __m512i &b) {
-    __m512i c = a;
+  __m512i c = a;
   a = _mm512_min_epi32(a, b);
   b = _mm512_max_epi32(c, b);
 }
 
 void AVX512Util::MinMax16(const __m512i& a, const __m512i& b,
-                    __m512i& minab, __m512i& maxab) {
+                          __m512i& minab, __m512i& maxab) {
   minab = _mm512_min_epi32(a, b);
   maxab = _mm512_max_epi32(a, b);
 }
 
 void AVX512Util::MinMax16(__m512 &a, __m512 &b) {
+  __m512 c = a;
   a = _mm512_min_ps(a, b);
   b = _mm512_max_ps(c, b);
 }
 
 void AVX512Util::MinMax16(const __m512& a, const __m512& b,
-                    __m512& minab, __m512& maxab) {
+                          __m512& minab, __m512& maxab) {
   minab = _mm512_min_ps(a, b);
   maxab = _mm512_max_ps(a, b);
 }
 
 void AVX512Util::MinMax8(__m512i &a, __m512i &b) {
+  __m512i c = a;
   a = _mm512_min_epi64(a, b);
   b = _mm512_max_epi64(c, b);
 }
 
+void AVX512Util::MinMax8(const __m512i &a, const __m512i &b,
+                         __m512i& minab, __m512i& maxab) {
+  minab = _mm512_min_epi64(a, b);
+  maxab = _mm512_max_epi64(c, b);
+}
+
 void AVX512Util::MinMax8(__m512d &a, __m512d &b) {
+  __m512d c = a;
   a = _mm512_min_pd(a, b);
   b = _mm512_max_pd(c, b);
+}
+
+void AVX512Util::MinMax8(const __m512d &a, const __m512d &b,
+                         __m512d& minab, __m512d& maxab) {
+  minab = _mm512_min_pd(a, b);
+  maxab = _mm512_max_pd(c, b);
 }
 
 /**
@@ -193,14 +208,14 @@ void AVX512Util::Transpose8x8(__m512i &row0,
 //  row7 = (__m512i)_mm512_permute2f128_ps(__tt3, __tt7, 0x31);
 }
 
-void AVX512Util::Transpose8x8(__m512 &row0,
-                              __m512 &row1,
-                              __m512 &row2,
-                              __m512 &row3,
-                              __m512 &row4,
-                              __m512 &row5,
-                              __m512 &row6,
-                              __m512 &row7) {
+void AVX512Util::Transpose8x8(__m512d &row0,
+                              __m512d &row1,
+                              __m512d &row2,
+                              __m512d &row3,
+                              __m512d &row4,
+                              __m512d &row5,
+                              __m512d &row6,
+                              __m512d &row7) {
   // TODO: Convert
 //  __m512 __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
 //  __m512 __tt0, __tt1, __tt2, __tt3, __tt4, __tt5, __tt6, __tt7;
@@ -233,9 +248,9 @@ void AVX512Util::Transpose8x8(__m512 &row0,
 }
 
 void Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
-                             __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7,
-                             __m512i &rowa, __m512i &row9, __m512i &row10, __m512i &row11,
-                             __m512i &row12, __m512i &row13, __m512i &row14, __m512i &row15) {
+                    __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7,
+                    __m512i &row8, __m512i &row9, __m512i &row10, __m512i &row11,
+                    __m512i &row12, __m512i &row13, __m512i &row14, __m512i &row15) {
   __m512i t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, ta, tb, tc, td, te, tf;
   __m512i tt0, tt1, tt2, tt3, tt4, tt5, tt6, tt7, tt8, tt9, tta, ttb, ttc, ttd, tte, ttf;
   t0 = _mm512_unpacklo_epi32(row0,row1); //   0  16   1  17   4  20   5  21   8  24   9  25  12  28  13  29
@@ -308,44 +323,45 @@ void Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
 }
 
 void Transpose16x16(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
-                             __m512 &row4, __m512 &row5, __m512 &row6, __m512 &row7,
-                             __m512 &row8, __m512 &row9, __m512 &row10, __m512 &row11,
-                             __m512 &row12, __m512 &row13, __m512 &row14, __m512 &row15) {
+                    __m512 &row4, __m512 &row5, __m512 &row6, __m512 &row7,
+                    __m512 &row8, __m512 &row9, __m512 &row10, __m512 &row11,
+                    __m512 &row12, __m512 &row13, __m512 &row14, __m512 &row15) {
   __m512 t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, ta, tb, tc, td, te, tf;
   __m512 tt0, tt1, tt2, tt3, tt4, tt5, tt6, tt7, tt8, tt9, tta, ttb, ttc, ttd, tte, ttf;
-  t0 = _mm512_unpacklo_ps(row0,row1); //   0  16   1  17   4  20   5  21   8  24   9  25  12  28  13  29
-  t1 = _mm512_unpackhi_ps(row0,row1); //   2  18   3  19   6  22   7  23  10  26  11  27  14  30  15  31
-  t2 = _mm512_unpacklo_ps(row2,row3); //  32  48  33  49 ...
-  t3 = _mm512_unpackhi_ps(row2,row3); //  34  50  35  51 ...
-  t4 = _mm512_unpacklo_ps(row4,row5); //  64  80  65  81 ...
-  t5 = _mm512_unpackhi_ps(row4,row5); //  66  82  67  83 ...
-  t6 = _mm512_unpacklo_ps(row6,row7); //  96 112  97 113 ...
-  t7 = _mm512_unpackhi_ps(row6,row7); //  98 114  99 115 ...
-  t8 = _mm512_unpacklo_ps(row8,row9); // 128 ...
-  t9 = _mm512_unpackhi_ps(row8,row9); // 130 ...
-  ta = _mm512_unpacklo_ps(row10,row11); // 160 ...
-  tb = _mm512_unpackhi_ps(row10,row11); // 162 ...
-  tc = _mm512_unpacklo_ps(row12,row13); // 196 ...
-  td = _mm512_unpackhi_ps(row12,row13); // 198 ...
-  te = _mm512_unpacklo_ps(row14,row15); // 228 ...
-  tf = _mm512_unpackhi_ps(row14,row15); // 230 ...
+  // Note: The unpack section is converted to integer to void compiler error on Dev5.
+  t0 = _mm512_unpacklo_epi32(row0,row1); //   0  16   1  17   4  20   5  21   8  24   9  25  12  28  13  29
+  t1 = _mm512_unpackhi_epi32(row0,row1); //   2  18   3  19   6  22   7  23  10  26  11  27  14  30  15  31
+  t2 = _mm512_unpacklo_epi32(row2,row3); //  32  48  33  49 ...
+  t3 = _mm512_unpackhi_epi32(row2,row3); //  34  50  35  51 ...
+  t4 = _mm512_unpacklo_epi32(row4,row5); //  64  80  65  81 ...
+  t5 = _mm512_unpackhi_epi32(row4,row5); //  66  82  67  83 ...
+  t6 = _mm512_unpacklo_epi32(row6,row7); //  96 112  97 113 ...
+  t7 = _mm512_unpackhi_epi32(row6,row7); //  98 114  99 115 ...
+  t8 = _mm512_unpacklo_epi32(row8,row9); // 128 ...
+  t9 = _mm512_unpackhi_epi32(row8,row9); // 130 ...
+  ta = _mm512_unpacklo_epi32(row10,row11); // 160 ...
+  tb = _mm512_unpackhi_epi32(row10,row11); // 162 ...
+  tc = _mm512_unpacklo_epi32(row12,row13); // 196 ...
+  td = _mm512_unpackhi_epi32(row12,row13); // 198 ...
+  te = _mm512_unpacklo_epi32(row14,row15); // 228 ...
+  tf = _mm512_unpackhi_epi32(row14,row15); // 230 ...
 
-  tt0 = _mm512_unpacklo_pd(t0,t2); //   0  16  32  48 ...
-  tt1 = _mm512_unpackhi_pd(t0,t2); //   1  17  33  49 ...
-  tt2 = _mm512_unpacklo_pd(t1,t3); //   2  18  34  49 ...
-  tt3 = _mm512_unpackhi_pd(t1,t3); //   3  19  35  51 ...
-  tt4 = _mm512_unpacklo_pd(t4,t6); //  64  80  96 112 ...
-  tt5 = _mm512_unpackhi_pd(t4,t6); //  65  81  97 114 ...
-  tt6 = _mm512_unpacklo_pd(t5,t7); //  66  82  98 113 ...
-  tt7 = _mm512_unpackhi_pd(t5,t7); //  67  83  99 115 ...
-  tt8 = _mm512_unpacklo_pd(t8,ta); // 128 144 160 176 ...
-  tt9 = _mm512_unpackhi_pd(t8,ta); // 129 145 161 178 ...
-  tta = _mm512_unpacklo_pd(t9,tb); // 130 146 162 177 ...
-  ttb = _mm512_unpackhi_pd(t9,tb); // 131 147 163 179 ...
-  ttc = _mm512_unpacklo_pd(tc,te); // 192 208 228 240 ...
-  ttd = _mm512_unpackhi_pd(tc,te); // 193 209 229 241 ...
-  tte = _mm512_unpacklo_pd(td,tf); // 194 210 230 242 ...
-  ttf = _mm512_unpackhi_pd(td,tf); // 195 211 231 243 ...
+  tt0 = _mm512_unpacklo_epi64(t0,t2); //   0  16  32  48 ...
+  tt1 = _mm512_unpackhi_epi64(t0,t2); //   1  17  33  49 ...
+  tt2 = _mm512_unpacklo_epi64(t1,t3); //   2  18  34  49 ...
+  tt3 = _mm512_unpackhi_epi64(t1,t3); //   3  19  35  51 ...
+  tt4 = _mm512_unpacklo_epi64(t4,t6); //  64  80  96 112 ...
+  tt5 = _mm512_unpackhi_epi64(t4,t6); //  65  81  97 114 ...
+  tt6 = _mm512_unpacklo_epi64(t5,t7); //  66  82  98 113 ...
+  tt7 = _mm512_unpackhi_epi64(t5,t7); //  67  83  99 115 ...
+  tt8 = _mm512_unpacklo_epi64(t8,ta); // 128 144 160 176 ...
+  tt9 = _mm512_unpackhi_epi64(t8,ta); // 129 145 161 178 ...
+  tta = _mm512_unpacklo_epi64(t9,tb); // 130 146 162 177 ...
+  ttb = _mm512_unpackhi_epi64(t9,tb); // 131 147 163 179 ...
+  ttc = _mm512_unpacklo_epi64(tc,te); // 192 208 228 240 ...
+  ttd = _mm512_unpackhi_epi64(tc,te); // 193 209 229 241 ...
+  tte = _mm512_unpacklo_epi64(td,tf); // 194 210 230 242 ...
+  ttf = _mm512_unpackhi_epi64(td,tf); // 195 211 231 243 ...
 
   t0 = _mm512_shuffle_f32x4(tt0, tt4, 0x88); //   0  16  32  48   8  24  40  56  64  80  96  112 ...
   t1 = _mm512_shuffle_f32x4(tt1, tt5, 0x88); //   1  17  33  49 ...
@@ -386,7 +402,7 @@ __m512i AVX512Util::Reverse8(__m512i &v) {
   return _mm512_permutexvar_epi64(v, _mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0));
 }
 
-__m512 AVX512Util::Reverse8(__m512d &v) {
+__m512d AVX512Util::Reverse8(__m512d &v) {
   return _mm512_permutexvar_pd(v, _mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0));
 }
 
@@ -405,8 +421,8 @@ void AVX512Util::IntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
   __m512i mina, maxa, minb, maxb;
   // phase 1
   MinMax8(a8, b8);
-  auto a8_1 = _mm512_permutexvar_epi64(a8, _mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4));
-  auto b8_1 = _mm512_permutexvar_epi64(b8, _mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4));
+  auto a8_1 = _mm512_permutexvar_epi64(_mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4), a8);
+  auto b8_1 = _mm512_permutexvar_epi64(_mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4), b8);
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
@@ -437,11 +453,11 @@ void AVX512Util::IntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
 }
 
 void AVX512Util::IntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
-  __m512 mina, maxa, minb, maxb;
+  __m512d mina, maxa, minb, maxb;
   // phase 1
   MinMax8(a8, b8);
-  auto a8_1 = _mm512_permutexvar_pd(a8, _mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4));
-  auto b8_1 = _mm512_permutexvar_pd(b8, _mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4));
+  auto a8_1 = _mm512_permutexvar_pd(_mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4), a8);
+  auto b8_1 = _mm512_permutexvar_pd(_mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4), b8);
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
@@ -495,8 +511,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   auto a4 = _mm512_mask_blend_epi32(_mm512_int2mask(0xf0f0), mina, maxa);
   auto b4 = _mm512_mask_blend_epi32(_mm512_int2mask(0xf0f0), minb, maxb);
 
-  auto a4_1 = _mm512_shuffle_epi32(a4, a4, 0x4e);
-  auto b4_1 = _mm512_shuffle_epi32(b4, b4, 0x4e);
+  auto a4_1 = _mm512_shuffle_epi32(a4, 0x4e);
+  auto b4_1 = _mm512_shuffle_epi32(b4, 0x4e);
 
   MinMax16(a4, a4_1, mina, maxa);
   MinMax16(b4, b4_1, minb, maxb);
@@ -505,8 +521,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   auto a2 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), mina, maxa);
   auto b2 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), minb, maxb);
 
-  auto a2_1 = _mm512_shuffle_epi32(a2, a2, 0xb1);
-  auto b2_1 = _mm512_shuffle_epi32(b2, b2, 0xb1);
+  auto a2_1 = _mm512_shuffle_epi32(a2, 0xb1);
+  auto b2_1 = _mm512_shuffle_epi32(b2, 0xb1);
 
   a16 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), a2, a2_1);
   b16 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), b2, b2_1);
@@ -536,8 +552,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
   auto a4 = _mm512_mask_blend_ps(_mm512_int2mask(0xf0f0), mina, maxa);
   auto b4 = _mm512_mask_blend_ps(_mm512_int2mask(0xf0f0), minb, maxb);
 
-  auto a4_1 = _mm512_shuffle_ps(a4, a4, 0x4e);
-  auto b4_1 = _mm512_shuffle_ps(b4, b4, 0x4e);
+  auto a4_1 = _mm512_shuffle_ps(a4, 0x4e);
+  auto b4_1 = _mm512_shuffle_ps(b4, 0x4e);
 
   MinMax16(a4, a4_1, mina, maxa);
   MinMax16(b4, b4_1, minb, maxb);
@@ -546,8 +562,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
   auto a2 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), mina, maxa);
   auto b2 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), minb, maxb);
 
-  auto a2_1 = _mm512_shuffle_ps(a2, a2, 0xb1);
-  auto b2_1 = _mm512_shuffle_ps(b2, b2, 0xb1);
+  auto a2_1 = _mm512_shuffle_ps(a2, 0xb1);
+  auto b2_1 = _mm512_shuffle_ps(b2, 0xb1);
 
   a16 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), a2, a2_1);
   b16 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), b2, b2_1);
