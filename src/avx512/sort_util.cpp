@@ -83,6 +83,7 @@ void AVX512SortUtil::SortBlock64(InType *&arr, int offset) {
 }
 
 template void AVX512SortUtil::SortBlock64<int64_t, __m512i>(int64_t *&arr, int offset);
+template void AVX512SortUtil::SortBlock64<double, __m512d>(double *&arr, int offset);
 
 #endif
 
