@@ -88,7 +88,7 @@ template void AVX512MergeUtil::MergePass16<int,__m512i>(int *&arr, int *buffer, 
 template void AVX512MergeUtil::MergePass16<float,__m512>(float *&arr, float *buffer, int N, int run_size);
 
 template <typename InType, typename RegType>
-void MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
+void AVX512MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
   int UNIT_RUN_SIZE=8;
   RegType ra, rb;
   int buffer_offset = 0;
