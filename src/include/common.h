@@ -10,20 +10,13 @@
  * Common definitions
  */
 
-#define SIMD_WIDTH 256
 
-#if SIMD_WIDTH == 256
 #if __AVX2__
 #define AVX2
-#else
-#error "AVX2 not available on this platform"
 #endif
-#elif SIMD_WIDTH == 512
+
 #if __AVX512F__
 #define AVX512
-#else
-#error "AVX512 not available on this platform"
-#endif
 #endif
 
 /**

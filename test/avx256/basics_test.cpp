@@ -111,18 +111,21 @@ TEST(BasicsTest, AVX256BlendTest) {
   delete c;
 }
 
-TEST(BasicsTest, AVX256TestBed) {
-  int *c;
-  aligned_init<int>(c, 8);
-  __m256i ra, rb, rc;
+TEST(BasicsTest, AVX256MinMaxKV) {
+  // Register-type input
+  __m256i ra, rb;
   // need to set in reverse order since Intel's Little Endian arch
   // low ---------> hi           |
-  ra = _mm256_setr_epi32(0, 2, 4, 6, 8, 10, 12, 14);
-  rb = _mm256_setr_epi32(1, 3, 5, 7, 9, 11, 13, 15);
-  rc = _mm256_shuffle_epi32(ra, 0x4e);
-  // 01 00 11 10 => 10 11 00 01
-  // 4, 6, 0, 2, 12, 14, 8, 10
-  AVX256Util::StoreReg(rc, c);
-//  print_arr<int>(c, 0, 8, "rc: ");
-  delete(c);
+  // (K, V) pairs, first num is K, then V. We try to min/max by K
+  ra = _mm256_setr_epi32(0, 2, 5, 8, 8, 10, 13, 15);
+  rb = _mm256_setr_epi32(1, 3, 4, 10, 9, 11, 12, 14);
+  // Register-type mask
+  // rc:0, 0, -1, -1, 0, 0, -1, -1,
+  auto rc = _mm256_permutevar8x32_epi32(_mm256_cmpgt_epi32(ra, rb), _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6));
+  // 0, 0, 5, 8, 0, 0, 13, 15,
+  auto rabmaxa = _mm256_and_si256(rc, ra);
+  auto rabmaxb = _mm256_andnot_si256(rc, rb);
+  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
+//  rab = _mm256_andnot_si256(rab, rb);
+//  print_arr((int*)(&rabmax), 0, 8, "rabmin: ");
 }
