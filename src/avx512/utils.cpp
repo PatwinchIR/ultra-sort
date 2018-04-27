@@ -399,21 +399,21 @@ void Transpose16x16(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
 }
 
 __m512i AVX512Util::Reverse8(__m512i &v) {
-  return _mm512_permutexvar_epi64(v, _mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0));
+  return _mm512_permutexvar_epi64(_mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0), v);
 }
 
 __m512d AVX512Util::Reverse8(__m512d &v) {
-  return _mm512_permutexvar_pd(v, _mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0));
+  return _mm512_permutexvar_pd(_mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0), v);
 }
 
 __m512i AVX512Util::Reverse16(__m512i &v) {
-  return _mm512_permutexvar_epi32(v, _mm512_setr_epi32(15, 14, 13, 12, 11, 10, 9, 8, 
-                                                        7, 6, 5, 4, 3, 2, 1, 0));
+  return _mm512_permutexvar_epi32(_mm512_setr_epi32(15, 14, 13, 12, 11, 10, 9, 8,
+                                                    7, 6, 5, 4, 3, 2, 1, 0), v);
 }
 
 __m512d AVX512Util::Reverse16(__m512 &v) {
-  return _mm512_permutexvar_ps(v, _mm512_setr_epi32(15, 14, 13, 12, 11, 10, 9, 8, 
-                                                        7, 6, 5, 4, 3, 2, 1, 0));
+  return _mm512_permutexvar_ps(_mm512_setr_epi32(15, 14, 13, 12, 11, 10, 9, 8,
+                                                 7, 6, 5, 4, 3, 2, 1, 0), v);
 }
 
 
