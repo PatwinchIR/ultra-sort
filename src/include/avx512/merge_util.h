@@ -8,13 +8,13 @@
 class AVX512MergeUtil{
  public:
   template <typename InType, typename RegType>
-  static void MergeRuns16(int *&arr, int N);
+  static void MergeRuns16(InType *&arr, int N);
   template <typename InType, typename RegType>
-  static void MergeRuns8(int64_t *&arr, int N);
+  static void MergeRuns8(InType *&arr, int N);
   template <typename InType, typename RegType>
-  static void MergePass16(int *&arr, int *buffer, int N, int run_size);
+  static void MergePass16(InType *&arr, InType *buffer, int N, int run_size);
   template <typename InType, typename RegType>
-  static void MergePass8(int64_t *&arr, int64_t *buffer, int N, int run_size);
+  static void MergePass8(InType *&arr, InType *buffer, int N, int run_size);
 };
 
 #endif
