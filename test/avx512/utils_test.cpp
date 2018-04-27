@@ -74,7 +74,7 @@ TEST(UtilsTest, MinMax16Float32BitTest) {
   __m512 ra, rb;
   AVX512Util::LoadReg(ra, a);
   AVX512Util::LoadReg(rb, b);
-  AVX512Util::MinMax8(ra, rb);
+  AVX512Util::MinMax16(ra, rb);
   AVX512Util::StoreReg(ra, a);
   AVX512Util::StoreReg(rb, b);
   for(int i = 0; i < 16; i++) {
@@ -94,7 +94,7 @@ TEST(UtilsTest, MinMax8Int64BitTest) {
   __m512i ra, rb;
   AVX512Util::LoadReg(ra, a);
   AVX512Util::LoadReg(rb, b);
-  AVX512Util::MinMax4(ra, rb);
+  AVX512Util::MinMax8(ra, rb);
   AVX512Util::StoreReg(ra, a);
   AVX512Util::StoreReg(rb, b);
   for(int i = 0; i < 8; i++) {
@@ -114,7 +114,7 @@ TEST(UtilsTest, MinMax8Float64BitTest) {
   __m512d ra, rb;
   AVX512Util::LoadReg(ra, a);
   AVX512Util::LoadReg(rb, b);
-  AVX512Util::MinMax4(ra, rb);
+  AVX512Util::MinMax8(ra, rb);
   AVX512Util::StoreReg(ra, a);
   AVX512Util::StoreReg(rb, b);
   for(int i = 0; i < 8; i++) {
@@ -238,7 +238,7 @@ TEST(UtilsTest, BitonicMerge16Int32BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, BitonicMerge16Int32BitTest) {
+TEST(UtilsTest, BitonicMerge16Float32BitTest) {
   float *a;
   float *b;
   aligned_init(a, 16);
