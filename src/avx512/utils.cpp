@@ -411,7 +411,7 @@ __m512i AVX512Util::Reverse16(__m512i &v) {
                                                     7, 6, 5, 4, 3, 2, 1, 0), v);
 }
 
-__m512d AVX512Util::Reverse16(__m512 &v) {
+__m512 AVX512Util::Reverse16(__m512 &v) {
   return _mm512_permutexvar_ps(_mm512_setr_epi32(15, 14, 13, 12, 11, 10, 9, 8,
                                                  7, 6, 5, 4, 3, 2, 1, 0), v);
 }
