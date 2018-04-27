@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "test_util.h"
 #include "avx512/utils.h"
+#include "avx512/sort_util.h"
 
 TEST(UtilsTest, AVX512LoadStore32BitTest) {
   int *a;
