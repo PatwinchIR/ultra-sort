@@ -26,7 +26,7 @@ void AVX512MergeUtil::MergeRuns8(InType *&arr, int N) {
   }
 }
 template void AVX512MergeUtil::MergeRuns8<int64_t,__m512i>(int64_t *&arr, int N);
-template void AVX512MergeUtil::MergeRuns8<double,__m512i>(double *&arr, int N);
+template void AVX512MergeUtil::MergeRuns8<double,__m512d>(double *&arr, int N);
 
 template <typename InType, typename RegType>
 void AVX512MergeUtil::MergePass16(InType *&arr, InType *buffer, int N, int run_size) {
@@ -146,6 +146,6 @@ void AVX512MergeUtil::MergePass8(InType *&arr, InType *buffer, int N, int run_si
 }
 
 template void AVX512MergeUtil::MergePass8<int64_t,__m512i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
-template void AVX512MergeUtil::MergePass8<double,__m512i>(double *&arr, double *buffer, int N, int run_size);
+template void AVX512MergeUtil::MergePass8<double,__m512d>(double *&arr, double *buffer, int N, int run_size);
 
 #endif
