@@ -498,8 +498,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   MinMax16(b16, b16_1, minb, maxb);
 
   // phase 2
-  auto a8 = _mm512_mask_blend_epi32(_mm512_int2mask(0xff00), mina, maxa);
-  auto b8 = _mm512_mask_blend_epi32(_mm512_int2mask(0xff00), minb, maxb);
+  auto a8 = _mm512_mask_blend_epi32((__mmask16)(0xff00), mina, maxa);
+  auto b8 = _mm512_mask_blend_epi32((__mmask16)(0xff00), minb, maxb);
 
   auto a8_1 = _mm512_shuffle_i32x4(a8, a8, 0xb1);
   auto b8_1 = _mm512_shuffle_i32x4(b8, b8, 0xb1);
@@ -508,8 +508,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   MinMax16(b8, b8_1, minb, maxb);
 
   // phase 3
-  auto a4 = _mm512_mask_blend_epi32(_mm512_int2mask(0xf0f0), mina, maxa);
-  auto b4 = _mm512_mask_blend_epi32(_mm512_int2mask(0xf0f0), minb, maxb);
+  auto a4 = _mm512_mask_blend_epi32((__mmask16)(0xf0f0), mina, maxa);
+  auto b4 = _mm512_mask_blend_epi32((__mmask16)(0xf0f0), minb, maxb);
 
   auto a4_1 = _mm512_shuffle_epi32(a4, 0x4e);
   auto b4_1 = _mm512_shuffle_epi32(b4, 0x4e);
@@ -518,14 +518,14 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   MinMax16(b4, b4_1, minb, maxb);
 
   // phase 4
-  auto a2 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), mina, maxa);
-  auto b2 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), minb, maxb);
+  auto a2 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), mina, maxa);
+  auto b2 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), minb, maxb);
 
   auto a2_1 = _mm512_shuffle_epi32(a2, 0xb1);
   auto b2_1 = _mm512_shuffle_epi32(b2, 0xb1);
 
-  a16 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), a2, a2_1);
-  b16 = _mm512_mask_blend_epi32(_mm512_int2mask(0xcccc), b2, b2_1);
+  a16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), a2, a2_1);
+  b16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), b2, b2_1);
 }
 
 void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
@@ -539,8 +539,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
   MinMax16(b16, b16_1, minb, maxb);
 
   // phase 2
-  auto a8 = _mm512_mask_blend_ps(_mm512_int2mask(0xff00), mina, maxa);
-  auto b8 = _mm512_mask_blend_ps(_mm512_int2mask(0xff00), minb, maxb);
+  auto a8 = _mm512_mask_blend_ps((__mmask16)(0xff00), mina, maxa);
+  auto b8 = _mm512_mask_blend_ps((__mmask16)(0xff00), minb, maxb);
 
   auto a8_1 = _mm512_shuffle_f32x4(a8, a8, 0xb1);
   auto b8_1 = _mm512_shuffle_f32x4(b8, b8, 0xb1);
@@ -549,8 +549,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
   MinMax16(b8, b8_1, minb, maxb);
 
   // phase 3
-  auto a4 = _mm512_mask_blend_ps(_mm512_int2mask(0xf0f0), mina, maxa);
-  auto b4 = _mm512_mask_blend_ps(_mm512_int2mask(0xf0f0), minb, maxb);
+  auto a4 = _mm512_mask_blend_ps((__mmask16)(0xf0f0), mina, maxa);
+  auto b4 = _mm512_mask_blend_ps((__mmask16)(0xf0f0), minb, maxb);
 
   auto a4_1 = _mm512_shuffle_ps(a4, a4, 0x4e);
   auto b4_1 = _mm512_shuffle_ps(b4, b4, 0x4e);
@@ -559,14 +559,14 @@ void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
   MinMax16(b4, b4_1, minb, maxb);
 
   // phase 4
-  auto a2 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), mina, maxa);
-  auto b2 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), minb, maxb);
+  auto a2 = _mm512_mask_blend_ps((__mmask16)(0xcccc), mina, maxa);
+  auto b2 = _mm512_mask_blend_ps((__mmask16)(0xcccc), minb, maxb);
 
   auto a2_1 = _mm512_shuffle_ps(a2, a2, 0xb1);
   auto b2_1 = _mm512_shuffle_ps(b2, b2, 0xb1);
 
-  a16 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), a2, a2_1);
-  b16 = _mm512_mask_blend_ps(_mm512_int2mask(0xcccc), b2, b2_1);
+  a16 = _mm512_mask_blend_ps((__mmask16)(0xcccc), a2, a2_1);
+  b16 = _mm512_mask_blend_ps((__mmask16)(0xcccc), b2, b2_1);
 }
 
 void AVX512Util::BitonicMerge8(__m512i& a, __m512i& b) {
