@@ -131,8 +131,8 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
   TestUtil::RandGenInt(arr, 256, -10, 10);
   __m512i r[16];
   AVX512SortUtil::SortBlock256<int, __m512i>(arr, 0);
-  for(int i = 0; i < 16; i++) {
-    for(int j = 1; j < 16; j++) {
+  for(int i = 0; i < 256; i+=16) {
+    for(int j = i + 1; j < i + 16; j++) {
       EXPECT_LE(arr[j - 1], arr[j]);
     }
   }
