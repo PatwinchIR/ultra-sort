@@ -28,10 +28,10 @@ void AVX512SIMDSorter::SIMDSort(size_t N, float *&arr) {
   int BLOCK_SIZE = 256;
   assert(N % BLOCK_SIZE == 0);
   for(int i = 0; i < N; i+=BLOCK_SIZE) {
-    AVX512SortUtil::SortBlock256<float,__m256>(arr, i);
+    AVX512SortUtil::SortBlock256<float,__m512>(arr, i);
   }
   // Merge sorted runs
-  AVX512MergeUtil::MergeRuns8<float,__m256>(arr, N);
+  AVX512MergeUtil::MergeRuns16<float,__m512>(arr, N);
 }
 
 void AVX512SIMDSorter::SIMDSort(size_t N, double *&arr) {
