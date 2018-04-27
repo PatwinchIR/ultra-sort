@@ -511,8 +511,9 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   auto a4 = _mm512_mask_blend_epi32((__mmask16)(0xf0f0), mina, maxa);
   auto b4 = _mm512_mask_blend_epi32((__mmask16)(0xf0f0), minb, maxb);
 
-  auto a4_1 = _mm512_shuffle_epi32(a4, 0x4e);
-  auto b4_1 = _mm512_shuffle_epi32(b4, 0x4e);
+  // https://clang.llvm.org/doxygen/avx512fintrin_8h_source.html
+  auto a4_1 = _mm512_shuffle_epi32(a4, _MM_PERM_BADC); // 0x4e
+  auto b4_1 = _mm512_shuffle_epi32(b4, _MM_PERM_BADC); // 0x4e
 
   MinMax16(a4, a4_1, mina, maxa);
   MinMax16(b4, b4_1, minb, maxb);
@@ -521,8 +522,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   auto a2 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), mina, maxa);
   auto b2 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), minb, maxb);
 
-  auto a2_1 = _mm512_shuffle_epi32(a2, 0xb1);
-  auto b2_1 = _mm512_shuffle_epi32(b2, 0xb1);
+  auto a2_1 = _mm512_shuffle_epi32(a2, _MM_PERM_CDAB); // 0xb1
+  auto b2_1 = _mm512_shuffle_epi32(b2, _MM_PERM_CDAB); // 0xb1
 
   a16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), a2, a2_1);
   b16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), b2, b2_1);
