@@ -300,7 +300,7 @@ TEST(SIMDSortTests, SIMDSort32BitKeyValueIntegerTest) {
   std::copy(rand_arr, rand_arr + N, soln_arr);
   std::vector<std::pair<int,int>> check_arr(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDSorter::SIMDSort32KV(N, soln_arr);
+  AVX512SIMDSorter::SIMDSort32KV(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end(), [](std::pair<int,int> &left, std::pair<int,int> &right) {
     return left.first < right.first;
