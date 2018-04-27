@@ -25,8 +25,8 @@ TEST(UtilsTest, AVX512LoadStore32BitTest) {
 TEST(UtilsTest, AVX512LoadStore64BitTest) {
   int64_t *a;
   int64_t *b;
-  aligned_init<int64_t>(a, 4);
-  aligned_init<int64_t>(b, 4);
+  aligned_init<int64_t>(a, 8);
+  aligned_init<int64_t>(b, 8);
   TestUtil::PopulateSeqArray<int64_t>(a, 0, 8);
   TestUtil::PopulateSeqArray<int64_t>(b, 8, 16);
   __m512i ra, rb;
