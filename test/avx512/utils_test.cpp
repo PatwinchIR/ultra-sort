@@ -4,6 +4,9 @@
 #include "avx512/sort_util.h"
 #include "avx512/merge_util.h"
 #include <algorithm>
+#include <iterator>
+
+//#ifdef AVX512
 
 TEST(UtilsTest, AVX512LoadStore32BitTest) {
   int *a;
@@ -149,7 +152,7 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
   for(int i = 0; i < 256; i++) {
     EXPECT_EQ(check_arr[i], arr[i]);
   }
-  
+
   delete[](arr);
   free(check_arr);
   free(temp_arr);
@@ -347,6 +350,64 @@ TEST(UtilsTest, AVX512BitonicMerge16Int32BitTest) {
   delete[](b);
 }
 
+TEST(UtilsTest, AVX512Reverse16Int32BitTest) {
+  int *a;
+  aligned_init<int>(a, 16);
+
+  TestUtil::RandGenInt(a, 16, -10, 10);
+  std::sort(a, a + 16);
+
+  int check_arr[16];
+  for (int i = 15; i >= 0; --i) {
+    check_arr[15 - i] = a[i];
+  }
+
+  __m512i ra;
+  AVX512Util::LoadReg(ra, a);
+  ra = AVX512Util::Reverse16(ra);
+  AVX512Util::StoreReg(ra, a);
+
+  for (int j = 0; j < 16; ++j) {
+    EXPECT_EQ(check_arr[j], a[j]);
+  }
+
+  delete[](a);
+}
+
+TEST(UtilsTest, AVX512IntraRegisterSort16x16Int32BitTest) {
+  int *a;
+  int *b;
+  aligned_init<int>(a, 16);
+  aligned_init<int>(b, 16);
+
+  TestUtil::RandGenInt(a, 16, -10, 10);
+  TestUtil::RandGenInt(b, 16, -10, 10);
+
+  std::sort(a, a + 16);
+  std::sort(b, b + 16);
+
+  int check_arr[32];
+  for (int i = 0; i < 32; ++i) {
+    check_arr[i] = i < 16 ? a[i] : b[i - 16];
+  }
+
+  std::reverse(b, b + 16);
+
+  __m512i ra, rb;
+  AVX512Util::LoadReg(ra, a);
+  AVX512Util::LoadReg(rb, b);
+  AVX512Util::IntraRegisterSort16x16(ra, rb);
+  AVX512Util::StoreReg(ra, a);
+  AVX512Util::StoreReg(rb, b);
+
+  for (int j = 0; j < 32; ++j) {
+    EXPECT_EQ(check_arr[j], j < 16 ? a[j] : b[j - 16]);
+  }
+
+  delete[](a);
+  delete[](b);
+}
+
 TEST(UtilsTest, AVX512BitonicMerge16Float32BitTest) {
   float *a;
   float *b;
@@ -424,3 +485,5 @@ TEST(UtilsTest, AVX512BitonicMerge16Float32BitTest) {
 //  delete[](a);
 //  delete[](b);
 //}
+
+//#endif

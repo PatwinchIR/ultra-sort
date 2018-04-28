@@ -7,6 +7,8 @@
 #include "ips4o.hpp"
 #include "pdqsort.h"
 
+#ifdef AVX512
+
 TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
   int N = 65536;
   int lo = -10000;
@@ -312,3 +314,5 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
 //  delete rand_arr;
 //  delete soln_arr;
 //}
+
+#endif
