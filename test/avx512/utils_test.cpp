@@ -2,6 +2,7 @@
 #include "test_util.h"
 #include "avx512/utils.h"
 #include "avx512/sort_util.h"
+#include "avx512/merge_util.h"
 #include <algorithm>
 
 TEST(UtilsTest, AVX512LoadStore32BitTest) {
