@@ -151,6 +151,35 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
   }
 }
 
+TEST(UtilsTest, AVX512MergeRuns16Int32BitTest) {
+  int *arr;
+  aligned_init(arr, 256);
+  TestUtil::RandGenInt(arr, 256, -10, 10);
+  __m512i r[16];
+
+  int *intermediate_arr = (int *)malloc(256 * sizeof(int));
+  int *check_arr = (int *)malloc(256 * sizeof(int));
+  int *temp_arr = (int *)malloc(16 * sizeof(int));
+  for (int k = 0; k < 16; k++) {
+    for (int i = 0; i < 16; ++i) {
+      temp_arr[i] = arr[i * 16 + k];
+    }
+    std::sort(temp_arr, temp_arr + 16);
+    for (int j = 0; j < 16; ++j) {
+      intermediate_arr[k * 16 + j] = temp_arr[j];
+      check_arr[k * 16 + j] = temp_arr[j];
+    }
+  }
+
+  std::sort(check_arr, check_arr + 256);
+
+  AVX512MergeUtil::MergeRuns16<int,__m512i>(intermediate_arr, 256);
+
+  for (int l = 0; l < 256; ++l) {
+    EXPECT_EQ(check_arr[l], intermediate_arr[l]);
+  }
+}
+
 TEST(UtilsTest, AVX512BitonicSort16x16Int32BitTest) {
   int *arr;
   aligned_init(arr, 256);
