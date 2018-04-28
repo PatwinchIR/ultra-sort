@@ -391,6 +391,8 @@ TEST(UtilsTest, AVX512IntraRegisterSort16x16Int32BitTest) {
     check_arr[i] = i < 16 ? a[i] : b[i - 16];
   }
 
+  std::sort(check_arr, check_arr + 32);
+
   std::reverse(b, b + 16);
 
   __m512i ra, rb;
