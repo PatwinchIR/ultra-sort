@@ -575,8 +575,8 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   print_arr((int*)(&maxa), 0, 16, "a2_1 -> maxa: ");
   print_arr((int*)(&maxb), 0, 16, "b2_1 -> maxb: ");
 
-  a16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), a2, a2_1);
-  b16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), b2, b2_1);
+  a16 = _mm512_mask_blend_epi32((__mmask16)(0xaaaa), mina, maxa);
+  b16 = _mm512_mask_blend_epi32((__mmask16)(0xaaaa), minb, maxb);
 
   print_arr((int*)(&a16), 0, 16, "a16: ");
   print_arr((int*)(&b16), 0, 16, "b16: ");
