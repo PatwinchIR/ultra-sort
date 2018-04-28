@@ -490,25 +490,24 @@ void AVX512Util::IntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
 void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   __m512i mina, maxa, minb, maxb;
   // phase 1
-  print_arr((int*)(&a16), 0, 16, "a16: ");
-  print_arr((int*)(&b16), 0, 16, "b16: ");
 
   MinMax16(a16, b16);
 
-  print_arr((int*)(&a16), 0, 16, "min a16: ");
-  print_arr((int*)(&b16), 0, 16, "max b16: ");
-
   auto a16_1 = _mm512_permutexvar_epi32(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), a16);
   auto b16_1 = _mm512_permutexvar_epi32(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), b16);
-
-  print_arr((int*)(&a16_1), 0, 16, "a16_1: ");
-  print_arr((int*)(&b16_1), 0, 16, "b16_1: ");
   
   MinMax16(a16, a16_1, mina, maxa);
   MinMax16(b16, b16_1, minb, maxb);
 
+  print_arr((int*)(&a16_1), 0, 16, "a16_1: ");
+  print_arr((int*)(&a16), 0, 16, "a16: ");
+
   print_arr((int*)(&mina), 0, 16, "a16_1 -> mina: ");
   print_arr((int*)(&maxa), 0, 16, "a16_1 -> maxa: ");
+
+  print_arr((int*)(&b16_1), 0, 16, "b16_1: ");
+  print_arr((int*)(&b16), 0, 16, "b16: ");
+
   print_arr((int*)(&minb), 0, 16, "b16_1 -> minb: ");
   print_arr((int*)(&maxb), 0, 16, "a16_1 -> maxb: ");
 
@@ -567,6 +566,14 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
 
   print_arr((int*)(&a2_1), 0, 16, "a2_1: ");
   print_arr((int*)(&b2_1), 0, 16, "b2_1: ");
+
+  MinMax16(a2, a2_1, mina, maxa);
+  MinMax16(b2, b2_1, minb, maxb);
+
+  print_arr((int*)(&mina), 0, 16, "a2_1 -> mina: ");
+  print_arr((int*)(&minb), 0, 16, "b2_1 -> minb: ");
+  print_arr((int*)(&maxa), 0, 16, "a2_1 -> maxa: ");
+  print_arr((int*)(&maxb), 0, 16, "b2_1 -> maxb: ");
 
   a16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), a2, a2_1);
   b16 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), b2, b2_1);
