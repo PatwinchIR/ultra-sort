@@ -131,7 +131,6 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
   int *arr;
   aligned_init(arr, 256);
   TestUtil::RandGenInt(arr, 256, -10, 10);
-  __m512i r[16];
 
   int *check_arr = (int *)malloc(256 * sizeof(int));
   int *temp_arr = (int *)malloc(16 * sizeof(int));
@@ -155,10 +154,10 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
 TEST(UtilsTest, AVX512MergeRuns16Int32BitTest) {
   int *arr, *intermediate_arr;
   aligned_init(arr, 256);
-  TestUtil::RandGenInt(arr, 256, -10, 10);
-  __m512i r[16];
-
   aligned_init(intermediate_arr, 256);
+
+  TestUtil::RandGenInt(arr, 256, -10, 10);
+
   int *check_arr = (int *)malloc(256 * sizeof(int));
   int *temp_arr = (int *)malloc(16 * sizeof(int));
   for (int k = 0; k < 16; k++) {
@@ -178,6 +177,40 @@ TEST(UtilsTest, AVX512MergeRuns16Int32BitTest) {
 
   for (int l = 0; l < 256; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
+  }
+}
+
+TEST(UtilsTest, AVX512MergePass16Int32BitTest) {
+  int *arr, *intermediate_arr;
+  aligned_init(arr, 64);
+  aligned_init(intermediate_arr, 64);
+
+  TestUtil::RandGenInt(arr, 64, -10, 10);
+
+  int *check_arr = (int *)malloc(64 * sizeof(int));
+  int *temp_arr = (int *)malloc(16 * sizeof(int));
+
+  for (int k = 0; k < 4; k++) {
+    for (int i = 0; i < 16; ++i) {
+      temp_arr[i] = arr[i * 16 + k];
+    }
+    std::sort(temp_arr, temp_arr + 16);
+    for (int j = 0; j < 16; ++j) {
+      intermediate_arr[k * 16 + j] = temp_arr[j];
+      check_arr[k * 16 + j] = temp_arr[j];
+    }
+  }
+
+  for (int l = 0; l < 2; ++l) {
+    std::sort(check_arr + l * 32, check_arr + l * 32 + 32);
+  }
+
+  int *buffer;
+  aligned_init(buffer, 64);
+  AVX512MergeUtil::MergePass16<int,__m512i>(intermediate_arr, buffer, 64, 16);
+
+  for (int m = 0; m < 64; ++m) {
+    EXPECT_EQ(check_arr[m], intermediate_arr[m]);
   }
 }
 
