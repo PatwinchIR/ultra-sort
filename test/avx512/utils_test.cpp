@@ -415,16 +415,16 @@ TEST(UtilsTest, FixedTest) {
   aligned_init<int>(b, 16);
 
   for (int k = 0, i = 1; k < 16; k ++, i += 2) {
-    a[k] = i;
+    a[k] = i - 16;
   }
 
   for (int k = 0, i = 32; k < 16; k ++, i -= 2) {
-    b[k] = i;
+    b[k] = i - 16;
   }
 
   int check_arr[32];
   for (int i = 0; i < 32; ++i) {
-    check_arr[i] = i + 1;
+    check_arr[i] = i + 1 - 16;
   }
 
   __m512i ra, rb;
