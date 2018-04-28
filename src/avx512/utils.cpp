@@ -490,6 +490,9 @@ void AVX512Util::IntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
 void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   __m512i mina, maxa, minb, maxb;
   // phase 1
+  print_arr((int*)(&a16), 0, 16, "a16: ");
+  print_arr((int*)(&b16), 0, 16, "b16: ");
+
   MinMax16(a16, b16);
   auto a16_1 = _mm512_permutexvar_epi32(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), a16);
   auto b16_1 = _mm512_permutexvar_epi32(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), b16);
