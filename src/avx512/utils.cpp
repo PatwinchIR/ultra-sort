@@ -619,8 +619,11 @@ void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
   auto a2_1 = _mm512_shuffle_ps(a2, a2, 0xb1);
   auto b2_1 = _mm512_shuffle_ps(b2, b2, 0xb1);
 
-  a16 = _mm512_mask_blend_ps((__mmask16)(0xcccc), a2, a2_1);
-  b16 = _mm512_mask_blend_ps((__mmask16)(0xcccc), b2, b2_1);
+  MinMax16(a2, a2_1, mina, maxa);
+  MinMax16(b2, b2_1, minb, maxb);
+
+  a16 = _mm512_mask_blend_ps((__mmask16)(0xaaaa), mina, maxa);
+  b16 = _mm512_mask_blend_ps((__mmask16)(0xaaaa), minb, maxb);
 }
 
 void AVX512Util::BitonicMerge8(__m512i& a, __m512i& b) {
