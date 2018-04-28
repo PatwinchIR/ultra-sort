@@ -414,18 +414,23 @@ TEST(UtilsTest, FixedTest) {
   aligned_init<int>(a, 16);
   aligned_init<int>(b, 16);
 
-  for (int k = 0, i = 1; k < 16; k ++, i += 2) {
-    a[k] = i - 16;
+  int temp_a[16] = {-10, -6, -4, -3, -3, -3, -2, 0, 0, 6, 8, 9, 9, 9, 9, 10};
+  int temp_b[16] = {7, 6, 4, 4, 3, 3, 3, 2, 1, 0, -5, -6, -8, -8, -9, -9};
+
+  for (int k = 0; k < 16; k ++) {
+    a[k] = temp_a[k];
   }
 
-  for (int k = 0, i = 32; k < 16; k ++, i -= 2) {
-    b[k] = i - 16;
+  for (int k = 0; k < 16; k ++) {
+    b[k] = temp_b[k];
   }
 
   int check_arr[32];
   for (int i = 0; i < 32; ++i) {
-    check_arr[i] = i + 1 - 16;
+    check_arr[i] = i < 16 ? temp_a[i] : temp_b[i - 16];
   }
+
+  std::sort(check_arr, check_arr + 32);
 
   __m512i ra, rb;
   AVX512Util::LoadReg(ra, a);
