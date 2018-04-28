@@ -149,6 +149,10 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
   for(int i = 0; i < 256; i++) {
     EXPECT_EQ(check_arr[i], arr[i]);
   }
+  
+  delete[](arr);
+  free(check_arr);
+  free(temp_arr);
 }
 
 TEST(UtilsTest, AVX512MergeRuns16Int32BitTest) {
@@ -178,6 +182,11 @@ TEST(UtilsTest, AVX512MergeRuns16Int32BitTest) {
   for (int l = 0; l < 256; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
   }
+
+  delete[](arr);
+  delete[](intermediate_arr);
+  free(check_arr);
+  free(temp_arr);
 }
 
 TEST(UtilsTest, AVX512MergePass16Int32BitTest) {
@@ -212,6 +221,11 @@ TEST(UtilsTest, AVX512MergePass16Int32BitTest) {
   for (int m = 0; m < 64; ++m) {
     EXPECT_EQ(check_arr[m], intermediate_arr[m]);
   }
+
+  delete[](arr);
+  delete[](intermediate_arr);
+  free(check_arr);
+  free(temp_arr);
 }
 
 TEST(UtilsTest, AVX512BitonicSort16x16Int32BitTest) {
@@ -307,22 +321,27 @@ TEST(UtilsTest, AVX512BitonicMerge16Int32BitTest) {
   int *b;
   aligned_init<int>(a, 16);
   aligned_init<int>(b, 16);
-  TestUtil::PopulateSeqArray(a, 0, 32, 2);
-  TestUtil::PopulateSeqArray(b, 1, 32, 2);
+
+  TestUtil::RandGenInt(a, 16, -10, 10);
+  TestUtil::RandGenInt(b, 16, -10, 10);
+
+  std::sort(a, a + 16);
+  std::sort(b, b + 16);
+
+  int check_arr[32];
+  for (int j = 0; j < 32; ++j) {
+    check_arr[j] = j < 16 ? a[j] : b[j - 16];
+  }
+
   __m512i ra, rb;
   AVX512Util::LoadReg(ra, a);
   AVX512Util::LoadReg(rb, b);
   AVX512Util::BitonicMerge16(ra, rb);
   AVX512Util::StoreReg(ra, a);
   AVX512Util::StoreReg(rb, b);
-  int ab[32];
+
   for(int i = 0; i < 32; i++) {
-    if(i < 16) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 16];
-    }
-    EXPECT_EQ(ab[i], i);
+    EXPECT_EQ(check_arr[i], i < 16 ? a[i] : b[i - 16]);
   }
   delete[](a);
   delete[](b);
