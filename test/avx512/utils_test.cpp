@@ -153,12 +153,12 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
 }
 
 TEST(UtilsTest, AVX512MergeRuns16Int32BitTest) {
-  int *arr;
+  int *arr, *intermediate_arr;
   aligned_init(arr, 256);
   TestUtil::RandGenInt(arr, 256, -10, 10);
   __m512i r[16];
 
-  int *intermediate_arr = (int *)malloc(256 * sizeof(int));
+  aligned_init(intermediate_arr, 256);
   int *check_arr = (int *)malloc(256 * sizeof(int));
   int *temp_arr = (int *)malloc(16 * sizeof(int));
   for (int k = 0; k < 16; k++) {
