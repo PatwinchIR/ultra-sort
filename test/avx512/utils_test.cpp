@@ -2,6 +2,7 @@
 #include "test_util.h"
 #include "avx512/utils.h"
 #include "avx512/sort_util.h"
+#include <algorithm>
 
 TEST(UtilsTest, AVX512LoadStore32BitTest) {
   int *a;
@@ -130,11 +131,23 @@ TEST(UtilsTest, AVX512SortBlock256Int32BitTest) {
   aligned_init(arr, 256);
   TestUtil::RandGenInt(arr, 256, -10, 10);
   __m512i r[16];
-  AVX512SortUtil::SortBlock256<int, __m512i>(arr, 0);
-  for(int i = 0; i < 256; i+=16) {
-    for(int j = i + 1; j < i + 16; j++) {
-      EXPECT_LE(arr[j - 1], arr[j]);
+
+  int *check_arr = (int *)malloc(256 * sizeof(int));
+  int *temp_arr = (int *)malloc(16 * sizeof(int));
+  for (int k = 0; k < 16; k++) {
+    for (int i = 0; i < 16; ++i) {
+      temp_arr[i] = arr[i * 16 + k];
     }
+    std::sort(temp_arr, temp_arr + 16);
+    for (int j = 0; j < 16; ++j) {
+      check_arr[k * 16 + j] = temp_arr[j];
+    }
+  }
+
+  AVX512SortUtil::SortBlock256<int, __m512i>(arr, 0);
+
+  for(int i = 0; i < 256; i++) {
+    EXPECT_EQ(check_arr[i], arr[i]);
   }
 }
 
