@@ -499,87 +499,87 @@ void AVX512Util::IntraRegisterSort16x16(__m512i& a16, __m512i& b16) {
   MinMax16(a16, a16_1, mina, maxa);
   MinMax16(b16, b16_1, minb, maxb);
 
-  print_arr((int*)(&a16_1), 0, 16, "a16_1: ");
-  print_arr((int*)(&a16), 0, 16, "a16: ");
-
-  print_arr((int*)(&mina), 0, 16, "a16_1 -> mina: ");
-  print_arr((int*)(&maxa), 0, 16, "a16_1 -> maxa: ");
-
-  print_arr((int*)(&b16_1), 0, 16, "b16_1: ");
-  print_arr((int*)(&b16), 0, 16, "b16: ");
-
-  print_arr((int*)(&minb), 0, 16, "b16_1 -> minb: ");
-  print_arr((int*)(&maxb), 0, 16, "a16_1 -> maxb: ");
+//  print_arr((int*)(&a16_1), 0, 16, "a16_1: ");
+//  print_arr((int*)(&a16), 0, 16, "a16: ");
+//
+//  print_arr((int*)(&mina), 0, 16, "a16_1 -> mina: ");
+//  print_arr((int*)(&maxa), 0, 16, "a16_1 -> maxa: ");
+//
+//  print_arr((int*)(&b16_1), 0, 16, "b16_1: ");
+//  print_arr((int*)(&b16), 0, 16, "b16: ");
+//
+//  print_arr((int*)(&minb), 0, 16, "b16_1 -> minb: ");
+//  print_arr((int*)(&maxb), 0, 16, "a16_1 -> maxb: ");
 
   // phase 2
   auto a8 = _mm512_mask_blend_epi32((__mmask16)(0xff00), mina, maxa);
   auto b8 = _mm512_mask_blend_epi32((__mmask16)(0xff00), minb, maxb);
 
-  print_arr((int*)(&a8), 0, 16, "a8: ");
-  print_arr((int*)(&b8), 0, 16, "b8: ");
+//  print_arr((int*)(&a8), 0, 16, "a8: ");
+//  print_arr((int*)(&b8), 0, 16, "b8: ");
 
   auto a8_1 = _mm512_shuffle_i32x4(a8, a8, 0xb1);
   auto b8_1 = _mm512_shuffle_i32x4(b8, b8, 0xb1);
 
-  print_arr((int*)(&a8_1), 0, 16, "a8_1: ");
-  print_arr((int*)(&b8_1), 0, 16, "b8_1: ");
+//  print_arr((int*)(&a8_1), 0, 16, "a8_1: ");
+//  print_arr((int*)(&b8_1), 0, 16, "b8_1: ");
 
   MinMax16(a8, a8_1, mina, maxa);
   MinMax16(b8, b8_1, minb, maxb);
 
-  print_arr((int*)(&mina), 0, 16, "a8_1 -> mina: ");
-  print_arr((int*)(&minb), 0, 16, "b8_1 -> minb: ");
-  print_arr((int*)(&maxa), 0, 16, "a8_1 -> maxa: ");
-  print_arr((int*)(&maxb), 0, 16, "b8_1 -> maxb: ");
+//  print_arr((int*)(&mina), 0, 16, "a8_1 -> mina: ");
+//  print_arr((int*)(&minb), 0, 16, "b8_1 -> minb: ");
+//  print_arr((int*)(&maxa), 0, 16, "a8_1 -> maxa: ");
+//  print_arr((int*)(&maxb), 0, 16, "b8_1 -> maxb: ");
 
   // phase 3
   auto a4 = _mm512_mask_blend_epi32((__mmask16)(0xf0f0), mina, maxa);
   auto b4 = _mm512_mask_blend_epi32((__mmask16)(0xf0f0), minb, maxb);
 
-  print_arr((int*)(&a4), 0, 16, "a4: ");
-  print_arr((int*)(&b4), 0, 16, "b4: ");
+//  print_arr((int*)(&a4), 0, 16, "a4: ");
+//  print_arr((int*)(&b4), 0, 16, "b4: ");
 
   // https://clang.llvm.org/doxygen/avx512fintrin_8h_source.html
   auto a4_1 = _mm512_shuffle_epi32(a4, _MM_PERM_BADC); // 0x4e
   auto b4_1 = _mm512_shuffle_epi32(b4, _MM_PERM_BADC); // 0x4e
 
-  print_arr((int*)(&a4_1), 0, 16, "a4_1: ");
-  print_arr((int*)(&b4_1), 0, 16, "b4_1: ");
+//  print_arr((int*)(&a4_1), 0, 16, "a4_1: ");
+//  print_arr((int*)(&b4_1), 0, 16, "b4_1: ");
 
   MinMax16(a4, a4_1, mina, maxa);
   MinMax16(b4, b4_1, minb, maxb);
 
-  print_arr((int*)(&mina), 0, 16, "a4_1 -> mina: ");
-  print_arr((int*)(&minb), 0, 16, "b4_1 -> minb: ");
-  print_arr((int*)(&maxa), 0, 16, "a4_1 -> maxa: ");
-  print_arr((int*)(&maxb), 0, 16, "b4_1 -> maxb: ");
+//  print_arr((int*)(&mina), 0, 16, "a4_1 -> mina: ");
+//  print_arr((int*)(&minb), 0, 16, "b4_1 -> minb: ");
+//  print_arr((int*)(&maxa), 0, 16, "a4_1 -> maxa: ");
+//  print_arr((int*)(&maxb), 0, 16, "b4_1 -> maxb: ");
 
   // phase 4
   auto a2 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), mina, maxa);
   auto b2 = _mm512_mask_blend_epi32((__mmask16)(0xcccc), minb, maxb);
 
-  print_arr((int*)(&a2), 0, 16, "a2: ");
-  print_arr((int*)(&b2), 0, 16, "b2: ");
+//  print_arr((int*)(&a2), 0, 16, "a2: ");
+//  print_arr((int*)(&b2), 0, 16, "b2: ");
 
   auto a2_1 = _mm512_shuffle_epi32(a2, _MM_PERM_CDAB); // 0xb1
   auto b2_1 = _mm512_shuffle_epi32(b2, _MM_PERM_CDAB); // 0xb1
 
-  print_arr((int*)(&a2_1), 0, 16, "a2_1: ");
-  print_arr((int*)(&b2_1), 0, 16, "b2_1: ");
+//  print_arr((int*)(&a2_1), 0, 16, "a2_1: ");
+//  print_arr((int*)(&b2_1), 0, 16, "b2_1: ");
 
   MinMax16(a2, a2_1, mina, maxa);
   MinMax16(b2, b2_1, minb, maxb);
 
-  print_arr((int*)(&mina), 0, 16, "a2_1 -> mina: ");
-  print_arr((int*)(&minb), 0, 16, "b2_1 -> minb: ");
-  print_arr((int*)(&maxa), 0, 16, "a2_1 -> maxa: ");
-  print_arr((int*)(&maxb), 0, 16, "b2_1 -> maxb: ");
+//  print_arr((int*)(&mina), 0, 16, "a2_1 -> mina: ");
+//  print_arr((int*)(&minb), 0, 16, "b2_1 -> minb: ");
+//  print_arr((int*)(&maxa), 0, 16, "a2_1 -> maxa: ");
+//  print_arr((int*)(&maxb), 0, 16, "b2_1 -> maxb: ");
 
   a16 = _mm512_mask_blend_epi32((__mmask16)(0xaaaa), mina, maxa);
   b16 = _mm512_mask_blend_epi32((__mmask16)(0xaaaa), minb, maxb);
 
-  print_arr((int*)(&a16), 0, 16, "a16: ");
-  print_arr((int*)(&b16), 0, 16, "b16: ");
+//  print_arr((int*)(&a16), 0, 16, "a16: ");
+//  print_arr((int*)(&b16), 0, 16, "b16: ");
 }
 
 void AVX512Util::IntraRegisterSort16x16(__m512& a16, __m512& b16) {
