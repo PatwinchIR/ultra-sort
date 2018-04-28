@@ -73,69 +73,69 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
   delete soln_arr;
 }
 
-//TEST(SIMDSortTests, AVX512SIMDSort32BitFloatTest) {
-//  int N = 65536;
-//  float lo = -10000;
-//  float hi = 10000;
-//  float *rand_arr;
-//  float *soln_arr;
-//  double start, end;
-//
-//  // Initialization
-//  TestUtil::RandGenFloat<float>(rand_arr, N, lo, hi);
-//
-//  // C++ std::stable_sort
-//  aligned_init(soln_arr, N);
-//  std::copy(rand_arr, rand_arr + N, soln_arr);
-//  start = currentSeconds();
-//  std::stable_sort(soln_arr, soln_arr + N);
-//  end = currentSeconds();
-//  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
-//  delete soln_arr;
-//
-//  // C++ std::sort
-//  aligned_init(soln_arr, N);
-//  std::copy(rand_arr, rand_arr + N, soln_arr);
-//  start = currentSeconds();
-//  std::sort(soln_arr, soln_arr + N);
-//  end = currentSeconds();
-//  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
-//  delete soln_arr;
-//
-//  // C++ ips4o::sort
-//  aligned_init(soln_arr, N);
-//  std::copy(rand_arr, rand_arr + N, soln_arr);
-//  start = currentSeconds();
-//  ips4o::sort(soln_arr, soln_arr + N);
-//  end = currentSeconds();
-//  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
-//  delete soln_arr;
-//
-//  // C++ pqd::sort
-//  aligned_init(soln_arr, N);
-//  std::copy(rand_arr, rand_arr + N, soln_arr);
-//  start = currentSeconds();
-//  pdqsort(soln_arr, soln_arr + N);
-//  end = currentSeconds();
-//  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
-//  delete soln_arr;
-//
-//  // AVX512 Sort
-//  aligned_init(soln_arr, N);
-//  std::copy(rand_arr, rand_arr + N, soln_arr);
-//  std::vector<float> check_arr(rand_arr, rand_arr + N);
-//  start = currentSeconds();
-//  AVX512SIMDSorter::SIMDSort(N, soln_arr);
-//  end = currentSeconds();
-//  std::sort(check_arr.begin(), check_arr.end());
-//  // First perform a correctness check
-//  for(int i = 0; i < N; i++) {
-//    EXPECT_EQ(check_arr[i], soln_arr[i]);
-//  }
-//  printf("[avx512::sort] %d elements: %.8f seconds\n", N, end - start);
-//  delete rand_arr;
-//  delete soln_arr;
-//}
+TEST(SIMDSortTests, AVX512SIMDSort32BitFloatTest) {
+  int N = 65536;
+  float lo = -10000;
+  float hi = 10000;
+  float *rand_arr;
+  float *soln_arr;
+  double start, end;
+
+  // Initialization
+  TestUtil::RandGenFloat<float>(rand_arr, N, lo, hi);
+
+  // C++ std::stable_sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::stable_sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ std::sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ ips4o::sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ pqd::sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N);
+  end = currentSeconds();
+  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // AVX512 Sort
+  aligned_init(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  std::vector<float> check_arr(rand_arr, rand_arr + N);
+  start = currentSeconds();
+  AVX512SIMDSorter::SIMDSort(N, soln_arr);
+  end = currentSeconds();
+  std::sort(check_arr.begin(), check_arr.end());
+  // First perform a correctness check
+  for(int i = 0; i < N; i++) {
+    EXPECT_EQ(check_arr[i], soln_arr[i]);
+  }
+  printf("[avx512::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete rand_arr;
+  delete soln_arr;
+}
 
 //TEST(SIMDSortTests, AVX512SIMDSort64BitIntegerTest) {
 //  int N = 65536;
