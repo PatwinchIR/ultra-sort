@@ -83,6 +83,12 @@ void AVX256Util::MinMax4(__m256i &a, __m256i &b) {
   b = DoubleToInt64Reg(b_d);
 }
 
+void AVX256Util::MinMax4(__m256d &a, __m256d &b) {
+  __m256d c = a;
+  a = _mm256_min_pd(a, b);
+  b = _mm256_max_pd(c, b);
+}
+
 void AVX256Util::MaskedMinMax8(__m256i &a, __m256i &b) {
   auto keycopy_control = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
   auto cmp_mask = _mm256_cmpgt_epi32(a, b);
@@ -108,14 +114,6 @@ void AVX256Util::MaskedMinMax8(__m256 &a, __m256 &b) {
   a = _mm256_or_ps(rabmina, rabminb);
   b = rabmax;
 }
-
-void AVX256Util::MinMax4(__m256d &a, __m256d &b) {
-  __m256d c = a;
-  a = _mm256_min_pd(a, b);
-  b = _mm256_max_pd(c, b);
-}
-
-
 
 /**
  * Bitonic Transpose:
@@ -235,6 +233,14 @@ __m256i AVX256Util::Reverse8(__m256i &v) {
 
 __m256 AVX256Util::Reverse8(__m256 &v) {
   return _mm256_permutevar8x32_ps(v, _mm256_setr_epi32(7, 6, 5, 4, 3, 2, 1, 0));
+}
+
+__m256i AVX256Util::MaskedReverse8(__m256i &v) {
+  return _mm256_permutevar8x32_epi32(v, _mm256_setr_epi32(6, 7, 4, 5, 2, 3, 0, 1));
+}
+
+__m256 AVX256Util::MaskedReverse8(__m256 &v) {
+  return _mm256_permutevar8x32_ps(v, _mm256_setr_epi32(6, 7, 4, 5, 2, 3, 0, 1));
 }
 
 __m256i AVX256Util::Reverse4(__m256i &v) {

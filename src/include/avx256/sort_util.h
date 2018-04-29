@@ -7,12 +7,15 @@
 
 class AVX256SortUtil{
  public:
+  // Regular
   template <typename InType, typename RegType>
   static void SortBlock64(InType *&arr, int offset);
   template <typename InType, typename RegType>
-  static void MaskedSortBlock64(InType *&arr, int offset);
-  template <typename InType, typename RegType>
   static void SortBlock16(InType *&arr, int offset);
+
+  // Masked
+  template <typename InType, typename RegType>
+  static void MaskedSortBlock64(InType *&arr, int offset);
 
   // BitonicSort(Sorting Networks)
   // Simple
