@@ -34,13 +34,27 @@ struct TestUtil{
     }
   }
 
-  static void RandPairGen(std::pair<int,int>* &arr, int N, int lo, int hi) {
-    aligned_init<std::pair<int,int>>(arr, N);
+  template <typename T>
+  static void RandGenIntRecords(std::pair<T, T>* &arr, int N, T lo, T hi, int offset_start=0) {
+    aligned_init<std::pair<T, T>>(arr, N);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_int_distribution<> dis(lo, hi);
+    std::uniform_int_distribution<T> dis(lo, hi);
     for(size_t i = 0; i < N; i++) {
-      arr[i] = std::pair<int,int>(dis(gen), dis(gen));
+      arr[i].first = dis(gen);
+      arr[i].second = offset_start++;
+    }
+  }
+
+  template <typename T>
+  static void RandGenIntRecords(T* &arr, int N, T lo, T hi, int offset_start=0) {
+    aligned_init<T>(arr, N);
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<T> dis(lo, hi);
+    for(size_t i = 0; i < N; i++) {
+      arr[2*i] = dis(gen);
+      arr[2*i + 1] = offset_start++;
     }
   }
 };

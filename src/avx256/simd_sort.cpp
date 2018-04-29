@@ -45,17 +45,38 @@ void AVX256SIMDSorter::SIMDSort(size_t N, double *&arr) {
   AVX256MergeUtil::MergeRuns4<double,__m256d>(arr, N);
 }
 
-void AVX256SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
-  int64_t* kv_arr;
-  aligned_init<int64_t>(kv_arr, N);
+//void AVX256SIMDSorter::SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
+//  int64_t* kv_arr;
+//  aligned_init<int64_t>(kv_arr, N);
+//  for(int i = 0; i < N; i++) {
+//    kv_arr[i] = ((((int64_t)arr[i].first) << 32) | (0x00000000ffffffff & arr[i].second));
+//  }
+//  SIMDSort(N, kv_arr);
+//  for(int i = 0; i < N; i++) {
+//    auto kv = (int*)&kv_arr[i];
+//    arr[i].first = kv[1];
+//    arr[i].second = kv[0];
+//  }
+//}
+
+void AVX256SIMDSorter::SIMDSort(size_t N, std::pair<int, int> *&arr) {
+  int* kv_arr;
+  size_t Nkv = N*2;
+  aligned_init(kv_arr, Nkv);
   for(int i = 0; i < N; i++) {
-    kv_arr[i] = ((((int64_t)arr[i].first) << 32) | (0x00000000ffffffff & arr[i].second));
+    kv_arr[2*i] = arr[i].first;
+    kv_arr[2*i + 1] = arr[i].second;
   }
-  SIMDSort(N, kv_arr);
-  for(int i = 0; i < N; i++) {
-    auto kv = (int*)&kv_arr[i];
-    arr[i].first = kv[1];
-    arr[i].second = kv[0];
+  int BLOCK_SIZE = 64;
+  assert(Nkv % BLOCK_SIZE == 0);
+  for(int i = 0; i < Nkv; i+=BLOCK_SIZE) {
+    AVX256SortUtil::MaskedSortBlock64<int,__m256i>(kv_arr, i);
   }
+//  SIMDSort(N, kv_arr);
+//  for(int i = 0; i < N; i++) {
+//    auto kv = (int*)&kv_arr[i];
+//    arr[i].first = kv[1];
+//    arr[i].second = kv[0];
+//  }
 }
 #endif

@@ -83,66 +83,39 @@ void AVX256Util::MinMax4(__m256i &a, __m256i &b) {
   b = DoubleToInt64Reg(b_d);
 }
 
+void AVX256Util::MaskedMinMax8(__m256i &a, __m256i &b) {
+  auto keycopy_control = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
+  auto cmp_mask = _mm256_cmpgt_epi32(a, b);
+  auto ra_max_mask = _mm256_permutevar8x32_epi32(cmp_mask, keycopy_control);
+  auto rabmaxa = _mm256_and_si256(ra_max_mask, a);
+  auto rabmaxb = _mm256_andnot_si256(ra_max_mask, b);
+  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
+  auto rabmina = _mm256_andnot_si256(ra_max_mask, a);
+  auto rabminb = _mm256_and_si256(ra_max_mask, b);
+  a = _mm256_or_si256(rabmina, rabminb);
+  b = rabmax;
+}
+
+void AVX256Util::MaskedMinMax8(__m256 &a, __m256 &b) {
+  auto keycopy_control = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
+  auto cmp_mask = _mm256_cmp_ps(a, b, _CMP_GT_OQ);
+  auto ra_max_mask = _mm256_permutevar8x32_ps(cmp_mask, keycopy_control);
+  auto rabmaxa = _mm256_and_ps(ra_max_mask, a);
+  auto rabmaxb = _mm256_andnot_ps(ra_max_mask, b);
+  auto rabmax = _mm256_or_ps(rabmaxa, rabmaxb);
+  auto rabmina = _mm256_andnot_ps(ra_max_mask, a);
+  auto rabminb = _mm256_and_ps(ra_max_mask, b);
+  a = _mm256_or_ps(rabmina, rabminb);
+  b = rabmax;
+}
+
 void AVX256Util::MinMax4(__m256d &a, __m256d &b) {
   __m256d c = a;
   a = _mm256_min_pd(a, b);
   b = _mm256_max_pd(c, b);
 }
 
-/**
- * Bitonic Sorting networks:
- * 8x8 networks: int32, float32
- * 4x4 networks: int64
- */
-template <typename T>
-void AVX256Util::BitonicSort8x8(T &r0,
-                                T &r1,
-                                T &r2,
-                                T &r3,
-                                T &r4,
-                                T &r5,
-                                T &r6,
-                                T &r7) {
-  MinMax8(r0, r1);
-  MinMax8(r2, r3);
-  MinMax8(r4, r5);
-  MinMax8(r6, r7);
-  MinMax8(r0, r2);
-  MinMax8(r4, r6);
-  MinMax8(r1, r3);
-  MinMax8(r5, r7);
-  MinMax8(r1, r2);
-  MinMax8(r5, r6);
-  MinMax8(r0, r4);
-  MinMax8(r1, r5);
-  MinMax8(r1, r4);
-  MinMax8(r2, r6);
-  MinMax8(r3, r7);
-  MinMax8(r3, r6);
-  MinMax8(r2, r4);
-  MinMax8(r3, r5);
-  MinMax8(r3, r4);
-}
 
-// 32 bit ints, floats
-template void AVX256Util::BitonicSort8x8<__m256i>(__m256i&, __m256i&, __m256i&, __m256i&, __m256i&, __m256i&, __m256i&, __m256i&);
-template void AVX256Util::BitonicSort8x8<__m256>(__m256&, __m256&, __m256&, __m256&, __m256&, __m256&, __m256&, __m256&);
-
-template <typename T>
-void AVX256Util::BitonicSort4x4(T &r0,
-                                T &r1,
-                                T &r2,
-                                T &r3) {
-  MinMax4(r0, r1);
-  MinMax4(r2, r3);
-  MinMax4(r0, r2);
-  MinMax4(r1, r3);
-  MinMax4(r1, r2);
-}
-
-// 64 bit ints, floats
-template void AVX256Util::BitonicSort4x4<__m256i>(__m256i&, __m256i&, __m256i&, __m256i&);
-template void AVX256Util::BitonicSort4x4<__m256d>(__m256d&, __m256d&, __m256d&, __m256d&);
 
 /**
  * Bitonic Transpose:
@@ -271,133 +244,5 @@ __m256i AVX256Util::Reverse4(__m256i &v) {
 __m256d AVX256Util::Reverse4(__m256d &v) {
   return _mm256_permute4x64_pd(v, _MM_SHUFFLE(0, 1, 2, 3));
 }
-
-void AVX256Util::IntraRegisterSort8x8(__m256i &a8, __m256i &b8) {
-  __m256i mina, maxa, minb, maxb;
-  // phase 1
-  MinMax8(a8, b8);
-  auto a8_1 = _mm256_permutevar8x32_epi32(a8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
-  auto b8_1 = _mm256_permutevar8x32_epi32(b8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
-
-  MinMax8(a8, a8_1, mina, maxa);
-  MinMax8(b8, b8_1, minb, maxb);
-
-  auto a4 = _mm256_blend_epi32(mina, maxa, 0xf0);
-  auto b4 = _mm256_blend_epi32(minb, maxb, 0xf0);
-
-  // phase 2
-  auto a4_1 = _mm256_shuffle_epi32(a4, 0x4e);
-  auto b4_1 = _mm256_shuffle_epi32(b4, 0x4e);
-
-  MinMax8(a4, a4_1, mina, maxa);
-  MinMax8(b4, b4_1, minb, maxb);
-
-  auto a2 = _mm256_unpacklo_epi64(mina, maxa);
-  auto b2 = _mm256_unpacklo_epi64(minb, maxb);
-
-  // phase 3
-  auto a2_1 = _mm256_shuffle_epi32(a2, 0xb1);
-  auto b2_1 = _mm256_shuffle_epi32(b2, 0xb1);
-
-  MinMax8(a2, a2_1, mina, maxa);
-  MinMax8(b2, b2_1, minb, maxb);
-
-  a8 = _mm256_blend_epi32(mina, maxa, 0xaa);
-  b8 = _mm256_blend_epi32(minb, maxb, 0xaa);
-}
-
-void AVX256Util::IntraRegisterSort8x8(__m256 &a8, __m256 &b8) {
-  __m256 mina, maxa, minb, maxb;
-  // phase 1
-  MinMax8(a8, b8);
-  auto a8_1 = _mm256_permutevar8x32_ps(a8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
-  auto b8_1 = _mm256_permutevar8x32_ps(b8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
-
-  MinMax8(a8, a8_1, mina, maxa);
-  MinMax8(b8, b8_1, minb, maxb);
-
-  auto a4 = _mm256_blend_ps(mina, maxa, 0xf0);
-  auto b4 = _mm256_blend_ps(minb, maxb, 0xf0);
-
-  // phase 2
-  auto a4_1 = _mm256_shuffle_ps(a4, a4, 0x4e);
-  auto b4_1 = _mm256_shuffle_ps(b4, b4, 0x4e);
-
-  MinMax8(a4, a4_1, mina, maxa);
-  MinMax8(b4, b4_1, minb, maxb);
-
-  auto a2 = (__m256)_mm256_unpacklo_pd((__m256d)mina, (__m256d)maxa);
-  auto b2 = (__m256)_mm256_unpacklo_pd((__m256d)minb, (__m256d)maxb);
-
-  // phase 3
-  auto a2_1 = _mm256_shuffle_ps(a2, a2, 0xb1);
-  auto b2_1 = _mm256_shuffle_ps(b2, b2, 0xb1);
-
-  MinMax8(a2, a2_1, mina, maxa);
-  MinMax8(b2, b2_1, minb, maxb);
-
-  a8 = _mm256_blend_ps(mina, maxa, 0xaa);
-  b8 = _mm256_blend_ps(minb, maxb, 0xaa);
-}
-
-void AVX256Util::IntraRegisterSort4x4(__m256i &a4, __m256i &b4) {
-  // Level 1
-  MinMax4(a4, b4);
-  auto l1p = (__m256i)_mm256_permute2f128_pd((__m256d)a4, (__m256d)b4, 0x31);
-  auto h1p = (__m256i)_mm256_permute2f128_pd((__m256d)a4, (__m256d)b4, 0x20);
-
-  // Level 2
-  MinMax4(l1p, h1p);
-  auto l2p = (__m256i)_mm256_shuffle_pd((__m256d)l1p, (__m256d)h1p, 0x0);
-  auto h2p = (__m256i)_mm256_shuffle_pd((__m256d)l1p, (__m256d)h1p, 0xF);
-
-  // Level 3
-  MinMax4(l2p, h2p);
-  auto l3p = (__m256i)_mm256_unpacklo_pd((__m256d)l2p, (__m256d)h2p);
-  auto h3p = (__m256i)_mm256_unpackhi_pd((__m256d)l2p, (__m256d)h2p);
-
-  // Finally
-  a4 = (__m256i)_mm256_permute2f128_pd((__m256d)l3p, (__m256d)h3p, 0x20);
-  b4 = (__m256i)_mm256_permute2f128_pd((__m256d)l3p, (__m256d)h3p, 0x31);
-}
-
-void AVX256Util::IntraRegisterSort4x4(__m256d &a4, __m256d &b4) {
-  // Level 1
-  MinMax4(a4, b4);
-  auto l1p = _mm256_permute2f128_pd(a4, b4, 0x31);
-  auto h1p = _mm256_permute2f128_pd(a4, b4, 0x20);
-
-  // Level 2
-  MinMax4(l1p, h1p);
-  auto l2p = _mm256_shuffle_pd(l1p, h1p, 0x0);
-  auto h2p = _mm256_shuffle_pd(l1p, h1p, 0xF);
-
-  // Level 3
-  MinMax4(l2p, h2p);
-  auto l3p = _mm256_unpacklo_pd(l2p, h2p);
-  auto h3p = _mm256_unpackhi_pd(l2p, h2p);
-
-  // Finally
-  a4 = _mm256_permute2f128_pd(l3p, h3p, 0x20);
-  b4 = _mm256_permute2f128_pd(l3p, h3p, 0x31);
-}
-
-template <typename T>
-void AVX256Util::BitonicMerge8(T &a, T &b) {
-  b = Reverse8(b);
-  IntraRegisterSort8x8(a,b);
-}
-
-template void AVX256Util::BitonicMerge8<__m256i>(__m256i &a, __m256i &b);
-template void AVX256Util::BitonicMerge8<__m256>(__m256 &a, __m256 &b);
-
-template <typename T>
-void AVX256Util::BitonicMerge4(T &a, T &b) {
-  b = Reverse4(b);
-  IntraRegisterSort4x4(a,b);
-}
-
-template void AVX256Util::BitonicMerge4<__m256i>(__m256i &a, __m256i &b);
-template void AVX256Util::BitonicMerge4<__m256d>(__m256d &a, __m256d &b);
 
 #endif

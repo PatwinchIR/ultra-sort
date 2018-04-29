@@ -1,3 +1,4 @@
+#include <avx256/sort_util.h>
 #include "gtest/gtest.h"
 #include "test_util.h"
 #include "avx256/utils.h"
@@ -104,208 +105,92 @@ TEST(UtilsTest, AVX256MinMax4Int64BitTest) {
   delete[](b);
 }
 
-TEST(UtilsTest, AVX256MinMax4Float64BitTest) {
-  double *a;
-  double *b;
-  aligned_init<double>(a, 4);
-  aligned_init<double>(b, 4);
-  TestUtil::RandGenFloat<double>(a, 4, -10, 10);
-  TestUtil::RandGenFloat<double>(b, 4, -10, 10);
-  __m256d ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::MinMax4(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  for(int i = 0; i < 4; i++) {
-    EXPECT_LE(a[i], b[i]);
+TEST(UtilsTest, AVX256MaskedMinMax8Int32Test) {
+  // For masked tests, we assume k,v follow one another with native type
+  // i.e. for 32-bit int k,v array -> Assume its flattened out to an int array
+  // 4 32-bit key-value integers will fit in AVX2 register
+  // This test is currently weak - only checks for sorted order
+  int unit_size = 4;
+  int *kv_flat1, *kv_flat2;
+  TestUtil::RandGenIntRecords(kv_flat1, unit_size*2, -10, 10, 0);
+  TestUtil::RandGenIntRecords(kv_flat2, unit_size*2, -10, 10, unit_size*2);
+  int *check_kv1, *check_kv2;
+  aligned_init(check_kv1, unit_size*2);
+  aligned_init(check_kv2, unit_size*2);
+
+  __m256i r1, r2;
+  AVX256Util::LoadReg(r1, kv_flat1);
+  AVX256Util::LoadReg(r2, kv_flat2);
+  AVX256Util::MaskedMinMax8(r1, r2);
+  AVX256Util::StoreReg(r1, kv_flat1);
+  AVX256Util::StoreReg(r2, kv_flat2);
+  for(int i = 0; i < unit_size; i++) {
+    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
   }
-  delete[](a);
-  delete[](b);
+  delete[](kv_flat1);
+  delete[](kv_flat2);
 }
 
-TEST(UtilsTest, AVX256BitonicSort8x8Int32BitTest) {
-  int *arr;
-  aligned_init(arr, 64);
-  TestUtil::RandGenInt(arr, 64, -10, 10);
-  __m256i r[8];
-  for(int i = 0; i < 8; i++) {
-    AVX256Util::LoadReg(r[i], arr + i*8);
-  }
-  AVX256Util::BitonicSort8x8(r[0], r[1], r[2], r[3],
-                             r[4], r[5], r[6], r[7]);
-  for(int i = 0; i < 8; i++) {
-    AVX256Util::StoreReg(r[i], arr + i*8);
-  }
-  for(int i = 8; i < 64; i+=8) {
-    for(int j = i; j < i + 8; j++) {
-      EXPECT_LE(arr[j-8], arr[j]);
-    }
-  }
-  delete[](arr);
-}
-
-TEST(UtilsTest, AVX256BitonicSort8x8Float32BitTest) {
-  float *arr;
-  aligned_init(arr, 64);
-  TestUtil::RandGenFloat<float>(arr, 64, -10, 10);
-  __m256 r[8];
-  for(int i = 0; i < 8; i++) {
-    AVX256Util::LoadReg(r[i], arr + i*8);
-  }
-  AVX256Util::BitonicSort8x8(r[0], r[1], r[2], r[3],
-                             r[4], r[5], r[6], r[7]);
-  for(int i = 0; i < 8; i++) {
-    AVX256Util::StoreReg(r[i], arr + i*8);
-  }
-  for(int i = 8; i < 64; i+=8) {
-    for(int j = i; j < i + 8; j++) {
-      EXPECT_LE(arr[j-8], arr[j]);
-    }
-  }
-  delete[](arr);
-}
-
-TEST(UtilsTest, AVX256BitonicSort4x4Int64BitTest) {
-  int64_t *arr;
-  aligned_init<int64_t>(arr, 16);
-  TestUtil::RandGenInt<int64_t>(arr, 16, -10, 10);
-  __m256i r[4];
-  for(int i = 0; i < 4; i++) {
-    AVX256Util::LoadReg(r[i], arr + i*4);
-  }
-  AVX256Util::BitonicSort4x4(r[0], r[1], r[2], r[3]);
-  for(int i = 0; i < 4; i++) {
-    AVX256Util::StoreReg(r[i], arr + i*4);
-  }
-  for(int i = 4; i < 16; i+=4) {
-    for(int j = i; j < i + 4; j++) {
-      EXPECT_LE(arr[j-4], arr[j]);
-    }
-  }
-  delete[](arr);
-}
-
-TEST(UtilsTest, AVX256BitonicSort4x4Float64BitTest) {
-  double *arr;
-  aligned_init(arr, 16);
-  TestUtil::RandGenFloat<double>(arr, 16, -10, 10);
-  __m256d r[4];
-  for(int i = 0; i < 4; i++) {
-    AVX256Util::LoadReg(r[i], arr + i*4);
-  }
-  AVX256Util::BitonicSort4x4(r[0], r[1], r[2], r[3]);
-  for(int i = 0; i < 4; i++) {
-    AVX256Util::StoreReg(r[i], arr + i*4);
-  }
-  for(int i = 4; i < 16; i+=4) {
-    for(int j = i; j < i + 4; j++) {
-      EXPECT_LE(arr[j-4], arr[j]);
-    }
-  }
-  delete[](arr);
-}
-
-TEST(UtilsTest, AVX256BitonicMerge8Int32BitTest) {
-  int *a;
-  int *b;
-  aligned_init<int>(a, 8);
-  aligned_init<int>(b, 8);
-  TestUtil::PopulateSeqArray(a, 0, 16, 2);
-  TestUtil::PopulateSeqArray(b, 1, 16, 2);
-  __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::BitonicMerge8(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  int ab[16];
-  for(int i = 0; i < 16; i++) {
-    if(i < 8) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 8];
-    }
-    EXPECT_EQ(ab[i], i);
-  }
-  delete[](a);
-  delete[](b);
-}
-
-TEST(UtilsTest, AVX256BitonicMerge8Float32BitTest) {
-  float *a;
-  float *b;
-  aligned_init(a, 8);
-  aligned_init(b, 8);
-  TestUtil::PopulateSeqArray(a, 0, 16, 2);
-  TestUtil::PopulateSeqArray(b, 1, 16, 2);
-  __m256 ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::BitonicMerge8(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  float ab[16];
-  for(int i = 0; i < 16; i++) {
-    if(i < 8) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 8];
-    }
-    EXPECT_EQ(ab[i], i);
-  }
-  delete(a);
-  delete(b);
-}
-
-TEST(UtilsTest, AVX256BitonicMerge4Int64BitTest) {
-  int64_t *a;
-  int64_t *b;
-  aligned_init<int64_t>(a, 8);
-  aligned_init<int64_t>(b, 8);
-  TestUtil::PopulateSeqArray<int64_t>(a, 0, 8, 2);
-  TestUtil::PopulateSeqArray<int64_t>(b, 1, 8, 2);
-  __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::BitonicMerge4(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  int64_t ab[8];
-  for(int i = 0; i < 8; i++) {
-    if(i < 4) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 4];
-    }
-    EXPECT_EQ(ab[i], i);
-  }
-  delete[](a);
-  delete[](b);
-}
-
-TEST(UtilsTest, AVX256BitonicMerge4Float64BitTest) {
-  double *a;
-  double *b;
-  aligned_init(a, 8);
-  aligned_init(b, 8);
-  TestUtil::PopulateSeqArray(a, 0, 8, 2);
-  TestUtil::PopulateSeqArray(b, 1, 8, 2);
-  __m256d ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::BitonicMerge4(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  double ab[8];
-  for(int i = 0; i < 8; i++) {
-    if(i < 4) {
-      ab[i] = a[i];
-    } else {
-      ab[i] = b[i - 4];
-    }
-    EXPECT_EQ(ab[i], i);
-  }
-  delete[](a);
-  delete[](b);
-}
+//TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
+//  // For masked tests, we assume k,v follow one another with native type
+//  // i.e. for 32-bit int k,v array -> Assume its flattened out to an int array
+//  // 4 32-bit key-value integers will fit in AVX2 register
+//  // This test is currently weak - only checks for sorted order
+//  int unit_size = 4;
+//  float *kv_flat1, *kv_flat2;
+//  TestUtil::RandGenFloat(kv_flat1, unit_size*2, -10.0f, 10.0f);
+//  TestUtil::RandGenFloat(kv_flat2, unit_size*2, -10.0f, 10.0f);
+//
+//  __m256 r1, r2;
+//  AVX256Util::LoadReg(r1, kv_flat1);
+//  AVX256Util::LoadReg(r2, kv_flat2);
+//  AVX256Util::MaskedMinMax8(r1, r2);
+//  AVX256Util::StoreReg(r1, kv_flat1);
+//  AVX256Util::StoreReg(r2, kv_flat2);
+//  for(int i = 0; i < unit_size; i++) {
+//    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
+//  }
+//  delete[](kv_flat1);
+//  delete[](kv_flat2);
+//}
+//
+//TEST(UtilsTest, AVX256MaskedMinMax4DoubleTest) {
+//  double *a;
+//  double *b;
+//  aligned_init<double>(a, 4);
+//  aligned_init<double>(b, 4);
+//  TestUtil::RandGenFloat<double>(a, 4, -10, 10);
+//  TestUtil::RandGenFloat<double>(b, 4, -10, 10);
+//  __m256d ra, rb;
+//  AVX256Util::LoadReg(ra, a);
+//  AVX256Util::LoadReg(rb, b);
+//  AVX256Util::MinMax4(ra, rb);
+//  AVX256Util::StoreReg(ra, a);
+//  AVX256Util::StoreReg(rb, b);
+//  for(int i = 0; i < 4; i++) {
+//    EXPECT_LE(a[i], b[i]);
+//  }
+//  delete[](a);
+//  delete[](b);
+//}
+//
+//TEST(UtilsTest, AVX256MaskedMinMax4Int64Test) {
+//  double *a;
+//  double *b;
+//  aligned_init<double>(a, 4);
+//  aligned_init<double>(b, 4);
+//  TestUtil::RandGenFloat<double>(a, 4, -10, 10);
+//  TestUtil::RandGenFloat<double>(b, 4, -10, 10);
+//  __m256d ra, rb;
+//  AVX256Util::LoadReg(ra, a);
+//  AVX256Util::LoadReg(rb, b);
+//  AVX256Util::MinMax4(ra, rb);
+//  AVX256Util::StoreReg(ra, a);
+//  AVX256Util::StoreReg(rb, b);
+//  for(int i = 0; i < 4; i++) {
+//    EXPECT_LE(a[i], b[i]);
+//  }
+//  delete[](a);
+//  delete[](b);
+//}
+//

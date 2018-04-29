@@ -12,6 +12,6 @@ class AVX256SIMDSorter{
   static void SIMDSort(size_t N, int64_t *&arr);
   static void SIMDSort(size_t N, float *&arr);
   static void SIMDSort(size_t N, double *&arr);
-  static void SIMDSort32KV(size_t N, std::pair<int,int> *&arr);
+  static void SIMDSort(size_t N, std::pair<int,int> *&arr);
 };
 #endif

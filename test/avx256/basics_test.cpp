@@ -111,21 +111,24 @@ TEST(BasicsTest, AVX256BlendTest) {
   delete c;
 }
 
-TEST(BasicsTest, AVX256MinMaxKV) {
+TEST(BasicsTest, AVX256MinMax32KV) {
   // Register-type input
-  __m256i ra, rb;
+  __m256 ra, rb;
   // need to set in reverse order since Intel's Little Endian arch
   // low ---------> hi           |
   // (K, V) pairs, first num is K, then V. We try to min/max by K
-  ra = _mm256_setr_epi32(0, 2, 5, 8, 8, 10, 13, 15);
-  rb = _mm256_setr_epi32(1, 3, 4, 10, 9, 11, 12, 14);
+  ra = _mm256_setr_ps(0.0, 2.0, 5.0, 8.0, 8.0, 10.0, 13.0, 15.0);
+  rb = _mm256_setr_ps(1.0, 3.0, 4.0, 10.0, 9.0, 11.0, 12.0, 14.0);
   // Register-type mask
   // rc:0, 0, -1, -1, 0, 0, -1, -1,
-  auto rc = _mm256_permutevar8x32_epi32(_mm256_cmpgt_epi32(ra, rb), _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6));
-  // 0, 0, 5, 8, 0, 0, 13, 15,
-  auto rabmaxa = _mm256_and_si256(rc, ra);
-  auto rabmaxb = _mm256_andnot_si256(rc, rb);
-  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
+  auto keycopy_flag = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
+  auto cmp_val = _mm256_cmp_ps(ra, rb, _CMP_GT_OQ);
+
+  auto rc = _mm256_permutevar8x32_ps(cmp_val, keycopy_flag);
+//  // 0, 0, 5, 8, 0, 0, 13, 15,
+//  auto rabmaxa = _mm256_and_si256(rc, ra);
+//  auto rabmaxb = _mm256_andnot_si256(rc, rb);
+//  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
 //  rab = _mm256_andnot_si256(rab, rb);
-//  print_arr((int*)(&rabmax), 0, 8, "rabmin: ");
+//  print_arr((int*)(&cmp_val), 0, 8, "cmpval: ");
 }

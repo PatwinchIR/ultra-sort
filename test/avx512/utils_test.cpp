@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iterator>
 
-//#ifdef AVX512
+#ifdef AVX512
 
 TEST(UtilsTest, AVX512LoadStore32BitTest) {
   int *a;
@@ -530,4 +530,4 @@ TEST(UtilsTest, AVX512BitonicMerge16Float32BitTest) {
 //  delete[](b);
 //}
 
-//#endif
+#endif

@@ -15,6 +15,14 @@ class AVX256MergeUtil{
   static void MergePass8(InType *&arr, InType *buffer, int N, int run_size);
   template <typename InType, typename RegType>
   static void MergePass4(InType *&arr, InType *buffer, int N, int run_size);
+  static void IntraRegisterSort8x8(__m256i& a8, __m256i& b8);
+  static void IntraRegisterSort8x8(__m256& a8, __m256& b8);
+  static void IntraRegisterSort4x4(__m256i& a4, __m256i& b4);
+  static void IntraRegisterSort4x4(__m256d& a4, __m256d& b4);
+  template <typename T>
+  static void BitonicMerge8(T& a, T& b);
+  template <typename T>
+  static void BitonicMerge4(T& a, T& b);
 };
 
 #endif
