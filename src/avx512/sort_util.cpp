@@ -85,5 +85,88 @@ void AVX512SortUtil::SortBlock64(InType *&arr, int offset) {
 template void AVX512SortUtil::SortBlock64<int64_t, __m512i>(int64_t *&arr, int offset);
 template void AVX512SortUtil::SortBlock64<double, __m512d>(double *&arr, int offset);
 
+/**
+ * Bitonic Sorting networks:
+ * 16x16 networks: int32, float32
+ * 8x8 networks: int64
+ */
+template <typename T>
+void AVX512SortUtil::BitonicSort8x8(T &r0,
+                                T &r1,
+                                T &r2,
+                                T &r3,
+                                T &r4,
+                                T &r5,
+                                T &r6,
+                                T &r7) {
+  MinMax8(r0, r1);
+  MinMax8(r2, r3);
+  MinMax8(r4, r5);
+  MinMax8(r6, r7);
+  MinMax8(r0, r2);
+  MinMax8(r4, r6);
+  MinMax8(r1, r3);
+  MinMax8(r5, r7);
+  MinMax8(r1, r2);
+  MinMax8(r5, r6);
+  MinMax8(r0, r4);
+  MinMax8(r1, r5);
+  MinMax8(r1, r4);
+  MinMax8(r2, r6);
+  MinMax8(r3, r7);
+  MinMax8(r3, r6);
+  MinMax8(r2, r4);
+  MinMax8(r3, r5);
+  MinMax8(r3, r4);
+}
+
+// 64 bit ints, doubles
+template void AVX512SortUtil::BitonicSort8x8<__m512i>(__m512i&, __m512i&, __m512i&, __m512i&, __m512i&, __m512i&, __m512i&, __m512i&);
+template void AVX512SortUtil::BitonicSort8x8<__m512d>(__m512d&, __m512d&, __m512d&, __m512d&, __m512d&, __m512d&, __m512d&, __m512d&);
+
+template <typename T>
+void AVX512SortUtil::BitonicSort16x16(T &r0, T &r1, T &r2, T &r3,
+                                  T &r4, T &r5, T &r6, T &r7,
+                                  T &r8, T &r9, T &r10, T &r11,
+                                  T &r12, T &r13, T &r14, T &r15) {
+  MinMax16(r0, r1); MinMax16(r2, r3); MinMax16(r4, r5); MinMax16(r6, r7);
+  MinMax16(r8, r9); MinMax16(r10, r11); MinMax16(r12, r13); MinMax16(r14, r15);
+
+  MinMax16(r0, r2); MinMax16(r4, r6); MinMax16(r8, r10); MinMax16(r12, r14);
+  MinMax16(r1, r3); MinMax16(r5, r7); MinMax16(r9, r11); MinMax16(r13, r15);
+
+  MinMax16(r0, r4); MinMax16(r8, r12); MinMax16(r1, r5); MinMax16(r9, r13);
+  MinMax16(r2, r6); MinMax16(r10, r14); MinMax16(r3, r7); MinMax16(r11, r15);
+
+  MinMax16(r0, r8); MinMax16(r1, r9); MinMax16(r2, r10); MinMax16(r3, r11);
+  MinMax16(r4, r12); MinMax16(r5, r13); MinMax16(r6, r14); MinMax16(r7, r15);
+
+  MinMax16(r5, r10); MinMax16(r6, r9); MinMax16(r3, r12); MinMax16(r13, r14);
+  MinMax16(r7, r11); MinMax16(r1, r2); MinMax16(r4, r8);
+
+  MinMax16(r1, r4); MinMax16(r7, r13); MinMax16(r2, r8);
+  MinMax16(r11, r14); MinMax16(r5, r6); MinMax16(r9, r10);
+
+  MinMax16(r2, r4); MinMax16(r11, r13); MinMax16(r3, r8); MinMax16(r7, r12);
+
+  MinMax16(r6, r8); MinMax16(r10, r12); MinMax16(r3, r5); MinMax16(r7, r9);
+
+  MinMax16(r3, r4); MinMax16(r5, r6); MinMax16(r7, r8); MinMax16(r9, r10);
+  MinMax16(r11, r12);
+
+  MinMax16(r6, r7); MinMax16(r8, r9);
+}
+
+// 32 bit ints, floats
+template void AVX512SortUtil::BitonicSort16x16<__m512i>(__m512i&, __m512i&, __m512i&, __m512i&,
+                                                        __m512i&, __m512i&, __m512i&, __m512i&,
+                                                        __m512i&, __m512i&, __m512i&, __m512i&,
+                                                        __m512i&, __m512i&, __m512i&, __m512i&);
+template void AVX512SortUtil::BitonicSort16x16<__m512>(__m512&, __m512&, __m512&, __m512&,
+                                                       __m512&, __m512&, __m512&, __m512&,
+                                                       __m512&, __m512&, __m512&, __m512&,
+                                                       __m512&, __m512&, __m512&, __m512&);
+
+
 #endif
 

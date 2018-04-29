@@ -30,16 +30,6 @@ class AVX512Util{
   static void MinMax8(const __m512d &a, const __m512d &b,
                       __m512d& minab, __m512d& maxab);
 
-  // BitonicSort(Sorting Networks)
-  template <typename T>
-  static void BitonicSort8x8(T &r0, T &r1, T &r2, T &r3,
-                             T &r4, T &r5, T &r6, T &r7);
-  template <typename T>
-  static void BitonicSort16x16(T &r0, T &r1, T &r2, T &r3,
-                               T &r4, T &r5, T &r6, T &r7,
-                               T &r8, T &r9, T &r10, T &r11,
-                               T &r12, T &r13, T &r14, T &r15);
-
   // Transpose(Bitonic)
   static void Transpose8x8(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
                            __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7);
@@ -63,11 +53,6 @@ class AVX512Util{
   static void IntraRegisterSort8x8(__m512d& a8, __m512d& b8);
   static void IntraRegisterSort16x16(__m512& a16, __m512& b16);
   static void IntraRegisterSort16x16(__m512i& a16, __m512i& b16);
-
-  static void BitonicMerge8(__m512i& a, __m512i& b);
-  static void BitonicMerge8(__m512d& a, __m512d& b);
-  static void BitonicMerge16(__m512i& a, __m512i& b);
-  static void BitonicMerge16(__m512& a, __m512& b);
 };
 
 #endif
