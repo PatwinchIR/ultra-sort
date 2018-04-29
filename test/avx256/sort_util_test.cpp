@@ -24,6 +24,39 @@ TEST(SortUtilTest, AVX256BitonicSort8x8Int32BitTest) {
   delete[](arr);
 }
 
+TEST(SortUtilTest, AVX256MaskedBitonicSort8x8Int32BitTest) {
+  using T = int;
+  T *arr;
+  int unit_size = 4;
+  int num_rows = unit_size*2;
+  TestUtil::RandGenIntRecords(arr, unit_size*num_rows, -10, 10);
+  std::map<T,T> kv_map;
+  for (int i = 0; i < unit_size*num_rows; ++i) {
+    kv_map.insert(std::pair<T,T>(arr[2*i + 1], arr[2*i]));
+  }
+
+  __m256i r[8];
+  for(int i = 0; i < num_rows; i++) {
+    AVX256Util::LoadReg(r[i], arr + i*unit_size*2);
+  }
+  AVX256SortUtil::MaskedBitonicSort8x8(r[0], r[1], r[2], r[3],
+                                       r[4], r[5], r[6], r[7]);
+  for(int i = 0; i < num_rows; i++) {
+    AVX256Util::StoreReg(r[i], arr + i*unit_size*2);
+  }
+
+  for(int i = num_rows; i < num_rows*unit_size*2; i+=unit_size*2) {
+    for(int j = i; j < i + unit_size*2; j+=2) {
+      EXPECT_LE(arr[j-8], arr[j]);
+    }
+  }
+
+  for (int i = 0; i < unit_size*num_rows; ++i) {
+    EXPECT_EQ(kv_map[arr[2*i + 1]], arr[2*i]);
+  }
+  delete[](arr);
+}
+
 TEST(SortUtilTest, AVX256BitonicSort8x8Float32BitTest) {
   float *arr;
   aligned_init(arr, 64);
@@ -41,6 +74,36 @@ TEST(SortUtilTest, AVX256BitonicSort8x8Float32BitTest) {
     for(int j = i; j < i + 8; j++) {
       EXPECT_LE(arr[j-8], arr[j]);
     }
+  }
+  delete[](arr);
+}
+
+TEST(SortUtilTest, AVX256MaskedBitonicSort8x8Float32BitTest) {
+  using T = float;
+  T *arr;
+  int unit_size = 4;
+  int num_rows = unit_size*2;
+  TestUtil::RandGenFloatRecords(arr, unit_size*num_rows, -10.0f, 10.0f);
+  std::map<T,T> kv_map;
+  for (int i = 0; i < unit_size*num_rows; ++i) {
+    kv_map.insert(std::pair<T,T>(arr[2*i + 1], arr[2*i]));
+  }
+  __m256 r[8];
+  for(int i = 0; i < num_rows; i++) {
+    AVX256Util::LoadReg(r[i], arr + i*unit_size*2);
+  }
+  AVX256SortUtil::MaskedBitonicSort8x8(r[0], r[1], r[2], r[3],
+                                       r[4], r[5], r[6], r[7]);
+  for(int i = 0; i < num_rows; i++) {
+    AVX256Util::StoreReg(r[i], arr + i*unit_size*2);
+  }
+  for(int i = num_rows; i < num_rows*unit_size*2; i+=unit_size*2) {
+    for(int j = i; j < i + unit_size*2; j+=2) {
+      EXPECT_LE(arr[j-8], arr[j]);
+    }
+  }
+  for (int i = 0; i < unit_size*num_rows; ++i) {
+    EXPECT_EQ(kv_map[arr[2*i + 1]], arr[2*i]);
   }
   delete[](arr);
 }

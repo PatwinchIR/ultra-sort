@@ -32,8 +32,8 @@ class AVX256Util{
   static void MaskedMinMax8(__m256i &a, __m256i &b);
   static void MaskedMinMax8(__m256 &a, __m256 &b);
   // 64-bit Key-Value pairs
-  static void MinMaxKV2(__m256i &a, __m256i &b);
-  static void MinMaxKV2(__m256d &a, __m256d &b);
+  static void MaskedMinMax4(__m256i &a, __m256i &b);
+  static void MaskedMinMax4(__m256d &a, __m256d &b);
 
   // Transpose(Bitonic)
   static void Transpose8x8(__m256i &row0, __m256i &row1, __m256i &row2, __m256i &row3,
@@ -46,6 +46,8 @@ class AVX256Util{
   static __m256 Reverse8(__m256& v);
   static __m256i Reverse4(__m256i& v);
   static __m256d Reverse4(__m256d& v);
+  static __m256i MaskedReverse8(__m256i& v);
+  static __m256 MaskedReverse8(__m256& v);
 };
 
 #endif
