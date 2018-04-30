@@ -4,181 +4,59 @@
 #include "avx256/utils.h"
 
 namespace avx2 {
-TEST(SortUtilTest, AVX256BitonicSort8x8Int32BitTest) {
+TEST(SortUtilTest, AVX256SortBlock64Int32BitTest) {
   int *arr;
-  aligned_init(arr, 64);
-  TestUtil::RandGenInt(arr, 64, -10, 10);
-  __m256i r[8];
-  for (int i = 0; i < 8; i++) {
-    LoadReg(r[i], arr + i * 8);
-  }
-  BitonicSort8x8(r[0], r[1], r[2], r[3],
-                 r[4], r[5], r[6], r[7]);
-  for (int i = 0; i < 8; i++) {
-    StoreReg(r[i], arr + i * 8);
-  }
-  for (int i = 8; i < 64; i += 8) {
-    for (int j = i; j < i + 8; j++) {
-      EXPECT_LE(arr[j - 8], arr[j]);
+  aligned_init<int>(arr, 64);
+  TestUtil::RandGenInt<int>(arr, 64, -10, 10);
+
+  int *check_arr = (int *) malloc(64 * sizeof(int));
+  int *temp_arr = (int *) malloc(8 * sizeof(int));
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      check_arr[k * 8 + j] = temp_arr[j];
     }
   }
+
+  SortBlock64<int, __m256i>(arr, 0);
+
+  for (int i = 0; i < 64; i++) {
+    EXPECT_EQ(check_arr[i], arr[i]);
+  }
+
   delete[](arr);
+  free(check_arr);
+  free(temp_arr);
 }
 
-TEST(SortUtilTest, AVX256BitonicSort8x8Float32BitTest) {
+TEST(SortUtilTest, AVX256SortBlock64Float32BitTest) {
   float *arr;
-  aligned_init(arr, 64);
+  aligned_init<float>(arr, 64);
   TestUtil::RandGenFloat<float>(arr, 64, -10, 10);
-  __m256 r[8];
-  for (int i = 0; i < 8; i++) {
-    LoadReg(r[i], arr + i * 8);
-  }
-  BitonicSort8x8(r[0], r[1], r[2], r[3],
-                 r[4], r[5], r[6], r[7]);
-  for (int i = 0; i < 8; i++) {
-    StoreReg(r[i], arr + i * 8);
-  }
-  for (int i = 8; i < 64; i += 8) {
-    for (int j = i; j < i + 8; j++) {
-      EXPECT_LE(arr[j - 8], arr[j]);
+
+  auto *check_arr = (float *) malloc(64 * sizeof(float));
+  auto *temp_arr = (float *) malloc(8 * sizeof(float));
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
     }
-  }
-  delete[](arr);
-}
-
-TEST(SortUtilTest, AVX256MaskedBitonicSort4x8Int32BitTest) {
-  using T = int;
-  T *arr;
-  int unit_size = 4;
-  int num_cols = unit_size * 2;
-  int num_rows = unit_size;
-  TestUtil::RandGenIntRecords(arr, num_cols * num_rows, -10, 10);
-  std::map<T, T> kv_map;
-  for (int i = 0; i < unit_size * num_rows; ++i) {
-    kv_map.insert(std::pair<T, T>(arr[2 * i + 1], arr[2 * i]));
-  }
-
-  __m256i r[num_rows];
-  for (int i = 0; i < num_rows; i++) {
-    LoadReg(r[i], arr + i * num_cols);
-  }
-  MaskedBitonicSort4x8(r[0], r[1], r[2], r[3]);
-  for (int i = 0; i < num_rows; i++) {
-    StoreReg(r[i], arr + i * num_cols);
-  }
-
-  for (int i = num_cols; i < num_rows * num_cols; i += num_cols) {
-    for (int j = i; j < i + num_cols; j += 2) {
-      EXPECT_LE(arr[j - 8], arr[j]);
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      check_arr[k * 8 + j] = temp_arr[j];
     }
   }
 
-  for (int i = 0; i < unit_size * num_rows; ++i) {
-    EXPECT_EQ(kv_map[arr[2 * i + 1]], arr[2 * i]);
+  SortBlock64<float, __m256>(arr, 0);
+
+  for (int i = 0; i < 64; i++) {
+    EXPECT_EQ(check_arr[i], arr[i]);
   }
+
   delete[](arr);
-}
-
-TEST(SortUtilTest, AVX256MaskedBitonicSort8x8Float32BitTest) {
-  using T = float;
-  T *arr;
-  int unit_size = 4;
-  int num_cols = unit_size * 2;
-  int num_rows = unit_size;
-  TestUtil::RandGenFloatRecords(arr, num_cols * num_rows, -10.0f, 10.0f);
-  std::map<T, T> kv_map;
-  for (int i = 0; i < unit_size * num_rows; ++i) {
-    kv_map.insert(std::pair<T, T>(arr[2 * i + 1], arr[2 * i]));
-  }
-
-  __m256 r[num_rows];
-  for (int i = 0; i < num_rows; i++) {
-    LoadReg(r[i], arr + i * num_cols);
-  }
-  MaskedBitonicSort4x8(r[0], r[1], r[2], r[3]);
-  for (int i = 0; i < num_rows; i++) {
-    StoreReg(r[i], arr + i * num_cols);
-  }
-
-  for (int i = num_cols; i < num_rows * num_cols; i += num_cols) {
-    for (int j = i; j < i + num_cols; j += 2) {
-      EXPECT_LE(arr[j - 8], arr[j]);
-    }
-  }
-
-  for (int i = 0; i < unit_size * num_rows; ++i) {
-    EXPECT_EQ(kv_map[arr[2 * i + 1]], arr[2 * i]);
-  }
-  delete[](arr);
-}
-
-//TEST(SortUtilTest, AVX256MaskedBitonicSort8x8Float32BitTest) {
-//  using T = float;
-//  T *arr;
-//  int unit_size = 4;
-//  int num_rows = unit_size*2;
-//  TestUtil::RandGenFloatRecords(arr, unit_size*num_rows, -10.0f, 10.0f);
-//  std::map<T,T> kv_map;
-//  for (int i = 0; i < unit_size*num_rows; ++i) {
-//    kv_map.insert(std::pair<T,T>(arr[2*i + 1], arr[2*i]));
-//  }
-//  __m256 r[8];
-//  for(int i = 0; i < num_rows; i++) {
-//    LoadReg(r[i], arr + i*unit_size*2);
-//  }
-//  MaskedBitonicSort8x8(r[0], r[1], r[2], r[3],
-//                                       r[4], r[5], r[6], r[7]);
-//  for(int i = 0; i < num_rows; i++) {
-//    StoreReg(r[i], arr + i*unit_size*2);
-//  }
-//  for(int i = num_rows; i < num_rows*unit_size*2; i+=unit_size*2) {
-//    for(int j = i; j < i + unit_size*2; j+=2) {
-//      EXPECT_LE(arr[j-8], arr[j]);
-//    }
-//  }
-//  for (int i = 0; i < unit_size*num_rows; ++i) {
-//    EXPECT_EQ(kv_map[arr[2*i + 1]], arr[2*i]);
-//  }
-//  delete[](arr);
-//}
-
-TEST(SortUtilTest, AVX256BitonicSort4x4Int64BitTest) {
-  int64_t *arr;
-  aligned_init<int64_t>(arr, 16);
-  TestUtil::RandGenInt<int64_t>(arr, 16, -10, 10);
-  __m256i r[4];
-  for (int i = 0; i < 4; i++) {
-    LoadReg(r[i], arr + i * 4);
-  }
-  BitonicSort4x4(r[0], r[1], r[2], r[3]);
-  for (int i = 0; i < 4; i++) {
-    StoreReg(r[i], arr + i * 4);
-  }
-  for (int i = 4; i < 16; i += 4) {
-    for (int j = i; j < i + 4; j++) {
-      EXPECT_LE(arr[j - 4], arr[j]);
-    }
-  }
-  delete[](arr);
-}
-
-TEST(SortUtilTest, AVX256BitonicSort4x4Float64BitTest) {
-  double *arr;
-  aligned_init<double>(arr, 16);
-  TestUtil::RandGenFloat<double>(arr, 16, -10, 10);
-  __m256d r[4];
-  for (int i = 0; i < 4; i++) {
-    LoadReg(r[i], arr + i * 4);
-  }
-  BitonicSort4x4(r[0], r[1], r[2], r[3]);
-  for (int i = 0; i < 4; i++) {
-    StoreReg(r[i], arr + i * 4);
-  }
-  for (int i = 4; i < 16; i += 4) {
-    for (int j = i; j < i + 4; j++) {
-      EXPECT_LE(arr[j - 4], arr[j]);
-    }
-  }
-  delete[](arr);
+  free(check_arr);
+  free(temp_arr);
 }
 }
