@@ -46,20 +46,6 @@ void SIMDSort(size_t N, double *&arr) {
   MergeRuns4<double, __m256d>(arr, N);
 }
 
-//void SIMDSort32KV(size_t N, std::pair<int, int> *&arr) {
-//  int64_t* kv_arr;
-//  aligned_init<int64_t>(kv_arr, N);
-//  for(int i = 0; i < N; i++) {
-//    kv_arr[i] = ((((int64_t)arr[i].first) << 32) | (0x00000000ffffffff & arr[i].second));
-//  }
-//  SIMDSort(N, kv_arr);
-//  for(int i = 0; i < N; i++) {
-//    auto kv = (int*)&kv_arr[i];
-//    arr[i].first = kv[1];
-//    arr[i].second = kv[0];
-//  }
-//}
-
 void SIMDSort(size_t N, std::pair<int, int> *&arr) {
   int *kv_arr;
   size_t Nkv = N * 2;
@@ -77,6 +63,29 @@ void SIMDSort(size_t N, std::pair<int, int> *&arr) {
 
   // Merge sorted runs
   MaskedMergeRuns8<int, __m256i>(kv_arr, Nkv);
+  for (int i = 0; i < N; i++) {
+    arr[i].first = kv_arr[2 * i];
+    arr[i].second = kv_arr[2 * i + 1];
+  }
+}
+
+void SIMDSort(size_t N, std::pair<float, float> *&arr) {
+  float *kv_arr;
+  size_t Nkv = N * 2;
+  aligned_init(kv_arr, Nkv);
+  for (int i = 0; i < N; i++) {
+    kv_arr[2 * i] = arr[i].first;
+    kv_arr[2 * i + 1] = arr[i].second;
+  }
+  // 4 rows of 4 K-V(8 total) pairs = 32 values
+  int BLOCK_SIZE = 32;
+  assert(Nkv % BLOCK_SIZE == 0);
+  for (int i = 0; i < Nkv; i += BLOCK_SIZE) {
+    MaskedSortBlock4x8<float, __m256>(kv_arr, i);
+  }
+
+  // Merge sorted runs
+  MaskedMergeRuns8<float, __m256>(kv_arr, Nkv);
   for (int i = 0; i < N; i++) {
     arr[i].first = kv_arr[2 * i];
     arr[i].second = kv_arr[2 * i + 1];

@@ -16,6 +16,7 @@ template void aligned_init<int64_t>(int64_t* &ptr, int N, size_t alignment_size)
 template void aligned_init<double>(double* &ptr, int N, size_t alignment_size);
 template void aligned_init<float>(float* &ptr, int N, size_t alignment_size);
 template void aligned_init<std::pair<int,int>>(std::pair<int,int>* &ptr, int N, size_t alignment_size);
+template void aligned_init<std::pair<float,float>>(std::pair<float,float>* &ptr, int N, size_t alignment_size);
 
 template <typename T>
 void print_arr(T *arr, int i, int j, const std::string &tag) {
