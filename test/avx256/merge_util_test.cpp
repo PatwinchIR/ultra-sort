@@ -158,7 +158,7 @@ TEST(MergeUtilsTest, AVX256MergeRuns8Int32BitTest) {
 
   std::sort(check_arr, check_arr + 64);
 
-  MergeRuns8<int, __m512i>(intermediate_arr, 64);
+  MergeRuns8<int, __m256i>(intermediate_arr, 64);
 
   for (int l = 0; l < 64; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
@@ -192,7 +192,7 @@ TEST(MergeUtilsTest, AVX256MergeRuns8Float32BitTest) {
 
   std::sort(check_arr, check_arr + 64);
 
-  MergeRuns8<float, __m512>(intermediate_arr, 64);
+  MergeRuns8<float, __m256>(intermediate_arr, 64);
 
   for (int l = 0; l < 64; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
@@ -227,7 +227,7 @@ TEST(MergeUtilsTest, AVX256MergeRuns4Int64BitTest) {
 
   std::sort(check_arr, check_arr + 16);
 
-  MergeRuns4<int64_t, __m512i>(intermediate_arr, 16);
+  MergeRuns4<int64_t, __m256i>(intermediate_arr, 16);
 
   for (int l = 0; l < 16; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
@@ -262,7 +262,7 @@ TEST(MergeUtilsTest, AVX256MergeRuns4Float64BitTest) {
 
   std::sort(check_arr, check_arr + 16);
 
-  MergeRuns4<double, __m512d>(intermediate_arr, 16);
+  MergeRuns4<double, __m256d>(intermediate_arr, 16);
 
   for (int l = 0; l < 16; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
@@ -301,7 +301,7 @@ TEST(MergeUtilsTest, AVX256MergePass8Int32BitTest) {
 
   int *buffer;
   aligned_init<int>(buffer, 64);
-  MergePass8<int, __m512i>(intermediate_arr, buffer, 64, 8);
+  MergePass8<int, __m256i>(intermediate_arr, buffer, 64, 8);
 
   for (int m = 0; m < 64; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
@@ -341,7 +341,7 @@ TEST(MergeUtilsTest, AVX256MergePass8Float32BitTest) {
 
   float *buffer;
   aligned_init<float>(buffer, 64);
-  MergePass8<float, __m512>(intermediate_arr, buffer, 64, 8);
+  MergePass8<float, __m256>(intermediate_arr, buffer, 64, 8);
 
   for (int m = 0; m < 64; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
@@ -381,7 +381,7 @@ TEST(MergeUtilsTest, AVX256MergePass4Int64BitTest) {
 
   int64_t *buffer;
   aligned_init<int64_t>(buffer, 16);
-  MergePass4<int64_t, __m512i>(intermediate_arr, buffer, 16, 4);
+  MergePass4<int64_t, __m256i>(intermediate_arr, buffer, 16, 4);
 
   for (int m = 0; m < 16; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
@@ -421,7 +421,7 @@ TEST(MergeUtilsTest, AVX256MergePass4Float64BitTest) {
 
   double *buffer;
   aligned_init<double>(buffer, 16);
-  MergePass4<double, __m512d>(intermediate_arr, buffer, 16, 4);
+  MergePass4<double, __m256d>(intermediate_arr, buffer, 16, 4);
 
   for (int m = 0; m < 16; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
