@@ -99,25 +99,25 @@ void AVX512SortUtil::BitonicSort8x8(T &r0,
                                 T &r5,
                                 T &r6,
                                 T &r7) {
-  MinMax8(r0, r1);
-  MinMax8(r2, r3);
-  MinMax8(r4, r5);
-  MinMax8(r6, r7);
-  MinMax8(r0, r2);
-  MinMax8(r4, r6);
-  MinMax8(r1, r3);
-  MinMax8(r5, r7);
-  MinMax8(r1, r2);
-  MinMax8(r5, r6);
-  MinMax8(r0, r4);
-  MinMax8(r1, r5);
-  MinMax8(r1, r4);
-  MinMax8(r2, r6);
-  MinMax8(r3, r7);
-  MinMax8(r3, r6);
-  MinMax8(r2, r4);
-  MinMax8(r3, r5);
-  MinMax8(r3, r4);
+  AVX512Util::MinMax8(r0, r1);
+  AVX512Util::MinMax8(r2, r3);
+  AVX512Util::MinMax8(r4, r5);
+  AVX512Util::MinMax8(r6, r7);
+  AVX512Util::MinMax8(r0, r2);
+  AVX512Util::MinMax8(r4, r6);
+  AVX512Util::MinMax8(r1, r3);
+  AVX512Util::MinMax8(r5, r7);
+  AVX512Util::MinMax8(r1, r2);
+  AVX512Util::MinMax8(r5, r6);
+  AVX512Util::MinMax8(r0, r4);
+  AVX512Util::MinMax8(r1, r5);
+  AVX512Util::MinMax8(r1, r4);
+  AVX512Util::MinMax8(r2, r6);
+  AVX512Util::MinMax8(r3, r7);
+  AVX512Util::MinMax8(r3, r6);
+  AVX512Util::MinMax8(r2, r4);
+  AVX512Util::MinMax8(r3, r5);
+  AVX512Util::MinMax8(r3, r4);
 }
 
 // 64 bit ints, doubles
@@ -129,32 +129,32 @@ void AVX512SortUtil::BitonicSort16x16(T &r0, T &r1, T &r2, T &r3,
                                   T &r4, T &r5, T &r6, T &r7,
                                   T &r8, T &r9, T &r10, T &r11,
                                   T &r12, T &r13, T &r14, T &r15) {
-  MinMax16(r0, r1); MinMax16(r2, r3); MinMax16(r4, r5); MinMax16(r6, r7);
-  MinMax16(r8, r9); MinMax16(r10, r11); MinMax16(r12, r13); MinMax16(r14, r15);
+  AVX512Util::MinMax16(r0, r1); AVX512Util::MinMax16(r2, r3); AVX512Util::MinMax16(r4, r5); AVX512Util::MinMax16(r6, r7);
+  AVX512Util::MinMax16(r8, r9); AVX512Util::MinMax16(r10, r11); AVX512Util::MinMax16(r12, r13); AVX512Util::MinMax16(r14, r15);
 
-  MinMax16(r0, r2); MinMax16(r4, r6); MinMax16(r8, r10); MinMax16(r12, r14);
-  MinMax16(r1, r3); MinMax16(r5, r7); MinMax16(r9, r11); MinMax16(r13, r15);
+  AVX512Util::MinMax16(r0, r2); AVX512Util::MinMax16(r4, r6); AVX512Util::MinMax16(r8, r10); AVX512Util::MinMax16(r12, r14);
+  AVX512Util::MinMax16(r1, r3); AVX512Util::MinMax16(r5, r7); AVX512Util::MinMax16(r9, r11); AVX512Util::MinMax16(r13, r15);
 
-  MinMax16(r0, r4); MinMax16(r8, r12); MinMax16(r1, r5); MinMax16(r9, r13);
-  MinMax16(r2, r6); MinMax16(r10, r14); MinMax16(r3, r7); MinMax16(r11, r15);
+  AVX512Util::MinMax16(r0, r4); AVX512Util::MinMax16(r8, r12); AVX512Util::MinMax16(r1, r5); AVX512Util::MinMax16(r9, r13);
+  AVX512Util::MinMax16(r2, r6); AVX512Util::MinMax16(r10, r14); AVX512Util::MinMax16(r3, r7); AVX512Util::MinMax16(r11, r15);
 
-  MinMax16(r0, r8); MinMax16(r1, r9); MinMax16(r2, r10); MinMax16(r3, r11);
-  MinMax16(r4, r12); MinMax16(r5, r13); MinMax16(r6, r14); MinMax16(r7, r15);
+  AVX512Util::MinMax16(r0, r8); AVX512Util::MinMax16(r1, r9); AVX512Util::MinMax16(r2, r10); AVX512Util::MinMax16(r3, r11);
+  AVX512Util::MinMax16(r4, r12); AVX512Util::MinMax16(r5, r13); AVX512Util::MinMax16(r6, r14); AVX512Util::MinMax16(r7, r15);
 
-  MinMax16(r5, r10); MinMax16(r6, r9); MinMax16(r3, r12); MinMax16(r13, r14);
-  MinMax16(r7, r11); MinMax16(r1, r2); MinMax16(r4, r8);
+  AVX512Util::MinMax16(r5, r10); AVX512Util::MinMax16(r6, r9); AVX512Util::MinMax16(r3, r12); AVX512Util::MinMax16(r13, r14);
+  AVX512Util::MinMax16(r7, r11); AVX512Util::MinMax16(r1, r2); AVX512Util::MinMax16(r4, r8);
 
-  MinMax16(r1, r4); MinMax16(r7, r13); MinMax16(r2, r8);
-  MinMax16(r11, r14); MinMax16(r5, r6); MinMax16(r9, r10);
+  AVX512Util::MinMax16(r1, r4); AVX512Util::MinMax16(r7, r13); AVX512Util::MinMax16(r2, r8);
+  AVX512Util::MinMax16(r11, r14); AVX512Util::MinMax16(r5, r6); AVX512Util::MinMax16(r9, r10);
 
-  MinMax16(r2, r4); MinMax16(r11, r13); MinMax16(r3, r8); MinMax16(r7, r12);
+  AVX512Util::MinMax16(r2, r4); AVX512Util::MinMax16(r11, r13); AVX512Util::MinMax16(r3, r8); AVX512Util::MinMax16(r7, r12);
 
-  MinMax16(r6, r8); MinMax16(r10, r12); MinMax16(r3, r5); MinMax16(r7, r9);
+  AVX512Util::MinMax16(r6, r8); AVX512Util::MinMax16(r10, r12); AVX512Util::MinMax16(r3, r5); AVX512Util::MinMax16(r7, r9);
 
-  MinMax16(r3, r4); MinMax16(r5, r6); MinMax16(r7, r8); MinMax16(r9, r10);
-  MinMax16(r11, r12);
+  AVX512Util::MinMax16(r3, r4); AVX512Util::MinMax16(r5, r6); AVX512Util::MinMax16(r7, r8); AVX512Util::MinMax16(r9, r10);
+  AVX512Util::MinMax16(r11, r12);
 
-  MinMax16(r6, r7); MinMax16(r8, r9);
+  AVX512Util::MinMax16(r6, r7); AVX512Util::MinMax16(r8, r9);
 }
 
 // 32 bit ints, floats

@@ -12,7 +12,7 @@ TEST(SortUtilTest, AVX256BitonicSort8x8Int32BitTest) {
     AVX256Util::LoadReg(r[i], arr + i*8);
   }
   AVX256SortUtil::BitonicSort8x8(r[0], r[1], r[2], r[3],
-                             r[4], r[5], r[6], r[7]);
+                                 r[4], r[5], r[6], r[7]);
   for(int i = 0; i < 8; i++) {
     AVX256Util::StoreReg(r[i], arr + i*8);
   }
@@ -59,7 +59,7 @@ TEST(SortUtilTest, AVX256MaskedBitonicSort8x8Int32BitTest) {
 
 TEST(SortUtilTest, AVX256BitonicSort8x8Float32BitTest) {
   float *arr;
-  aligned_init(arr, 64);
+  aligned_init<float>(arr, 64);
   TestUtil::RandGenFloat<float>(arr, 64, -10, 10);
   __m256 r[8];
   for(int i = 0; i < 8; i++) {
@@ -130,7 +130,7 @@ TEST(SortUtilTest, AVX256BitonicSort4x4Int64BitTest) {
 
 TEST(SortUtilTest, AVX256BitonicSort4x4Float64BitTest) {
   double *arr;
-  aligned_init(arr, 16);
+  aligned_init<double>(arr, 16);
   TestUtil::RandGenFloat<double>(arr, 16, -10, 10);
   __m256d r[4];
   for(int i = 0; i < 4; i++) {
@@ -147,3 +147,4 @@ TEST(SortUtilTest, AVX256BitonicSort4x4Float64BitTest) {
   }
   delete[](arr);
 }
+

@@ -6,16 +6,16 @@
 
 TEST(SortUtilTest, AVX512BitonicSort16x16Int32BitTest) {
   int *arr;
-  aligned_init(arr, 256);
-  TestUtil::RandGenInt(arr, 256, -10, 10);
+  aligned_init<int>(arr, 256);
+  TestUtil::RandGenInt<int>(arr, 256, -10, 10);
   __m512i r[16];
   for(int i = 0; i < 16; i++) {
     AVX512Util::LoadReg(r[i], arr + i*16);
   }
-  AVX512Util::BitonicSort16x16(r[0], r[1], r[2], r[3],
-                               r[4], r[5], r[6], r[7],
-                               r[8], r[9], r[10], r[11],
-                               r[12], r[13], r[14], r[15]);
+  AVX512SortUtil::BitonicSort16x16(r[0], r[1], r[2], r[3],
+                                   r[4], r[5], r[6], r[7],
+                                   r[8], r[9], r[10], r[11],
+                                   r[12], r[13], r[14], r[15]);
   for(int i = 0; i < 16; i++) {
     AVX512Util::StoreReg(r[i], arr + i*16);
   }
@@ -29,16 +29,16 @@ TEST(SortUtilTest, AVX512BitonicSort16x16Int32BitTest) {
 
 TEST(SortUtilTest, AVX512BitonicSort16x16Float32BitTest) {
   float *arr;
-  aligned_init(arr, 256);
+  aligned_init<float>(arr, 256);
   TestUtil::RandGenFloat<float>(arr, 256, -10, 10);
   __m512 r[16];
   for(int i = 0; i < 16; i++) {
     AVX512Util::LoadReg(r[i], arr + i*16);
   }
-  AVX512Util::BitonicSort16x16(r[0], r[1], r[2], r[3],
-                               r[4], r[5], r[6], r[7],
-                               r[8], r[9], r[10], r[11],
-                               r[12], r[13], r[14], r[15]);
+  AVX512SortUtil::BitonicSort16x16(r[0], r[1], r[2], r[3],
+                                   r[4], r[5], r[6], r[7],
+                                   r[8], r[9], r[10], r[11],
+                                   r[12], r[13], r[14], r[15]);
   for(int i = 0; i < 16; i++) {
     AVX512Util::StoreReg(r[i], arr + i*16);
   }
@@ -58,8 +58,8 @@ TEST(SortUtilTest, AVX512BitonicSort8x8Int64BitTest) {
   for(int i = 0; i < 8; i++) {
     AVX512Util::LoadReg(r[i], arr + i*8);
   }
-  AVX512Util::BitonicSort8x8(r[0], r[1], r[2], r[3],
-                             r[4], r[5], r[6], r[7]);
+  AVX512SortUtil::BitonicSort8x8(r[0], r[1], r[2], r[3],
+                                 r[4], r[5], r[6], r[7]);
   for(int i = 0; i < 8; i++) {
     AVX512Util::StoreReg(r[i], arr + i*8);
   }
@@ -73,14 +73,14 @@ TEST(SortUtilTest, AVX512BitonicSort8x8Int64BitTest) {
 
 TEST(SortUtilTest, AVX512BitonicSort8x8Float64BitTest) {
   double *arr;
-  aligned_init(arr, 64);
+  aligned_init<double>(arr, 64);
   TestUtil::RandGenFloat<double>(arr, 64, -10, 10);
   __m512d r[8];
   for(int i = 0; i < 8; i++) {
     AVX512Util::LoadReg(r[i], arr + i*8);
   }
-  AVX512Util::BitonicSort8x8(r[0], r[1], r[2], r[3],
-                             r[4], r[5], r[6], r[7]);
+  AVX512SortUtil::BitonicSort8x8(r[0], r[1], r[2], r[3],
+                                 r[4], r[5], r[6], r[7]);
   for(int i = 0; i < 8; i++) {
     AVX512Util::StoreReg(r[i], arr + i*8);
   }
@@ -94,8 +94,8 @@ TEST(SortUtilTest, AVX512BitonicSort8x8Float64BitTest) {
 
 TEST(SortUtilTest, AVX512SortBlock256Int32BitTest) {
   int *arr;
-  aligned_init(arr, 256);
-  TestUtil::RandGenInt(arr, 256, -10, 10);
+  aligned_init<int>(arr, 256);
+  TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
   int *check_arr = (int *)malloc(256 * sizeof(int));
   int *temp_arr = (int *)malloc(16 * sizeof(int));
@@ -122,11 +122,11 @@ TEST(SortUtilTest, AVX512SortBlock256Int32BitTest) {
 
 TEST(SortUtilTest, AVX512SortBlock256Float32BitTest) {
   float *arr;
-  aligned_init(arr, 256);
-  TestUtil::RandGenFloat(arr, 256, -10, 10);
+  aligned_init<float>(arr, 256);
+  TestUtil::RandGenFloat<float>(arr, 256, -10, 10);
 
-  float *check_arr = (float *)malloc(256 * sizeof(float));
-  float *temp_arr = (float *)malloc(16 * sizeof(float));
+  auto *check_arr = (float *)malloc(256 * sizeof(float));
+  auto *temp_arr = (float *)malloc(16 * sizeof(float));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
