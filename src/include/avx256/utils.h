@@ -40,8 +40,9 @@ class AVX256Util{
                            __m256i &row4, __m256i &row5, __m256i &row6, __m256i &row7);
   static void Transpose8x8(__m256 &row0, __m256 &row1, __m256 &row2, __m256 &row3,
                            __m256 &row4, __m256 &row5, __m256 &row6, __m256 &row7);
-  static void Transpose4x4(__m256i &row0, __m256i &row1, __m256i &row2, __m256i &row3);
-  static void Transpose4x4(__m256d &row0, __m256d &row1, __m256d &row2, __m256d &row3);
+  template <typename T>
+  static void Transpose4x4(T &row0, T &row1, T &row2, T &row3);
+
   static __m256i Reverse8(__m256i& v);
   static __m256 Reverse8(__m256& v);
   static __m256i Reverse4(__m256i& v);

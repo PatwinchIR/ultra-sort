@@ -131,7 +131,7 @@ void AVX256Util::Transpose8x8(__m256i &row0,
                               __m256i &row7) {
   __m256 __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
   __m256 __tt0, __tt1, __tt2, __tt3, __tt4, __tt5, __tt6, __tt7;
-  __t0 = _mm256_unpacklo_ps((__m256)row0, (__m256)row1);
+  __t0 = _mm256_unpacklo_epi32((__m256)row0, (__m256)row1);
   __t1 = _mm256_unpackhi_ps((__m256)row0, (__m256)row1);
   __t2 = _mm256_unpacklo_ps((__m256)row2, (__m256)row3);
   __t3 = _mm256_unpackhi_ps((__m256)row2, (__m256)row3);
@@ -197,35 +197,26 @@ void AVX256Util::Transpose8x8(__m256 &row0,
   row7 = _mm256_permute2f128_ps(__tt3, __tt7, 0x31);
 }
 
-void AVX256Util::Transpose4x4(__m256i &row0,
-                              __m256i &row1,
-                              __m256i &row2,
-                              __m256i &row3) {
-  __m256i __t0, __t1, __t2, __t3;
-  __t0 = _mm256_unpacklo_epi64(row0, row1);
-  __t1 = _mm256_unpackhi_epi64(row0, row1);
-  __t2 = _mm256_unpacklo_epi64(row2, row3);
-  __t3 = _mm256_unpackhi_epi64(row2, row3);
-  row0 = (__m256i)_mm256_permute2f128_ps((__m256)__t0, (__m256)__t2, 0x20);
-  row1 = (__m256i)_mm256_permute2f128_ps((__m256)__t1, (__m256)__t3, 0x20);
-  row2 = (__m256i)_mm256_permute2f128_ps((__m256)__t0, (__m256)__t2, 0x31);
-  row3 = (__m256i)_mm256_permute2f128_ps((__m256)__t1, (__m256)__t3, 0x31);
-}
-
-void AVX256Util::Transpose4x4(__m256d &row0,
-                              __m256d &row1,
-                              __m256d &row2,
-                              __m256d &row3) {
+// TODO: Check whether Dissociating into separate functions is worth it?
+template <typename T>
+void AVX256Util::Transpose4x4(T &row0,
+                              T &row1,
+                              T &row2,
+                              T &row3) {
   __m256d __t0, __t1, __t2, __t3;
-  __t0 = _mm256_unpacklo_pd(row0, row1);
-  __t1 = _mm256_unpackhi_pd(row0, row1);
-  __t2 = _mm256_unpacklo_pd(row2, row3);
-  __t3 = _mm256_unpackhi_pd(row2, row3);
-  row0 = (__m256d)_mm256_permute2f128_ps((__m256)__t0, (__m256)__t2, 0x20);
-  row1 = (__m256d)_mm256_permute2f128_ps((__m256)__t1, (__m256)__t3, 0x20);
-  row2 = (__m256d)_mm256_permute2f128_ps((__m256)__t0, (__m256)__t2, 0x31);
-  row3 = (__m256d)_mm256_permute2f128_ps((__m256)__t1, (__m256)__t3, 0x31);
+  __t0 = _mm256_unpacklo_pd((__m256d)row0, (__m256d)row1);
+  __t1 = _mm256_unpackhi_pd((__m256d)row0, (__m256d)row1);
+  __t2 = _mm256_unpacklo_pd((__m256d)row2, (__m256d)row3);
+  __t3 = _mm256_unpackhi_pd((__m256d)row2, (__m256d)row3);
+  row0 = (T)_mm256_permute2f128_ps((__m256)__t0, (__m256)__t2, 0x20);
+  row1 = (T)_mm256_permute2f128_ps((__m256)__t1, (__m256)__t3, 0x20);
+  row2 = (T)_mm256_permute2f128_ps((__m256)__t0, (__m256)__t2, 0x31);
+  row3 = (T)_mm256_permute2f128_ps((__m256)__t1, (__m256)__t3, 0x31);
 }
+// Originally meant for 64-bit floats/ints - Can be used for 32-bit in case of K-V pairs
+template void AVX256Util::Transpose4x4<__m256>(__m256 &row0, __m256 &row1, __m256 &row2, __m256 &row3);
+template void AVX256Util::Transpose4x4<__m256i>(__m256i &row0, __m256i &row1, __m256i &row2, __m256i &row3);
+template void AVX256Util::Transpose4x4<__m256d>(__m256d &row0, __m256d &row1, __m256d &row2, __m256d &row3);
 
 __m256i AVX256Util::Reverse8(__m256i &v) {
   return _mm256_permutevar8x32_epi32(v, _mm256_setr_epi32(7, 6, 5, 4, 3, 2, 1, 0));
