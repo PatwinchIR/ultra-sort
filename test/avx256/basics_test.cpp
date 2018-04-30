@@ -5,7 +5,7 @@
 
 // Introduction at: https://www.codeproject.com/Articles/874396/Crunching-Numbers-with-AVX-and-AVX
 // TODO: _mm256_permute2f128_pd
-
+namespace avx2 {
 TEST(BasicsTest, AVX256MaxDoubleTest) {
   double *c;
   aligned_init<double>(c, 4);
@@ -14,7 +14,7 @@ TEST(BasicsTest, AVX256MaxDoubleTest) {
   ra = _mm256_setr_pd(3, 1, 5, 7);
   rb = _mm256_setr_pd(5, 4, 2, 9);
   rc = _mm256_max_pd(ra, rb);
-  AVX256Util::StoreReg(rc, c);
+  StoreReg(rc, c);
   EXPECT_DOUBLE_EQ(c[0], 5);
   EXPECT_DOUBLE_EQ(c[1], 4);
   EXPECT_DOUBLE_EQ(c[2], 5);
@@ -32,7 +32,7 @@ TEST(BasicsTest, AVX256UnpackLoHiTest) {
   rb = _mm256_setr_ps(5, 4, 2, 9, 1, 3, 4, 5);
   // picks out lower order bits
   rc = _mm256_unpacklo_ps(ra, rb);
-  AVX256Util::StoreReg(rc, c);
+  StoreReg(rc, c);
   EXPECT_DOUBLE_EQ(c[0], 3);
   EXPECT_DOUBLE_EQ(c[1], 5);
   EXPECT_DOUBLE_EQ(c[2], 1);
@@ -43,7 +43,7 @@ TEST(BasicsTest, AVX256UnpackLoHiTest) {
   EXPECT_DOUBLE_EQ(c[7], 3);
   // picks out higher order bits
   rc = _mm256_unpackhi_ps(ra, rb);
-  AVX256Util::StoreReg(rc, c);
+  StoreReg(rc, c);
   EXPECT_DOUBLE_EQ(c[0], 5);
   EXPECT_DOUBLE_EQ(c[1], 2);
   EXPECT_DOUBLE_EQ(c[2], 7);
@@ -64,7 +64,7 @@ TEST(BasicsTest, AVX256ShuffleTest) {
   ra = _mm256_setr_ps(0, 2, 4, 6, 8, 10, 12, 14);
   rb = _mm256_setr_ps(1, 3, 5, 7, 9, 11, 13, 15);
   rc = _mm256_shuffle_ps(ra, rb, 0b01110100);
-  AVX256Util::StoreReg(rc, c);
+  StoreReg(rc, c);
   EXPECT_DOUBLE_EQ(c[0], 0);
   EXPECT_DOUBLE_EQ(c[1], 2);
   EXPECT_DOUBLE_EQ(c[2], 7);
@@ -75,7 +75,7 @@ TEST(BasicsTest, AVX256ShuffleTest) {
   EXPECT_DOUBLE_EQ(c[7], 11);
   rc = _mm256_shuffle_ps(ra, rb, 0b10110000);
   // 00 00 11 10
-  AVX256Util::StoreReg(rc, c);
+  StoreReg(rc, c);
   EXPECT_DOUBLE_EQ(c[0], 0);
   EXPECT_DOUBLE_EQ(c[1], 0);
   EXPECT_DOUBLE_EQ(c[2], 7);
@@ -98,7 +98,7 @@ TEST(BasicsTest, AVX256BlendTest) {
   ra = _mm256_setr_ps(0, 2, 4, 6, 8, 10, 12, 14);
   rb = _mm256_setr_ps(1, 3, 5, 7, 9, 11, 13, 15);
   rc = _mm256_blend_ps(ra, rb, 0b01110100);
-  AVX256Util::StoreReg(rc, c);
+  StoreReg(rc, c);
   // 00101110
   EXPECT_DOUBLE_EQ(c[0], 0);
   EXPECT_DOUBLE_EQ(c[1], 2);
@@ -111,24 +111,25 @@ TEST(BasicsTest, AVX256BlendTest) {
   delete c;
 }
 
-TEST(BasicsTest, AVX256MinMax32KV) {
-  // Register-type input
-  __m256 ra, rb;
-  // need to set in reverse order since Intel's Little Endian arch
-  // low ---------> hi           |
-  // (K, V) pairs, first num is K, then V. We try to min/max by K
-  ra = _mm256_setr_ps(0.0, 2.0, 5.0, 8.0, 8.0, 10.0, 13.0, 15.0);
-  rb = _mm256_setr_ps(1.0, 3.0, 4.0, 10.0, 9.0, 11.0, 12.0, 14.0);
-  // Register-type mask
-  // rc:0, 0, -1, -1, 0, 0, -1, -1,
-  auto keycopy_flag = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
-  auto cmp_val = _mm256_cmp_ps(ra, rb, _CMP_GT_OQ);
-
-  auto rc = _mm256_permutevar8x32_ps(cmp_val, keycopy_flag);
-//  // 0, 0, 5, 8, 0, 0, 13, 15,
-//  auto rabmaxa = _mm256_and_si256(rc, ra);
-//  auto rabmaxb = _mm256_andnot_si256(rc, rb);
-//  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
-//  rab = _mm256_andnot_si256(rab, rb);
-//  print_arr((int*)(&cmp_val), 0, 8, "cmpval: ");
+//TEST(BasicsTest, AVX256MinMax32KV) {
+//  // Register-type input
+//  __m256 ra, rb;
+//  // need to set in reverse order since Intel's Little Endian arch
+//  // low ---------> hi           |
+//  // (K, V) pairs, first num is K, then V. We try to min/max by K
+//  ra = _mm256_setr_ps(0.0, 2.0, 5.0, 8.0, 8.0, 10.0, 13.0, 15.0);
+//  rb = _mm256_setr_ps(1.0, 3.0, 4.0, 10.0, 9.0, 11.0, 12.0, 14.0);
+//  // Register-type mask
+//  // rc:0, 0, -1, -1, 0, 0, -1, -1,
+//  auto keycopy_flag = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
+//  auto cmp_val = _mm256_cmp_ps(ra, rb, _CMP_GT_OQ);
+//
+//  auto rc = _mm256_permutevar8x32_ps(cmp_val, keycopy_flag);
+////  // 0, 0, 5, 8, 0, 0, 13, 15,
+////  auto rabmaxa = _mm256_and_si256(rc, ra);
+////  auto rabmaxb = _mm256_andnot_si256(rc, rb);
+////  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
+////  rab = _mm256_andnot_si256(rab, rb);
+////  print_arr((int*)(&cmp_val), 0, 8, "cmpval: ");
+//}
 }

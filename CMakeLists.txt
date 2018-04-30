@@ -13,7 +13,7 @@ include_directories(third_party/googletest/googlemock/include)
 include_directories(third_party/ips4o)
 include_directories(third_party/pdqsort)
 
-set(CMAKE_CXX_FLAGS "-g -O3 -Wall -march=native")
+set(CMAKE_CXX_FLAGS "-g -O3 -flto -Wall -march=native")
 
 file(GLOB_RECURSE SOURCE_FILES
         "src/*.cpp" "test/*.cpp")

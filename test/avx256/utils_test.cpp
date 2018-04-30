@@ -3,6 +3,7 @@
 #include "test_util.h"
 #include "avx256/utils.h"
 
+namespace avx2{
 TEST(UtilsTest, AVX256LoadStore32BitTest) {
   int *a;
   int *b;
@@ -11,11 +12,11 @@ TEST(UtilsTest, AVX256LoadStore32BitTest) {
   TestUtil::PopulateSeqArray(a, 0, 8);
   TestUtil::PopulateSeqArray(b, 8, 16);
   __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::StoreReg(ra, b);
-  AVX256Util::StoreReg(rb, a);
-  for(int i = 0; i < 8; i++) {
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  StoreReg(ra, b);
+  StoreReg(rb, a);
+  for (int i = 0; i < 8; i++) {
     EXPECT_EQ(b[i], i);
     EXPECT_EQ(a[i], i + 8);
   }
@@ -31,11 +32,11 @@ TEST(UtilsTest, AVX256LoadStore64BitTest) {
   TestUtil::PopulateSeqArray<int64_t>(a, 0, 4);
   TestUtil::PopulateSeqArray<int64_t>(b, 4, 8);
   __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::StoreReg(ra, b);
-  AVX256Util::StoreReg(rb, a);
-  for(int i = 0; i < 4; i++) {
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  StoreReg(ra, b);
+  StoreReg(rb, a);
+  for (int i = 0; i < 4; i++) {
     EXPECT_EQ(b[i], i);
     EXPECT_EQ(a[i], i + 4);
   }
@@ -51,12 +52,12 @@ TEST(UtilsTest, AVX256MinMax8Int32BitTest) {
   TestUtil::RandGenInt(a, 8, -10, 10);
   TestUtil::RandGenInt(b, 8, -10, 10);
   __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::MinMax8(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  for(int i = 0; i < 8; i++) {
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  MinMax8(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
+  for (int i = 0; i < 8; i++) {
     EXPECT_LE(a[i], b[i]);
   }
   delete[](a);
@@ -73,12 +74,12 @@ TEST(UtilsTest, AVX256MinMax8Float32BitTest) {
   TestUtil::RandGenFloat(a, 8, lo, hi);
   TestUtil::RandGenFloat(b, 8, lo, hi);
   __m256 ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::MinMax8(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  for(int i = 0; i < 8; i++) {
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  MinMax8(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
+  for (int i = 0; i < 8; i++) {
     EXPECT_LE(a[i], b[i]);
   }
   delete[](a);
@@ -93,12 +94,12 @@ TEST(UtilsTest, AVX256MinMax4Int64BitTest) {
   TestUtil::RandGenInt<int64_t>(a, 4, -10, 10);
   TestUtil::RandGenInt<int64_t>(b, 4, -10, 10);
   __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256Util::MinMax4(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
-  for(int i = 0; i < 4; i++) {
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  MinMax4(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
+  for (int i = 0; i < 4; i++) {
     EXPECT_LE(a[i], b[i]);
   }
   delete[](a);
@@ -114,23 +115,23 @@ TEST(UtilsTest, AVX256MaskedMinMax8Int32Test) {
   int unit_size = 4;
   T *kv_flat1, *kv_flat2;
   TestUtil::RandGenIntRecords(kv_flat1, unit_size, -10, 10, 0);
-  TestUtil::RandGenIntRecords(kv_flat2, unit_size, -10, 10, unit_size*2);
-  std::map<T,T> kv_map;
+  TestUtil::RandGenIntRecords(kv_flat2, unit_size, -10, 10, unit_size * 2);
+  std::map<T, T> kv_map;
   for (int i = 0; i < unit_size; ++i) {
-    kv_map.insert(std::pair<T,T>(kv_flat1[2*i + 1], kv_flat1[2*i]));
-    kv_map.insert(std::pair<T,T>(kv_flat2[2*i + 1], kv_flat2[2*i]));
+    kv_map.insert(std::pair<T, T>(kv_flat1[2 * i + 1], kv_flat1[2 * i]));
+    kv_map.insert(std::pair<T, T>(kv_flat2[2 * i + 1], kv_flat2[2 * i]));
   }
 
   __m256i r1, r2;
-  AVX256Util::LoadReg(r1, kv_flat1);
-  AVX256Util::LoadReg(r2, kv_flat2);
-  AVX256Util::MaskedMinMax8(r1, r2);
-  AVX256Util::StoreReg(r1, kv_flat1);
-  AVX256Util::StoreReg(r2, kv_flat2);
-  for(int i = 0; i < unit_size; i++) {
-    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
-    EXPECT_EQ(kv_flat1[2*i], kv_map[kv_flat1[2*i + 1]]);
-    EXPECT_EQ(kv_flat2[2*i], kv_map[kv_flat2[2*i + 1]]);
+  LoadReg(r1, kv_flat1);
+  LoadReg(r2, kv_flat2);
+  MaskedMinMax8(r1, r2);
+  StoreReg(r1, kv_flat1);
+  StoreReg(r2, kv_flat2);
+  for (int i = 0; i < unit_size; i++) {
+    EXPECT_LE(kv_flat1[2 * i], kv_flat2[2 * i]);
+    EXPECT_EQ(kv_flat1[2 * i], kv_map[kv_flat1[2 * i + 1]]);
+    EXPECT_EQ(kv_flat2[2 * i], kv_map[kv_flat2[2 * i + 1]]);
   }
   delete[](kv_flat1);
   delete[](kv_flat2);
@@ -145,23 +146,23 @@ TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
   int unit_size = 4;
   T *kv_flat1, *kv_flat2;
   TestUtil::RandGenFloatRecords(kv_flat1, unit_size, -10.0f, 10.0f, 0);
-  TestUtil::RandGenFloatRecords(kv_flat2, unit_size, -10.0f, 10.0f, unit_size*2);
-  std::map<T,T> kv_map;
+  TestUtil::RandGenFloatRecords(kv_flat2, unit_size, -10.0f, 10.0f, unit_size * 2);
+  std::map<T, T> kv_map;
   for (int i = 0; i < unit_size; ++i) {
-    kv_map.insert(std::pair<T,T>(kv_flat1[2*i + 1], kv_flat1[2*i]));
-    kv_map.insert(std::pair<T,T>(kv_flat2[2*i + 1], kv_flat2[2*i]));
+    kv_map.insert(std::pair<T, T>(kv_flat1[2 * i + 1], kv_flat1[2 * i]));
+    kv_map.insert(std::pair<T, T>(kv_flat2[2 * i + 1], kv_flat2[2 * i]));
   }
 
   __m256 r1, r2;
-  AVX256Util::LoadReg(r1, kv_flat1);
-  AVX256Util::LoadReg(r2, kv_flat2);
-  AVX256Util::MaskedMinMax8(r1, r2);
-  AVX256Util::StoreReg(r1, kv_flat1);
-  AVX256Util::StoreReg(r2, kv_flat2);
-  for(int i = 0; i < unit_size; i++) {
-    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
-    EXPECT_EQ(kv_flat1[2*i], kv_map[kv_flat1[2*i + 1]]);
-    EXPECT_EQ(kv_flat2[2*i], kv_map[kv_flat2[2*i + 1]]);
+  LoadReg(r1, kv_flat1);
+  LoadReg(r2, kv_flat2);
+  MaskedMinMax8(r1, r2);
+  StoreReg(r1, kv_flat1);
+  StoreReg(r2, kv_flat2);
+  for (int i = 0; i < unit_size; i++) {
+    EXPECT_LE(kv_flat1[2 * i], kv_flat2[2 * i]);
+    EXPECT_EQ(kv_flat1[2 * i], kv_map[kv_flat1[2 * i + 1]]);
+    EXPECT_EQ(kv_flat2[2 * i], kv_map[kv_flat2[2 * i + 1]]);
   }
   delete[](kv_flat1);
   delete[](kv_flat2);
@@ -184,11 +185,11 @@ TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
 //  }
 //
 //  __m256i r1, r2;
-//  AVX256Util::LoadReg(r1, kv_flat1);
-//  AVX256Util::LoadReg(r2, kv_flat2);
-//  AVX256Util::MaskedMinMax4(r1, r2);
-//  AVX256Util::StoreReg(r1, kv_flat1);
-//  AVX256Util::StoreReg(r2, kv_flat2);
+//  LoadReg(r1, kv_flat1);
+//  LoadReg(r2, kv_flat2);
+//  MaskedMinMax4(r1, r2);
+//  StoreReg(r1, kv_flat1);
+//  StoreReg(r2, kv_flat2);
 //  for(int i = 0; i < unit_size; i++) {
 //    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
 //    EXPECT_EQ(kv_flat1[2*i], kv_map[kv_flat1[2*i + 1]]);
@@ -206,11 +207,11 @@ TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
 //  TestUtil::RandGenFloat<double>(a, 4, -10, 10);
 //  TestUtil::RandGenFloat<double>(b, 4, -10, 10);
 //  __m256d ra, rb;
-//  AVX256Util::LoadReg(ra, a);
-//  AVX256Util::LoadReg(rb, b);
-//  AVX256Util::MinMax4(ra, rb);
-//  AVX256Util::StoreReg(ra, a);
-//  AVX256Util::StoreReg(rb, b);
+//  LoadReg(ra, a);
+//  LoadReg(rb, b);
+//  MinMax4(ra, rb);
+//  StoreReg(ra, a);
+//  StoreReg(rb, b);
 //  for(int i = 0; i < 4; i++) {
 //    EXPECT_LE(a[i], b[i]);
 //  }
@@ -218,3 +219,4 @@ TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
 //  delete[](b);
 //}
 //
+}

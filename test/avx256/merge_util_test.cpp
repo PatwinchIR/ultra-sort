@@ -3,6 +3,7 @@
 #include "test_util.h"
 #include "avx256/utils.h"
 
+namespace avx2 {
 TEST(MergeUtilsTest, AVX256BitonicMerge8Int32BitTest) {
   int *a;
   int *b;
@@ -11,14 +12,14 @@ TEST(MergeUtilsTest, AVX256BitonicMerge8Int32BitTest) {
   TestUtil::PopulateSeqArray(a, 0, 16, 2);
   TestUtil::PopulateSeqArray(b, 1, 16, 2);
   __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256MergeUtil::BitonicMerge8(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  BitonicMerge8(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
   int ab[16];
-  for(int i = 0; i < 16; i++) {
-    if(i < 8) {
+  for (int i = 0; i < 16; i++) {
+    if (i < 8) {
       ab[i] = a[i];
     } else {
       ab[i] = b[i - 8];
@@ -37,22 +38,22 @@ TEST(MergeUtilsTest, AVX256BitonicMerge8Float32BitTest) {
   TestUtil::PopulateSeqArray(a, 0, 16, 2);
   TestUtil::PopulateSeqArray(b, 1, 16, 2);
   __m256 ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256MergeUtil::BitonicMerge8(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  BitonicMerge8(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
   float ab[16];
-  for(int i = 0; i < 16; i++) {
-    if(i < 8) {
+  for (int i = 0; i < 16; i++) {
+    if (i < 8) {
       ab[i] = a[i];
     } else {
       ab[i] = b[i - 8];
     }
     EXPECT_EQ(ab[i], i);
   }
-  delete(a);
-  delete(b);
+  delete (a);
+  delete (b);
 }
 
 TEST(MergeUtilsTest, AVX256BitonicMerge4Int64BitTest) {
@@ -63,14 +64,14 @@ TEST(MergeUtilsTest, AVX256BitonicMerge4Int64BitTest) {
   TestUtil::PopulateSeqArray<int64_t>(a, 0, 8, 2);
   TestUtil::PopulateSeqArray<int64_t>(b, 1, 8, 2);
   __m256i ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256MergeUtil::BitonicMerge4(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  BitonicMerge4(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
   int64_t ab[8];
-  for(int i = 0; i < 8; i++) {
-    if(i < 4) {
+  for (int i = 0; i < 8; i++) {
+    if (i < 4) {
       ab[i] = a[i];
     } else {
       ab[i] = b[i - 4];
@@ -89,14 +90,14 @@ TEST(MergeUtilsTest, AVX256BitonicMerge4Float64BitTest) {
   TestUtil::PopulateSeqArray(a, 0, 8, 2);
   TestUtil::PopulateSeqArray(b, 1, 8, 2);
   __m256d ra, rb;
-  AVX256Util::LoadReg(ra, a);
-  AVX256Util::LoadReg(rb, b);
-  AVX256MergeUtil::BitonicMerge4(ra, rb);
-  AVX256Util::StoreReg(ra, a);
-  AVX256Util::StoreReg(rb, b);
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  BitonicMerge4(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
   double ab[8];
-  for(int i = 0; i < 8; i++) {
-    if(i < 4) {
+  for (int i = 0; i < 8; i++) {
+    if (i < 4) {
       ab[i] = a[i];
     } else {
       ab[i] = b[i - 4];
@@ -105,4 +106,5 @@ TEST(MergeUtilsTest, AVX256BitonicMerge4Float64BitTest) {
   }
   delete[](a);
   delete[](b);
+}
 }

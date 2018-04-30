@@ -8,9 +8,9 @@
 class AVX512SortUtil{
  public:
   template <typename InType, typename RegType>
-  static void SortBlock256(InType *&arr, int offset);
+  void SortBlock256(InType *&arr, int offset);
   template <typename InType, typename RegType>
-  static void SortBlock64(InType *&arr, int offset);
+  void SortBlock64(InType *&arr, int offset);
 };
 
 #endif

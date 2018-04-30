@@ -5,28 +5,16 @@
 
 #ifdef AVX2
 
-class AVX256SortUtil{
- public:
+namespace avx2{
   // Regular
   template <typename InType, typename RegType>
-  static void SortBlock64(InType *&arr, int offset);
+  void SortBlock64(InType *&arr, int offset);
   template <typename InType, typename RegType>
-  static void SortBlock16(InType *&arr, int offset);
+  void SortBlock16(InType *&arr, int offset);
 
   // Masked
   template <typename InType, typename RegType>
-  static void MaskedSortBlock4x8(InType *&arr, int offset);
-
-  // BitonicSort(Sorting Networks)
-  // Simple
-  template <typename T>
-  static void BitonicSort8x8(T &r0, T &r1, T &r2, T &r3,
-                             T &r4, T &r5, T &r6, T &r7);
-  template <typename T>
-  static void BitonicSort4x4(T &r0, T &r1, T &r2, T &r3);
-  // Masked
-  template <typename T>
-  static void MaskedBitonicSort4x8(T &r0, T &r1, T &r2, T &r3);
+  void MaskedSortBlock4x8(InType *&arr, int offset);
 };
 
 #endif
