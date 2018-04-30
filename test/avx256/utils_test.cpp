@@ -168,55 +168,65 @@ TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
   delete[](kv_flat2);
 }
 
-//TEST(UtilsTest, AVX256MaskedMinMax4Int64Test) {
-//  // For masked tests, we assume k,v follow one another with native type
-//  // i.e. for 32-bit int k,v array -> Assume its flattened out to an int array
-//  // 4 32-bit key-value integers will fit in AVX2 register
-//  // This test is currently weak - only checks for sorted order
-//  using T = int64_t;
-//  int unit_size = 2;
-//  T *kv_flat1, *kv_flat2;
-//  TestUtil::RandGenIntRecords(kv_flat1, unit_size*2, -10ll, 10ll, 0);
-//  TestUtil::RandGenIntRecords(kv_flat2, unit_size*2, -10ll, 10ll, unit_size*2);
-//  std::map<T,T> kv_map;
-//  for (int i = 0; i < unit_size; ++i) {
-//    kv_map.insert(std::pair<T,T>(kv_flat1[2*i + 1], kv_flat1[2*i]));
-//    kv_map.insert(std::pair<T,T>(kv_flat2[2*i + 1], kv_flat2[2*i]));
-//  }
-//
-//  __m256i r1, r2;
-//  LoadReg(r1, kv_flat1);
-//  LoadReg(r2, kv_flat2);
-//  MaskedMinMax4(r1, r2);
-//  StoreReg(r1, kv_flat1);
-//  StoreReg(r2, kv_flat2);
-//  for(int i = 0; i < unit_size; i++) {
-//    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
-//    EXPECT_EQ(kv_flat1[2*i], kv_map[kv_flat1[2*i + 1]]);
-//    EXPECT_EQ(kv_flat2[2*i], kv_map[kv_flat2[2*i + 1]]);
-//  }
-//  delete[](kv_flat1);
-//  delete[](kv_flat2);
-//}
+TEST(UtilsTest, AVX256MaskedMinMax4Int64Test) {
+  // For masked tests, we assume k,v follow one another with native type
+  // i.e. for 32-bit int k,v array -> Assume its flattened out to an int array
+  // 4 32-bit key-value integers will fit in AVX2 register
+  // This test is currently weak - only checks for sorted order
+  using T = int64_t;
+  int unit_size = 2;
+  T *kv_flat1, *kv_flat2;
+  TestUtil::RandGenIntRecords(kv_flat1, unit_size*2, -10ll, 10ll, 0);
+  TestUtil::RandGenIntRecords(kv_flat2, unit_size*2, -10ll, 10ll, unit_size*2);
+  std::map<T,T> kv_map;
+  for (int i = 0; i < unit_size; ++i) {
+    kv_map.insert(std::pair<T,T>(kv_flat1[2*i + 1], kv_flat1[2*i]));
+    kv_map.insert(std::pair<T,T>(kv_flat2[2*i + 1], kv_flat2[2*i]));
+  }
 
-//TEST(UtilsTest, AVX256MaskedMinMax4Int64Test) {
-//  double *a;
-//  double *b;
-//  aligned_init<double>(a, 4);
-//  aligned_init<double>(b, 4);
-//  TestUtil::RandGenFloat<double>(a, 4, -10, 10);
-//  TestUtil::RandGenFloat<double>(b, 4, -10, 10);
-//  __m256d ra, rb;
-//  LoadReg(ra, a);
-//  LoadReg(rb, b);
-//  MinMax4(ra, rb);
-//  StoreReg(ra, a);
-//  StoreReg(rb, b);
-//  for(int i = 0; i < 4; i++) {
-//    EXPECT_LE(a[i], b[i]);
-//  }
-//  delete[](a);
-//  delete[](b);
-//}
-//
+  __m256i r1, r2;
+  LoadReg(r1, kv_flat1);
+  LoadReg(r2, kv_flat2);
+  MaskedMinMax4(r1, r2);
+  StoreReg(r1, kv_flat1);
+  StoreReg(r2, kv_flat2);
+  for(int i = 0; i < unit_size; i++) {
+    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
+    EXPECT_EQ(kv_flat1[2*i], kv_map[kv_flat1[2*i + 1]]);
+    EXPECT_EQ(kv_flat2[2*i], kv_map[kv_flat2[2*i + 1]]);
+  }
+  delete[](kv_flat1);
+  delete[](kv_flat2);
+}
+
+TEST(UtilsTest, AVX256MaskedMinMax4Float64Test) {
+  // For masked tests, we assume k,v follow one another with native type
+  // i.e. for 32-bit int k,v array -> Assume its flattened out to an int array
+  // 4 32-bit key-value integers will fit in AVX2 register
+  // This test is currently weak - only checks for sorted order
+  using T = double;
+  int unit_size = 2;
+  T *kv_flat1, *kv_flat2;
+  TestUtil::RandGenFloatRecords(kv_flat1, unit_size*2, -10.0, 10.0, 0);
+  TestUtil::RandGenFloatRecords(kv_flat2, unit_size*2, -10.0, 10.0, unit_size*2);
+  std::map<T,T> kv_map;
+  for (int i = 0; i < unit_size; ++i) {
+    kv_map.insert(std::pair<T,T>(kv_flat1[2*i + 1], kv_flat1[2*i]));
+    kv_map.insert(std::pair<T,T>(kv_flat2[2*i + 1], kv_flat2[2*i]));
+  }
+
+  __m256d r1, r2;
+  LoadReg(r1, kv_flat1);
+  LoadReg(r2, kv_flat2);
+  MaskedMinMax4(r1, r2);
+  StoreReg(r1, kv_flat1);
+  StoreReg(r2, kv_flat2);
+  for(int i = 0; i < unit_size; i++) {
+    EXPECT_LE(kv_flat1[2*i], kv_flat2[2*i]);
+    EXPECT_EQ(kv_flat1[2*i], kv_map[kv_flat1[2*i + 1]]);
+    EXPECT_EQ(kv_flat2[2*i], kv_map[kv_flat2[2*i + 1]]);
+  }
+  delete[](kv_flat1);
+  delete[](kv_flat2);
+}
 }

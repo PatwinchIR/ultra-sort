@@ -90,7 +90,7 @@ void MinMax4(__m256d &a, __m256d &b) {
 }
 
 void MaskedMinMax8(__m256i &a, __m256i &b) {
-  auto keycopy_control = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
+  auto keycopy_control = KEYCOPY_FLAG_32;
   auto cmp_mask = _mm256_cmpgt_epi32(a, b);
   auto ra_max_mask = _mm256_permutevar8x32_epi32(cmp_mask, keycopy_control);
   auto rabmaxa = _mm256_and_si256(ra_max_mask, a);
@@ -103,7 +103,7 @@ void MaskedMinMax8(__m256i &a, __m256i &b) {
 }
 
 void MaskedMinMax8(__m256 &a, __m256 &b) {
-  auto keycopy_control = _mm256_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6);
+  auto keycopy_control = KEYCOPY_FLAG_32;
   auto cmp_mask = _mm256_cmp_ps(a, b, _CMP_GT_OQ);
   auto ra_max_mask = _mm256_permutevar8x32_ps(cmp_mask, keycopy_control);
   auto rabmaxa = _mm256_and_ps(ra_max_mask, a);
@@ -112,6 +112,30 @@ void MaskedMinMax8(__m256 &a, __m256 &b) {
   auto rabmina = _mm256_andnot_ps(ra_max_mask, a);
   auto rabminb = _mm256_and_ps(ra_max_mask, b);
   a = _mm256_or_ps(rabmina, rabminb);
+  b = rabmax;
+}
+
+void MaskedMinMax4(__m256i &a, __m256i &b) {
+  auto cmp_mask = _mm256_cmpgt_epi64(a, b);
+  auto ra_max_mask = _mm256_permute4x64_epi64(cmp_mask, _MM_SHUFFLE(2, 2, 0, 0));
+  auto rabmaxa = _mm256_and_si256(ra_max_mask, a);
+  auto rabmaxb = _mm256_andnot_si256(ra_max_mask, b);
+  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
+  auto rabmina = _mm256_andnot_si256(ra_max_mask, a);
+  auto rabminb = _mm256_and_si256(ra_max_mask, b);
+  a = _mm256_or_si256(rabmina, rabminb);
+  b = rabmax;
+}
+
+void MaskedMinMax4(__m256d &a, __m256d &b) {
+  auto cmp_mask = _mm256_cmp_pd(a, b, _CMP_GT_OQ);
+  auto ra_max_mask = _mm256_permute4x64_pd(cmp_mask, _MM_SHUFFLE(2, 2, 0, 0));
+  auto rabmaxa = _mm256_and_pd(ra_max_mask, a);
+  auto rabmaxb = _mm256_andnot_pd(ra_max_mask, b);
+  auto rabmax = _mm256_or_pd(rabmaxa, rabmaxb);
+  auto rabmina = _mm256_andnot_pd(ra_max_mask, a);
+  auto rabminb = _mm256_and_pd(ra_max_mask, b);
+  a = _mm256_or_pd(rabmina, rabminb);
   b = rabmax;
 }
 
@@ -297,19 +321,19 @@ template void Transpose4x4<__m256i>(__m256i &row0, __m256i &row1, __m256i &row2,
 template void Transpose4x4<__m256d>(__m256d &row0, __m256d &row1, __m256d &row2, __m256d &row3);
 
 __m256i Reverse8(__m256i &v) {
-  return _mm256_permutevar8x32_epi32(v, _mm256_setr_epi32(7, 6, 5, 4, 3, 2, 1, 0));
+  return _mm256_permutevar8x32_epi32(v, REVERSE_FLAG_32);
 }
 
 __m256 Reverse8(__m256 &v) {
-  return _mm256_permutevar8x32_ps(v, _mm256_setr_epi32(7, 6, 5, 4, 3, 2, 1, 0));
+  return _mm256_permutevar8x32_ps(v, REVERSE_FLAG_32);
 }
 
 __m256i MaskedReverse8(__m256i &v) {
-  return _mm256_permutevar8x32_epi32(v, _mm256_setr_epi32(6, 7, 4, 5, 2, 3, 0, 1));
+  return _mm256_permutevar8x32_epi32(v, MASK_REVERSE_FLAG_32);
 }
 
 __m256 MaskedReverse8(__m256 &v) {
-  return _mm256_permutevar8x32_ps(v, _mm256_setr_epi32(6, 7, 4, 5, 2, 3, 0, 1));
+  return _mm256_permutevar8x32_ps(v, MASK_REVERSE_FLAG_32);
 }
 
 __m256i Reverse4(__m256i &v) {
@@ -324,8 +348,8 @@ void IntraRegisterSort8x8(__m256i &a8, __m256i &b8) {
   __m256i mina, maxa, minb, maxb;
   // phase 1
   MinMax8(a8, b8);
-  auto a8_1 = _mm256_permutevar8x32_epi32(a8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
-  auto b8_1 = _mm256_permutevar8x32_epi32(b8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
+  auto a8_1 = _mm256_permutevar8x32_epi32(a8, FLIP_HALVES_FLAG);
+  auto b8_1 = _mm256_permutevar8x32_epi32(b8, FLIP_HALVES_FLAG);
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
@@ -358,8 +382,8 @@ void IntraRegisterSort8x8(__m256 &a8, __m256 &b8) {
   __m256 mina, maxa, minb, maxb;
   // phase 1
   MinMax8(a8, b8);
-  auto a8_1 = _mm256_permutevar8x32_ps(a8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
-  auto b8_1 = _mm256_permutevar8x32_ps(b8, _mm256_set_epi32(3, 2, 1, 0, 7, 6, 5, 4));
+  auto a8_1 = _mm256_permutevar8x32_ps(a8, FLIP_HALVES_FLAG);
+  auto b8_1 = _mm256_permutevar8x32_ps(b8, FLIP_HALVES_FLAG);
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
