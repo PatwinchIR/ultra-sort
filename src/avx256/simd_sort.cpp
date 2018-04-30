@@ -67,11 +67,13 @@ void AVX256SIMDSorter::SIMDSort(size_t N, std::pair<int, int> *&arr) {
     kv_arr[2*i] = arr[i].first;
     kv_arr[2*i + 1] = arr[i].second;
   }
-  int BLOCK_SIZE = 64;
+  // 4 rows of 4 K-V(8 total) pairs = 32 values
+  int BLOCK_SIZE = 32;
   assert(Nkv % BLOCK_SIZE == 0);
   for(int i = 0; i < Nkv; i+=BLOCK_SIZE) {
-    AVX256SortUtil::MaskedSortBlock64<int,__m256i>(kv_arr, i);
+    AVX256SortUtil::MaskedSortBlock4x8<int,__m256i>(kv_arr, i);
   }
+
   // Merge sorted runs
   AVX256MergeUtil::MaskedMergeRuns8<int,__m256i>(kv_arr, Nkv);
   for(int i = 0; i < N; i++) {

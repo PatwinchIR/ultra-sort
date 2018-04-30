@@ -13,14 +13,14 @@ include_directories(third_party/googletest/googlemock/include)
 include_directories(third_party/ips4o)
 include_directories(third_party/pdqsort)
 
-set(CMAKE_CXX_FLAGS "-g -O3 -Wall -march=native -DDEBUG=0")
+set(CMAKE_CXX_FLAGS "-g -O3 -Wall -march=native")
 
 file(GLOB_RECURSE SOURCE_FILES
         "src/*.cpp" "test/*.cpp")
 
 file(GLOB_RECURSE HEADER_FILES "src/include/*.h" "test/include/*.h")
 
-add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES} src/avx512/merge_util.cpp src/avx512/simd_sort.cpp src/avx512/sort_util.cpp src/avx512/utils.cpp src/include/avx512/merge_util.h src/include/avx512/simd_sort.h src/include/avx512/sort_util.h src/include/avx512/utils.h)
+add_executable(ultrasort ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(ultrasort gtest gtest_main)
 target_link_libraries(ultrasort gmock gmock_main)
 

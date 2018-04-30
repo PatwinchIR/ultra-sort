@@ -7,8 +7,6 @@
 #include "ips4o.hpp"
 #include "pdqsort.h"
 
-// TODO: Separate tests from benchmarks
-
 TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
   int N = 65536;
   int lo = -10000;
@@ -265,8 +263,8 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
 
 TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntegerTest) {
   int N = 65536;
-  int lo = -10;
-  int hi = 10;
+  int lo = -10000;
+  int hi = 10000;
   std::pair<int,int> *rand_arr;
   std::pair<int,int> *soln_arr;
   double start, end;
