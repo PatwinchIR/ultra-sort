@@ -219,7 +219,6 @@ void MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
     buffer_offset += UNIT_RUN_SIZE;
   }
 }
-
 template void MergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
 template void MergePass4<double, __m256d>(double *&arr, double *buffer, int N, int run_size);
 }

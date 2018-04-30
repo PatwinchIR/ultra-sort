@@ -79,7 +79,7 @@ TEST(SortUtilTest, AVX256MaskedBitonicSort4x8Int32BitTest) {
   delete[](arr);
 }
 
-TEST(SortUtilTest, AVX256MaskedBitonicSort4x8Float32BitTest) {
+TEST(SortUtilTest, AVX256MaskedBitonicSort8x8Float32BitTest) {
   using T = float;
   T *arr;
   int unit_size = 4;
@@ -164,7 +164,7 @@ TEST(SortUtilTest, AVX256BitonicSort4x4Int64BitTest) {
 
 TEST(SortUtilTest, AVX256BitonicSort4x4Float64BitTest) {
   double *arr;
-  aligned_init(arr, 16);
+  aligned_init<double>(arr, 16);
   TestUtil::RandGenFloat<double>(arr, 16, -10, 10);
   __m256d r[4];
   for (int i = 0; i < 4; i++) {
