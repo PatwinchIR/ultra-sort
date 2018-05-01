@@ -2,7 +2,6 @@
 
 #ifdef AVX2
 namespace avx2 {
-
 template<typename InType, typename RegType>
 void SortBlock64(InType *&arr, int offset) {
   int ROW_SIZE = 8;
