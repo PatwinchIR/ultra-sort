@@ -111,7 +111,7 @@
 //  delete c;
 //}
 //
-//TEST(BasicsTest, AVX256MinMax32KV) {
+//TEST(BasicsTest, AVX256MinMax64KV) {
 //  // Register-type input
 //  __m256i ra, rb;
 //  // need to set in reverse order since Intel's Little Endian arch
@@ -133,4 +133,45 @@
 ////  print_arr((int64_t*)(&cmp_val), 0, 4, "cmpval: ");
 //  print_arr((int64_t*)(&rabmax), 0, 4, "rabmax: ");
 //}
+//
+//TEST(BasicsTest, AVX256Transpose64KV) {
+//  // Register-type input
+//  __m256i ra, rb;
+//  // need to set in reverse order since Intel's Little Endian arch
+//  // low ---------> hi           |
+//  // (K, V) pairs, first num is K, then V. We try to min/max by K
+//  ra = _mm256_setr_epi64x(0, 2, 5, 8);
+//  rb = _mm256_setr_epi64x(1, 3, 4, 10);
+//  // Expected output:
+//  // 0 2 1 3
+//  // 5 8 4 10
+//  // Register-type mask
+//  // rc:0, 0, -1, -1, 0, 0, -1, -1,
+//  // 0b0010 0000
+//  // 0b
+//  auto rc = _mm256_permute2f128_si256(ra, rb, 0b00100000);
+//  auto rd = _mm256_permute2f128_si256(ra, rb, 0b00110001);
+//  print_arr((int64_t*)(&rc), 0, 4, "rc: ");
+//  print_arr((int64_t*)(&rd), 0, 4, "rd: ");
+//}
+//
+//TEST(BasicsTest, AVX256IntraRegisterSort) {
+//  // Register-type input
+//  __m256i ra, rb;
+//  // need to set in reverse order since Intel's Little Endian arch
+//  // low ---------> hi           |
+//  // (K, V) pairs, first num is K, then V.
+//  // sorted ra and reverse sorted rb
+//  ra = _mm256_setr_epi64x(0, 2, 5, 8);
+////  rb = _mm256_setr_epi64x(-3, 10, 5, 3);
+//  // Expected: (-3 10) (0 2) (5 3) (5 8)
+//  auto rc = _mm256_permute4x64_epi64(ra, 0b01001110);
+////  auto rd = _mm256_permute2f128_si256(ra, rb, 0x21);
+//  print_arr((int64_t*)(&rc), 0, 4, "rc: ");
+////  print_arr((int64_t*)(&rd), 0, 4, "rd: ");
+//}
+//
+//
+//
+//
 //}

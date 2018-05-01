@@ -217,6 +217,15 @@ void MaskedBitonicSort4x8(T &r0,
 template void MaskedBitonicSort4x8<__m256i>(__m256i &, __m256i &, __m256i &, __m256i &);
 template void MaskedBitonicSort4x8<__m256>(__m256 &, __m256 &, __m256 &, __m256 &);
 
+template<typename T>
+void MaskedBitonicSort2x4(T &r0, T &r1) {
+  MaskedMinMax4(r0, r1);
+}
+
+// 64 bit KV ints, floats
+template void MaskedBitonicSort2x4<__m256i>(__m256i &, __m256i &);
+template void MaskedBitonicSort2x4<__m256d>(__m256d &, __m256d &);
+
 /**
  * Bitonic Transpose:
  * 8x8 networks: int32, float32
@@ -315,34 +324,50 @@ void Transpose4x4(T &row0,
   row2 = (T) _mm256_permute2f128_ps((__m256) __t0, (__m256) __t2, 0x31);
   row3 = (T) _mm256_permute2f128_ps((__m256) __t1, (__m256) __t3, 0x31);
 }
-// Originally meant for 64-bit floats/ints - Can be used for 32-bit in case of K-V pairs
+// 64-bit floats, (32-bit|32-bit) float + ints
 template void Transpose4x4<__m256>(__m256 &row0, __m256 &row1, __m256 &row2, __m256 &row3);
 template void Transpose4x4<__m256i>(__m256i &row0, __m256i &row1, __m256i &row2, __m256i &row3);
 template void Transpose4x4<__m256d>(__m256d &row0, __m256d &row1, __m256d &row2, __m256d &row3);
 
-__m256i Reverse8(__m256i &v) {
-  return _mm256_permutevar8x32_epi32(v, REVERSE_FLAG_32);
+void Transpose2x2(__m256d &row0, __m256d &row1) {
+  auto temp = _mm256_permute2f128_pd(row0, row1, 0b00100000);
+  row1 = _mm256_permute2f128_pd(row0, row1, 0b00110001);
+  row0 = temp;
 }
 
-__m256 Reverse8(__m256 &v) {
-  return _mm256_permutevar8x32_ps(v, REVERSE_FLAG_32);
+void Transpose2x2(__m256i &row0, __m256i &row1) {
+  auto temp = _mm256_permute2f128_si256(row0, row1, 0b00100000);
+  row1 = _mm256_permute2f128_si256(row0, row1, 0b00110001);
+  row0 = temp;
 }
 
-__m256i MaskedReverse8(__m256i &v) {
-  return _mm256_permutevar8x32_epi32(v, MASK_REVERSE_FLAG_32);
+template <typename T>
+void Reverse8(T &v) {
+  v = (T)_mm256_permutevar8x32_ps((__m256)v, REVERSE_FLAG_32);
 }
+template void Reverse8<__m256>(__m256 &v);
+template void Reverse8<__m256i>(__m256i &v);
 
-__m256 MaskedReverse8(__m256 &v) {
-  return _mm256_permutevar8x32_ps(v, MASK_REVERSE_FLAG_32);
+template <typename T>
+void MaskedReverse8(T &v) {
+  v = (T)_mm256_permutevar8x32_ps((__m256)v, MASK_REVERSE_FLAG_32);
 }
+template void MaskedReverse8<__m256>(__m256 &v);
+template void MaskedReverse8<__m256i>(__m256i &v);
 
-__m256i Reverse4(__m256i &v) {
-  return _mm256_permute4x64_epi64(v, _MM_SHUFFLE(0, 1, 2, 3));
+template <typename T>
+void Reverse4(T &v) {
+  v = (T)_mm256_permute4x64_pd((__m256d)v, _MM_SHUFFLE(0, 1, 2, 3));
 }
+template void Reverse4<__m256d>(__m256d &v);
+template void Reverse4<__m256i>(__m256i &v);
 
-__m256d Reverse4(__m256d &v) {
-  return _mm256_permute4x64_pd(v, _MM_SHUFFLE(0, 1, 2, 3));
+template <typename T>
+void MaskedReverse4(T &v) {
+  v = (T)_mm256_permute4x64_pd((__m256d)v, _MM_SHUFFLE(1, 0, 3, 2));
 }
+template void MaskedReverse4<__m256d>(__m256d &v);
+template void MaskedReverse4<__m256i>(__m256i &v);
 
 void IntraRegisterSort8x8(__m256i &a8, __m256i &b8) {
   __m256i mina, maxa, minb, maxb;
@@ -437,6 +462,14 @@ void MaskedIntraRegisterSort8x8(T &a4kv, T &b4kv) {
 template void MaskedIntraRegisterSort8x8<__m256i>(__m256i &a, __m256i &b);
 template void MaskedIntraRegisterSort8x8<__m256>(__m256 &a, __m256 &b);
 
+/**
+ * AVX256SIMDSort64BitFloatTest
+ * [std::stable_sort] 65536 elements: 0.00418001 seconds
+[std::sort] 65536 elements: 0.00355728 seconds
+[ips4o::sort] 65536 elements: 0.00260398 seconds
+[pdqsort] 65536 elements: 0.00209051 seconds
+[avx256::sort] 65536 elements: 0.00187344 seconds
+ */
 template<typename T>
 void IntraRegisterSort4x4(T &a4, T &b4) {
   // Level 1
@@ -459,12 +492,34 @@ void IntraRegisterSort4x4(T &a4, T &b4) {
   b4 = (T) _mm256_permute2f128_pd((__m256d) l3p, (__m256d) h3p, 0x31);
 }
 
+
+//void IntraRegisterSort4x4(__m256i &a4, __m256i &b4) {
+//  // Level 1
+//  MinMax4(a4, b4);
+//  auto l1p = _mm256_permute2f128_si256(a4, b4, 0x31);
+//  auto h1p = _mm256_permute2f128_si256(a4, b4, 0x20);
+//
+//  // Level 2
+//  MinMax4(l1p, h1p);
+//  auto l2p = _mm256_castpd_si256(_mm256_shuffle_pd(_mm256_castsi256_pd(l1p), _mm256_castsi256_pd(h1p), 0x0));
+//  auto h2p = _mm256_castpd_si256(_mm256_shuffle_pd(_mm256_castsi256_pd(l1p), _mm256_castsi256_pd(h1p), 0xF));
+//
+//  // Level 3
+//  MinMax4(l2p, h2p);
+//  auto l3p = _mm256_unpacklo_epi64(l2p, h2p);
+//  auto h3p = _mm256_unpackhi_epi64(l2p, h2p);
+//
+//  // Finally
+//  a4 = _mm256_permute2f128_si256(l3p, h3p, 0x20);
+//  b4 = _mm256_permute2f128_si256(l3p, h3p, 0x31);
+//}
+
 template void IntraRegisterSort4x4<__m256i>(__m256i &a, __m256i &b);
 template void IntraRegisterSort4x4<__m256d>(__m256d &a, __m256d &b);
 
 template<typename T>
 void BitonicMerge8(T &a, T &b) {
-  b = Reverse8(b);
+  Reverse8(b);
   IntraRegisterSort8x8(a, b);
 }
 
@@ -473,7 +528,7 @@ template void BitonicMerge8<__m256>(__m256 &a, __m256 &b);
 
 template<typename T>
 void MaskedBitonicMerge8(T &a, T &b) {
-  b = MaskedReverse8(b);
+  MaskedReverse8(b);
   MaskedIntraRegisterSort8x8(a, b);
 }
 
@@ -482,12 +537,23 @@ template void MaskedBitonicMerge8<__m256>(__m256 &a, __m256 &b);
 
 template<typename T>
 void BitonicMerge4(T &a, T &b) {
-  b = Reverse4(b);
+  Reverse4(b);
   IntraRegisterSort4x4(a, b);
 }
 
 template void BitonicMerge4<__m256i>(__m256i &a, __m256i &b);
 template void BitonicMerge4<__m256d>(__m256d &a, __m256d &b);
+
+template<typename T>
+void MaskedBitonicMerge4(T &a, T &b) {
+  MaskedMinMax4(a, b);
+  b = (T)_mm256_permute4x64_pd((__m256d)b, 0b01001110);
+  MaskedMinMax4(a, b);
+  MaskedReverse4(b);
+}
+
+template void MaskedBitonicMerge4<__m256i>(__m256i &a, __m256i &b);
+template void MaskedBitonicMerge4<__m256d>(__m256d &a, __m256d &b);
 
 }
 #endif

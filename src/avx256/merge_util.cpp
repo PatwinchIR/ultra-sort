@@ -44,6 +44,19 @@ template void MergeRuns4<int64_t, __m256i>(int64_t *&arr, int N);
 template void MergeRuns4<double, __m256d>(double *&arr, int N);
 
 template<typename InType, typename RegType>
+void MaskedMergeRuns4(InType *&arr, int N) {
+  InType *buffer;
+  int UNIT_RUN_SIZE = 4;
+  aligned_init(buffer, N);
+  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+    MaskedMergePass4<InType, RegType>(arr, buffer, N, run_size);
+    std::swap(arr, buffer);
+  }
+}
+template void MaskedMergeRuns4<int64_t, __m256i>(int64_t *&arr, int N);
+template void MaskedMergeRuns4<double, __m256d>(double *&arr, int N);
+
+template<typename InType, typename RegType>
 void MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
   int UNIT_RUN_SIZE = 8;
   RegType ra, rb;
@@ -221,6 +234,65 @@ void MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
 }
 template void MergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
 template void MergePass4<double, __m256d>(double *&arr, double *buffer, int N, int run_size);
+
+template<typename InType, typename RegType>
+void MaskedMergePass4(InType *&arr, InType *buffer, int N, int run_size) {
+  int UNIT_RUN_SIZE = 4;
+  RegType ra, rb;
+  int buffer_offset = 0;
+  for (int i = 0; i < N; i += 2 * run_size) {
+    int start = i;
+    int mid = i + run_size;
+    int end = i + 2 * run_size;
+    int p1_ptr = start;
+    int p2_ptr = mid;
+    LoadReg(ra, &arr[p1_ptr]);
+    LoadReg(rb, &arr[p2_ptr]);
+    p1_ptr += UNIT_RUN_SIZE;
+    p2_ptr += UNIT_RUN_SIZE;
+
+    while (p1_ptr < mid && p2_ptr < end) {
+      MaskedBitonicMerge4(ra, rb);
+
+      StoreReg(ra, &buffer[buffer_offset]);
+      buffer_offset += UNIT_RUN_SIZE;
+
+      if (arr[p1_ptr] > arr[p2_ptr]) {
+        LoadReg(ra, &arr[p2_ptr]);
+        p2_ptr += UNIT_RUN_SIZE;
+      } else {
+        LoadReg(ra, &arr[p1_ptr]);
+        p1_ptr += UNIT_RUN_SIZE;
+      }
+    }
+
+    MaskedBitonicMerge4(ra, rb);
+
+    StoreReg(ra, &buffer[buffer_offset]);
+    buffer_offset += UNIT_RUN_SIZE;
+
+    while (p1_ptr < mid) {
+      LoadReg(ra, &arr[p1_ptr]);
+      p1_ptr += UNIT_RUN_SIZE;
+      MaskedBitonicMerge4(ra, rb);
+      StoreReg(ra, &buffer[buffer_offset]);
+      buffer_offset += UNIT_RUN_SIZE;
+    }
+
+    while (p2_ptr < end) {
+      LoadReg(ra, &arr[p2_ptr]);
+      p2_ptr += UNIT_RUN_SIZE;
+      MaskedBitonicMerge4(ra, rb);
+      StoreReg(ra, &buffer[buffer_offset]);
+      buffer_offset += UNIT_RUN_SIZE;
+    }
+
+    StoreReg(rb, &buffer[buffer_offset]);
+    buffer_offset += UNIT_RUN_SIZE;
+  }
+}
+template void MaskedMergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
+template void MaskedMergePass4<double, __m256d>(double *&arr, double *buffer, int N, int run_size);
 }
 
 #endif

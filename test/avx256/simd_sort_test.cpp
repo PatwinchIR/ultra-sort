@@ -320,8 +320,124 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntTest) {
   delete soln_arr;
 }
 
+TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueIntTest) {
+  using T = int64_t;
+  int N = 65536;
+  T lo = -10000;
+  T hi = 10000;
+  std::pair<T, T> *rand_arr;
+  std::pair<T, T> *soln_arr;
+  double start, end;
+
+  // Initialization
+  TestUtil::RandGenIntRecords(rand_arr, N, lo, hi);
+  std::map<T, T> kv_map;
+  for (int i = 0; i < N; ++i) {
+    kv_map.insert(std::pair<T, T>(rand_arr[i].second, rand_arr[i].first));
+  }
+
+  // C++ std::stable_sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::stable_sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ std::sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::sort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // TODO(dee): Add ips4o and pdqsort benchmarks
+  // AVX256 sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  std::vector<std::pair<T, T>> check_arr(rand_arr, rand_arr + N);
+  start = currentSeconds();
+  SIMDSort(N, soln_arr);
+  end = currentSeconds();
+  std::sort(check_arr.begin(), check_arr.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  for (int i = 0; i < N; i++) {
+    EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
+    EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
+  }
+  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete rand_arr;
+  delete soln_arr;
+}
+
 TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueFloatTest) {
   using T = float;
+  int N = 65536;
+  T lo = -10000.0f;
+  T hi = 10000.0f;
+  std::pair<T, T> *rand_arr;
+  std::pair<T, T> *soln_arr;
+  double start, end;
+
+  // Initialization
+  TestUtil::RandGenFloatRecords(rand_arr, N, lo, hi);
+  std::map<T, T> kv_map;
+  for (int i = 0; i < N; ++i) {
+    kv_map.insert(std::pair<T, T>(rand_arr[i].second, rand_arr[i].first));
+  }
+
+  // C++ std::stable_sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::stable_sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // C++ std::sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  std::sort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // TODO(dee): Add ips4o and pdqsort benchmarks
+  // AVX256 sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  std::vector<std::pair<T, T>> check_arr(rand_arr, rand_arr + N);
+  start = currentSeconds();
+  SIMDSort(N, soln_arr);
+  end = currentSeconds();
+  std::sort(check_arr.begin(), check_arr.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  for (int i = 0; i < N; i++) {
+    EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
+    EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
+  }
+  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  delete rand_arr;
+  delete soln_arr;
+}
+
+TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueFloatTest) {
+  using T = double;
   int N = 65536;
   T lo = -10000.0f;
   T hi = 10000.0f;

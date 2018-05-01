@@ -15,6 +15,9 @@ namespace avx2{
   // Masked
   template <typename InType, typename RegType>
   void MaskedSortBlock4x8(InType *&arr, int offset);
+  template <typename InType, typename RegType>
+  void MaskedSortBlock2x4(InType *&arr, int offset);
+
 };
 
 #endif

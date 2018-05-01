@@ -50,6 +50,8 @@ void BitonicSort4x4(T &r0, T &r1, T &r2, T &r3);
 // Masked
 template <typename T>
 void MaskedBitonicSort4x8(T &r0, T &r1, T &r2, T &r3);
+template <typename T>
+void MaskedBitonicSort2x4(T &r0, T &r1);
 
 // Transpose(Bitonic)
 void Transpose8x8(__m256i &row0, __m256i &row1, __m256i &row2, __m256i &row3,
@@ -59,13 +61,27 @@ void Transpose8x8(__m256 &row0, __m256 &row1, __m256 &row2, __m256 &row3,
 template <typename T>
 void Transpose4x4(T &row0, T &row1, T &row2, T &row3);
 
-__m256i Reverse8(__m256i& v);
-__m256 Reverse8(__m256& v);
-__m256i Reverse4(__m256i& v);
-__m256d Reverse4(__m256d& v);
-__m256i MaskedReverse8(__m256i& v);
-__m256 MaskedReverse8(__m256& v);
+void Transpose2x2(__m256d &row0, __m256d &row1);
+void Transpose2x2(__m256i &row0, __m256i &row1);
 
+template <typename T>
+void Reverse8(T& v);
+template <typename T>
+void Reverse4(T& v);
+
+template <typename T>
+void MaskedReverse8(T& v);
+template <typename T>
+void MaskedReverse4(T& v);
+
+/**
+ * Note: Templatizing IntraRegSorts incurs significant overhead
+ * (and may not be compatible with certain compilers)
+ * https://stackoverflow.com/questions/50109218/casting-with-avx-intrinsics
+ * There are many internal casts to have this working correctly.
+ */
+
+// since there are many typ
 // Simple IntraReg Sorts
 void IntraRegisterSort8x8(__m256i& a8, __m256i& b8);
 void IntraRegisterSort8x8(__m256& a8, __m256& b8);
@@ -80,6 +96,9 @@ template <typename T>
 void BitonicMerge4(T& a, T& b);
 template <typename T>
 void MaskedBitonicMerge8(T& a, T& b);
+// To simple for an IntraReg sort
+template <typename T>
+void MaskedBitonicMerge4(T& a, T& b);
 };
 
 #endif
