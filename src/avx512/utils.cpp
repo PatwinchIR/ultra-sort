@@ -308,10 +308,10 @@ void MaskedBitonicSort8x16(T &r0, T &r1, T &r2, T &r3,
 }
 
 // 32 bit KV ints, floats
-template void MaskedBitonicSort8x16<__m256i>(__m256i &, __m256i &, __m256i &, __m256i &,
-                                             __m256i &, __m256i &, __m256i &, __m256i &);
-template void MaskedBitonicSort8x16<__m256>(__m256i &, __m256i &, __m256i &, __m256i &,
-                                            __m256i &, __m256i &, __m256i &, __m256i &);
+template void MaskedBitonicSort8x16<__m512i>(__m512i &, __m512i &, __m512i &, __m512i &,
+                                             __m512i &, __m512i &, __m512i &, __m512i &);
+template void MaskedBitonicSort8x16<__m512>(__m512 &, __m512 &, __m512 &, __m512 &,
+                                            __m512 &, __m512 &, __m512 &, __m512 &);
 
 template<typename T>
 void MaskedBitonicSort4x8(T &r0, T &r1, T &r2, T &r3) {
