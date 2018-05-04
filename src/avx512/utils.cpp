@@ -446,6 +446,49 @@ void Transpose8x8(__m512d &row0, __m512d &row1, __m512d &row2, __m512d &row3,
   row7 = _mm512_permutex2var_pd(__tt3, BLEND_HI_256, __tt7);
 }
 
+void Transpose8x8(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
+                  __m512 &row4, __m512 &row5, __m512 &row6, __m512 &row7) {
+  __m512d __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
+  __m512d __tt0, __tt1, __tt2, __tt3, __tt4, __tt5, __tt6, __tt7;
+  __t0 = _mm512_unpacklo_pd((__mm512d) row0, (__mm512d) row1);
+  __t1 = _mm512_unpackhi_pd((__mm512d) row0, (__mm512d) row1);
+  __t2 = _mm512_unpacklo_pd((__mm512d) row2, (__mm512d) row3);
+  __t3 = _mm512_unpackhi_pd((__mm512d) row2, (__mm512d) row3);
+  __t4 = _mm512_unpacklo_pd((__mm512d) row4, (__mm512d) row5);
+  __t5 = _mm512_unpackhi_pd((__mm512d) row4, (__mm512d) row5);
+  __t6 = _mm512_unpacklo_pd((__mm512d) row6, (__mm512d) row7);
+  __t7 = _mm512_unpackhi_pd((__mm512d) row6, (__mm512d) row7);
+
+//  auto mask1 = (__mmask16) 0x33;
+//  auto mask2 = (__mmask16) 0xcc;
+//  __tt0 = _mm512_mask_permutex_epi64(__t0, mask1, __t2, 0x44); // 0 1 0 1
+//  __tt1 = _mm512_mask_permutex_epi64(__t2, mask2, __t0, 0xee); // 2 3 2 3
+//  __tt2 = _mm512_mask_permutex_epi64(__t1, mask1, __t3, 0x44); // 0 1 0 1
+//  __tt3 = _mm512_mask_permutex_epi64(__t3, mask2, __t1, 0xee); // 2 3 2 3
+//  __tt4 = _mm512_mask_permutex_epi64(__t4, mask1, __t6, 0x44); // 0 1 0 1
+//  __tt5 = _mm512_mask_permutex_epi64(__t6, mask2, __t4, 0xee); // 2 3 2 3
+//  __tt6 = _mm512_mask_permutex_epi64(__t5, mask1, __t7, 0x44); // 0 1 0 1
+//  __tt7 = _mm512_mask_permutex_epi64(__t7, mask2, __t5, 0xee); // 2 3 2 3
+
+  __tt0 = _mm512_permutex2var_pd(__t0, BLEND_HALF_LO_128, __t2);
+  __tt1 = _mm512_permutex2var_pd(__t0, BLEND_HALF_HI_128, __t2);
+  __tt2 = _mm512_permutex2var_pd(__t1, BLEND_HALF_LO_128, __t3);
+  __tt3 = _mm512_permutex2var_pd(__t1, BLEND_HALF_HI_128, __t3);
+  __tt4 = _mm512_permutex2var_pd(__t4, BLEND_HALF_LO_128, __t6);
+  __tt5 = _mm512_permutex2var_pd(__t4, BLEND_HALF_HI_128, __t6);
+  __tt6 = _mm512_permutex2var_pd(__t5, BLEND_HALF_LO_128, __t7);
+  __tt7 = _mm512_permutex2var_pd(__t5, BLEND_HALF_HI_128, __t7);
+
+  row0 = (__m512) _mm512_permutex2var_pd(__tt0, BLEND_LO_256, __tt4);
+  row1 = (__m512) _mm512_permutex2var_pd(__tt1, BLEND_LO_256, __tt5);
+  row2 = (__m512) _mm512_permutex2var_pd(__tt0, BLEND_HI_256, __tt4);
+  row3 = (__m512) _mm512_permutex2var_pd(__tt1, BLEND_HI_256, __tt5);
+  row4 = (__m512) _mm512_permutex2var_pd(__tt2, BLEND_LO_256, __tt6);
+  row5 = (__m512) _mm512_permutex2var_pd(__tt3, BLEND_LO_256, __tt7);
+  row6 = (__m512) _mm512_permutex2var_pd(__tt2, BLEND_HI_256, __tt6);
+  row7 = (__m512) _mm512_permutex2var_pd(__tt3, BLEND_HI_256, __tt7);
+}
+
 void Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
                     __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7,
                     __m512i &row8, __m512i &row9, __m512i &row10, __m512i &row11,
