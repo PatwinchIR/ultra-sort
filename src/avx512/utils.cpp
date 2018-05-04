@@ -835,8 +835,8 @@ void MaskedIntraRegisterSort16x16(__m512i &a16, __m512i &b16) {
   // phase 1
   MaskedMinMax16(a16, b16);
 
-  auto a16_1 = _mm512_permutexvar_epi32(MASK_EXCHANGE_HALF_16, a16);
-  auto b16_1 = _mm512_permutexvar_epi32(MASK_EXCHANGE_HALF_16, b16);
+  auto a16_1 = _mm512_permutexvar_epi32(EXCHANGE_HALF_16, a16);
+  auto b16_1 = _mm512_permutexvar_epi32(EXCHANGE_HALF_16, b16);
 
   MaskedMinMax16(a16, a16_1, mina, maxa);
   MaskedMinMax16(b16, b16_1, minb, maxb);

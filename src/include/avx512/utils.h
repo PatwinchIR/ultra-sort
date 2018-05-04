@@ -17,8 +17,7 @@ namespace avx512{
 
   const __m512i EXCHANGE_HALF_8 = _mm512_setr_epi64(3, 2, 1, 0, 7, 6, 5, 4);
 
-  const __m512i EXCHANGE_HALF_16 = _mm512_setr_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8);
-  const __m512i MASK_EXCHANGE_HALF_16 = _mm512_setr_epi32(6, 7, 4, 5, 2, 3, 0, 1, 14, 15, 12, 13, 10, 11, 8, 9);
+  const __m512i EXCHANGE_HALF_16 = _mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8);
 
   const __m512i BLEND_LO_128 = _mm512_setr_epi64(0, 1, 8, 9, 2, 3, 10, 11);
   const __m512i BLEND_HI_128 = _mm512_setr_epi64(4, 5, 12, 13, 6, 7, 14, 15);
