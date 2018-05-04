@@ -809,7 +809,7 @@ void MaskedIntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
   print_arr((double *)&maxb, 0, 8, "4maxb: ");
 
   a8 = _mm512_mask_blend_pd((__mmask8) (0xcc), mina, maxa);
-  a8 = _mm512_mask_blend_pd((__mmask8) (0xcc), minb, maxb);
+  b8 = _mm512_mask_blend_pd((__mmask8) (0xcc), minb, maxb);
   
       print_arr((double *)&a8, 0, 8, "a8: ");
     print_arr((double *)&b8, 0, 8, "b8: ");
