@@ -5,25 +5,23 @@
 
 #ifdef AVX512
 
-class AVX512MergeUtil{
- public:
+namespace avx512{
   template <typename InType, typename RegType>
-  void MergeRuns16(InType *&arr, int N);
+  void MergeRuns16(InType *&arr, size_t N);
+  template<typename InType, typename RegType>
+  void MaskedMergeRuns16(InType *&arr, size_t N);
   template <typename InType, typename RegType>
-  void MergeRuns8(InType *&arr, int N);
+  void MergeRuns8(InType *&arr, size_t N);
+  template<typename InType, typename RegType>
+  void MaskedMergeRuns8(InType *&arr, size_t N);
   template <typename InType, typename RegType>
-  void MergePass16(InType *&arr, InType *buffer, int N, int run_size);
+  void MergePass16(InType *&arr, InType *buffer, size_t N, int run_size);
   template <typename InType, typename RegType>
-<<<<<<< HEAD
-  void MergePass8(InType *&arr, InType *buffer, int N, int run_size);
-=======
-  static void MergePass8(InType *&arr, InType *buffer, int N, int run_size);
-
-  static void BitonicMerge8(__m512i& a, __m512i& b);
-  static void BitonicMerge8(__m512d& a, __m512d& b);
-  static void BitonicMerge16(__m512i& a, __m512i& b);
-  static void BitonicMerge16(__m512& a, __m512& b);
->>>>>>> d1d42f31014ccc9ad722d365f92651609e7a68b9
+  void MaskedMergePass16(InType *&arr, InType *buffer, size_t N, int run_size);
+  template <typename InType, typename RegType>
+  void MergePass8(InType *&arr, InType *buffer, size_t N, int run_size);
+  template <typename InType, typename RegType>
+  void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, int run_size);
 };
 
 #endif

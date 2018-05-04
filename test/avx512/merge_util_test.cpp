@@ -4,6 +4,8 @@
 #include "avx512/utils.h"
 
 #ifdef AVX512
+
+namespace avx512 {
 TEST(MergeUtilsTest, AVX512MergeRuns16Int32BitTest) {
   int *arr, *intermediate_arr;
   aligned_init<int>(arr, 256);
@@ -11,8 +13,8 @@ TEST(MergeUtilsTest, AVX512MergeRuns16Int32BitTest) {
 
   TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
-  int *check_arr = (int *)malloc(256 * sizeof(int));
-  int *temp_arr = (int *)malloc(16 * sizeof(int));
+  int *check_arr = (int *) malloc(256 * sizeof(int));
+  int *temp_arr = (int *) malloc(16 * sizeof(int));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
@@ -26,7 +28,7 @@ TEST(MergeUtilsTest, AVX512MergeRuns16Int32BitTest) {
 
   std::sort(check_arr, check_arr + 256);
 
-  AVX512MergeUtil::MergeRuns16<int,__m512i>(intermediate_arr, 256);
+  MergeRuns16<int, __m512i>(intermediate_arr, 256);
 
   for (int l = 0; l < 256; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
@@ -45,8 +47,8 @@ TEST(MergeUtilsTest, AVX512MergeRuns16Float32BitTest) {
 
   TestUtil::RandGenFloat<float>(arr, 256, -10, 10);
 
-  auto *check_arr = (float *)malloc(256 * sizeof(float));
-  auto *temp_arr = (float *)malloc(16 * sizeof(float));
+  auto *check_arr = (float *) malloc(256 * sizeof(float));
+  auto *temp_arr = (float *) malloc(16 * sizeof(float));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
@@ -60,7 +62,7 @@ TEST(MergeUtilsTest, AVX512MergeRuns16Float32BitTest) {
 
   std::sort(check_arr, check_arr + 256);
 
-  AVX512MergeUtil::MergeRuns16<float,__m512>(intermediate_arr, 256);
+  MergeRuns16<float, __m512>(intermediate_arr, 256);
 
   for (int l = 0; l < 256; ++l) {
     EXPECT_EQ(check_arr[l], intermediate_arr[l]);
@@ -79,8 +81,8 @@ TEST(MergeUtilsTest, AVX512MergePass16Int32BitTest) {
 
   TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
-  int *check_arr = (int *)malloc(256 * sizeof(int));
-  int *temp_arr = (int *)malloc(16 * sizeof(int));
+  int *check_arr = (int *) malloc(256 * sizeof(int));
+  int *temp_arr = (int *) malloc(16 * sizeof(int));
 
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
@@ -99,7 +101,7 @@ TEST(MergeUtilsTest, AVX512MergePass16Int32BitTest) {
 
   int *buffer;
   aligned_init(buffer, 256);
-  AVX512MergeUtil::MergePass16<int,__m512i>(intermediate_arr, buffer, 256, 16);
+  MergePass16<int, __m512i>(intermediate_arr, buffer, 256, 16);
 
   for (int m = 0; m < 256; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
@@ -119,8 +121,8 @@ TEST(MergeUtilsTest, AVX512MergePass16Float32BitTest) {
 
   TestUtil::RandGenFloat<float>(arr, 256, -10, 10);
 
-  auto *check_arr = (float *)malloc(256 * sizeof(float));
-  auto *temp_arr = (float *)malloc(16 * sizeof(float));
+  auto *check_arr = (float *) malloc(256 * sizeof(float));
+  auto *temp_arr = (float *) malloc(16 * sizeof(float));
 
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
@@ -139,7 +141,7 @@ TEST(MergeUtilsTest, AVX512MergePass16Float32BitTest) {
 
   float *buffer;
   aligned_init<float>(buffer, 256);
-  AVX512MergeUtil::MergePass16<float,__m512>(intermediate_arr, buffer, 256, 16);
+  MergePass16<float, __m512>(intermediate_arr, buffer, 256, 16);
 
   for (int m = 0; m < 256; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
@@ -152,5 +154,6 @@ TEST(MergeUtilsTest, AVX512MergePass16Float32BitTest) {
   free(temp_arr);
 }
 
+}
 
 #endif

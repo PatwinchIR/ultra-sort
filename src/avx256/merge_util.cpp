@@ -4,60 +4,60 @@
 namespace avx2 {
 
 template<typename InType, typename RegType>
-void MergeRuns8(InType *&arr, int N) {
+void MergeRuns8(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 8;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MergePass8<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
 }
-template void MergeRuns8<int, __m256i>(int *&arr, int N);
-template void MergeRuns8<float, __m256>(float *&arr, int N);
+template void MergeRuns8<int, __m256i>(int *&arr, size_t N);
+template void MergeRuns8<float, __m256>(float *&arr, size_t N);
 
 template<typename InType, typename RegType>
-void MaskedMergeRuns8(InType *&arr, int N) {
+void MaskedMergeRuns8(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 8;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MaskedMergePass8<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
 }
-template void MaskedMergeRuns8<int, __m256i>(int *&arr, int N);
-template void MaskedMergeRuns8<float, __m256>(float *&arr, int N);
+template void MaskedMergeRuns8<int, __m256i>(int *&arr, size_t N);
+template void MaskedMergeRuns8<float, __m256>(float *&arr, size_t N);
 
 template<typename InType, typename RegType>
-void MergeRuns4(InType *&arr, int N) {
+void MergeRuns4(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 4;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MergePass4<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
 }
 
-template void MergeRuns4<int64_t, __m256i>(int64_t *&arr, int N);
-template void MergeRuns4<double, __m256d>(double *&arr, int N);
+template void MergeRuns4<int64_t, __m256i>(int64_t *&arr, size_t N);
+template void MergeRuns4<double, __m256d>(double *&arr, size_t N);
 
 template<typename InType, typename RegType>
-void MaskedMergeRuns4(InType *&arr, int N) {
+void MaskedMergeRuns4(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 4;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MaskedMergePass4<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
 }
-template void MaskedMergeRuns4<int64_t, __m256i>(int64_t *&arr, int N);
-template void MaskedMergeRuns4<double, __m256d>(double *&arr, int N);
+template void MaskedMergeRuns4<int64_t, __m256i>(int64_t *&arr, size_t N);
+template void MaskedMergeRuns4<double, __m256d>(double *&arr, size_t N);
 
 template<typename InType, typename RegType>
-void MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
+void MergePass8(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 8;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -113,11 +113,11 @@ void MergePass8(InType *&arr, InType *buffer, int N, int run_size) {
   }
 }
 
-template void MergePass8<int, __m256i>(int *&arr, int *buffer, int N, int run_size);
-template void MergePass8<float, __m256>(float *&arr, float *buffer, int N, int run_size);
+template void MergePass8<int, __m256i>(int *&arr, int *buffer, size_t N, unsigned int run_size);
+template void MergePass8<float, __m256>(float *&arr, float *buffer, size_t N, unsigned int run_size);
 
 template<typename InType, typename RegType>
-void MaskedMergePass8(InType *&arr, InType *buffer, int N, int run_size) {
+void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 8;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -173,11 +173,11 @@ void MaskedMergePass8(InType *&arr, InType *buffer, int N, int run_size) {
   }
 }
 
-template void MaskedMergePass8<int, __m256i>(int *&arr, int *buffer, int N, int run_size);
-template void MaskedMergePass8<float, __m256>(float *&arr, float *buffer, int N, int run_size);
+template void MaskedMergePass8<int, __m256i>(int *&arr, int *buffer, size_t N, unsigned int run_size);
+template void MaskedMergePass8<float, __m256>(float *&arr, float *buffer, size_t N, unsigned int run_size);
 
 template<typename InType, typename RegType>
-void MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
+void MergePass4(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 4;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -232,11 +232,11 @@ void MergePass4(InType *&arr, InType *buffer, int N, int run_size) {
     buffer_offset += UNIT_RUN_SIZE;
   }
 }
-template void MergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
-template void MergePass4<double, __m256d>(double *&arr, double *buffer, int N, int run_size);
+template void MergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, size_t N, unsigned int run_size);
+template void MergePass4<double, __m256d>(double *&arr, double *buffer, size_t N, unsigned int run_size);
 
 template<typename InType, typename RegType>
-void MaskedMergePass4(InType *&arr, InType *buffer, int N, int run_size) {
+void MaskedMergePass4(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 4;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -291,8 +291,8 @@ void MaskedMergePass4(InType *&arr, InType *buffer, int N, int run_size) {
     buffer_offset += UNIT_RUN_SIZE;
   }
 }
-template void MaskedMergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, int N, int run_size);
-template void MaskedMergePass4<double, __m256d>(double *&arr, double *buffer, int N, int run_size);
+template void MaskedMergePass4<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, size_t N, unsigned int run_size);
+template void MaskedMergePass4<double, __m256d>(double *&arr, double *buffer, size_t N, unsigned int run_size);
 }
 
 #endif

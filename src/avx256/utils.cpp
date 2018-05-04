@@ -232,34 +232,28 @@ template void MaskedBitonicSort2x4<__m256d>(__m256d &, __m256d &);
  * 4x4 networks: int64
  */
 
-void Transpose8x8(__m256i &row0,
-                  __m256i &row1,
-                  __m256i &row2,
-                  __m256i &row3,
-                  __m256i &row4,
-                  __m256i &row5,
-                  __m256i &row6,
-                  __m256i &row7) {
-  __m256 __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
+void Transpose8x8(__m256i &row0, __m256i &row1, __m256i &row2, __m256i &row3,
+                  __m256i &row4, __m256i &row5, __m256i &row6, __m256i &row7) {
+  __m256i __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
   __m256 __tt0, __tt1, __tt2, __tt3, __tt4, __tt5, __tt6, __tt7;
-  __t0 = _mm256_unpacklo_epi32((__m256) row0, (__m256) row1);
-  __t1 = _mm256_unpackhi_ps((__m256) row0, (__m256) row1);
-  __t2 = _mm256_unpacklo_ps((__m256) row2, (__m256) row3);
-  __t3 = _mm256_unpackhi_ps((__m256) row2, (__m256) row3);
-  __t4 = _mm256_unpacklo_ps((__m256) row4, (__m256) row5);
-  __t5 = _mm256_unpackhi_ps((__m256) row4, (__m256) row5);
-  __t6 = _mm256_unpacklo_ps((__m256) row6, (__m256) row7);
-  __t7 = _mm256_unpackhi_ps((__m256) row6, (__m256) row7);
+  __t0 = _mm256_unpacklo_epi32(row0, row1);
+  __t1 = _mm256_unpackhi_epi32(row0, row1);
+  __t2 = _mm256_unpacklo_epi32(row2, row3);
+  __t3 = _mm256_unpackhi_epi32(row2, row3);
+  __t4 = _mm256_unpacklo_epi32(row4, row5);
+  __t5 = _mm256_unpackhi_epi32(row4, row5);
+  __t6 = _mm256_unpacklo_epi32(row6, row7);
+  __t7 = _mm256_unpackhi_epi32(row6, row7);
   // Note: https://stackoverflow.com/questions/26983569/implications-of-using-mm-shuffle-ps-on-integer-vector
   // As provided in above link, it is relatively safe/free to run float shuffles on integers(not other way around)
-  __tt0 = _mm256_shuffle_ps(__t0, __t2, _MM_SHUFFLE(1, 0, 1, 0));
-  __tt1 = _mm256_shuffle_ps(__t0, __t2, _MM_SHUFFLE(3, 2, 3, 2));
-  __tt2 = _mm256_shuffle_ps(__t1, __t3, _MM_SHUFFLE(1, 0, 1, 0));
-  __tt3 = _mm256_shuffle_ps(__t1, __t3, _MM_SHUFFLE(3, 2, 3, 2));
-  __tt4 = _mm256_shuffle_ps(__t4, __t6, _MM_SHUFFLE(1, 0, 1, 0));
-  __tt5 = _mm256_shuffle_ps(__t4, __t6, _MM_SHUFFLE(3, 2, 3, 2));
-  __tt6 = _mm256_shuffle_ps(__t5, __t7, _MM_SHUFFLE(1, 0, 1, 0));
-  __tt7 = _mm256_shuffle_ps(__t5, __t7, _MM_SHUFFLE(3, 2, 3, 2));
+  __tt0 = _mm256_shuffle_ps((__m256)__t0, (__m256)__t2, _MM_SHUFFLE(1, 0, 1, 0));
+  __tt1 = _mm256_shuffle_ps((__m256)__t0, (__m256)__t2, _MM_SHUFFLE(3, 2, 3, 2));
+  __tt2 = _mm256_shuffle_ps((__m256)__t1, (__m256)__t3, _MM_SHUFFLE(1, 0, 1, 0));
+  __tt3 = _mm256_shuffle_ps((__m256)__t1, (__m256)__t3, _MM_SHUFFLE(3, 2, 3, 2));
+  __tt4 = _mm256_shuffle_ps((__m256)__t4, (__m256)__t6, _MM_SHUFFLE(1, 0, 1, 0));
+  __tt5 = _mm256_shuffle_ps((__m256)__t4, (__m256)__t6, _MM_SHUFFLE(3, 2, 3, 2));
+  __tt6 = _mm256_shuffle_ps((__m256)__t5, (__m256)__t7, _MM_SHUFFLE(1, 0, 1, 0));
+  __tt7 = _mm256_shuffle_ps((__m256)__t5, (__m256)__t7, _MM_SHUFFLE(3, 2, 3, 2));
   row0 = (__m256i) _mm256_permute2f128_ps(__tt0, __tt4, 0x20);
   row1 = (__m256i) _mm256_permute2f128_ps(__tt1, __tt5, 0x20);
   row2 = (__m256i) _mm256_permute2f128_ps(__tt2, __tt6, 0x20);
@@ -270,14 +264,8 @@ void Transpose8x8(__m256i &row0,
   row7 = (__m256i) _mm256_permute2f128_ps(__tt3, __tt7, 0x31);
 }
 
-void Transpose8x8(__m256 &row0,
-                  __m256 &row1,
-                  __m256 &row2,
-                  __m256 &row3,
-                  __m256 &row4,
-                  __m256 &row5,
-                  __m256 &row6,
-                  __m256 &row7) {
+void Transpose8x8(__m256 &row0, __m256 &row1, __m256 &row2, __m256 &row3,
+                  __m256 &row4, __m256 &row5, __m256 &row6, __m256 &row7) {
   __m256 __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
   __m256 __tt0, __tt1, __tt2, __tt3, __tt4, __tt5, __tt6, __tt7;
   __t0 = _mm256_unpacklo_ps(row0, row1);
@@ -310,10 +298,7 @@ void Transpose8x8(__m256 &row0,
 
 // TODO: Check whether Dissociating into separate functions is worth it?
 template<typename T>
-void Transpose4x4(T &row0,
-                  T &row1,
-                  T &row2,
-                  T &row3) {
+void Transpose4x4(T &row0, T &row1, T &row2, T &row3) {
   __m256d __t0, __t1, __t2, __t3;
   __t0 = _mm256_unpacklo_pd((__m256d) row0, (__m256d) row1);
   __t1 = _mm256_unpackhi_pd((__m256d) row0, (__m256d) row1);
@@ -491,28 +476,6 @@ void IntraRegisterSort4x4(T &a4, T &b4) {
   a4 = (T) _mm256_permute2f128_pd((__m256d) l3p, (__m256d) h3p, 0x20);
   b4 = (T) _mm256_permute2f128_pd((__m256d) l3p, (__m256d) h3p, 0x31);
 }
-
-
-//void IntraRegisterSort4x4(__m256i &a4, __m256i &b4) {
-//  // Level 1
-//  MinMax4(a4, b4);
-//  auto l1p = _mm256_permute2f128_si256(a4, b4, 0x31);
-//  auto h1p = _mm256_permute2f128_si256(a4, b4, 0x20);
-//
-//  // Level 2
-//  MinMax4(l1p, h1p);
-//  auto l2p = _mm256_castpd_si256(_mm256_shuffle_pd(_mm256_castsi256_pd(l1p), _mm256_castsi256_pd(h1p), 0x0));
-//  auto h2p = _mm256_castpd_si256(_mm256_shuffle_pd(_mm256_castsi256_pd(l1p), _mm256_castsi256_pd(h1p), 0xF));
-//
-//  // Level 3
-//  MinMax4(l2p, h2p);
-//  auto l3p = _mm256_unpacklo_epi64(l2p, h2p);
-//  auto h3p = _mm256_unpackhi_epi64(l2p, h2p);
-//
-//  // Finally
-//  a4 = _mm256_permute2f128_si256(l3p, h3p, 0x20);
-//  b4 = _mm256_permute2f128_si256(l3p, h3p, 0x31);
-//}
 
 template void IntraRegisterSort4x4<__m256i>(__m256i &a, __m256i &b);
 template void IntraRegisterSort4x4<__m256d>(__m256d &a, __m256d &b);
