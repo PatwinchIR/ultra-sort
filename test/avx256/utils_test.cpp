@@ -112,7 +112,7 @@ TEST(UtilsTest, AVX256MaskedMinMax8Int32Test) {
   // 4 32-bit key-value integers will fit in AVX2 register
   // This test is currently weak - only checks for sorted order
   using T = int;
-  int unit_size = 4;
+  unsigned int unit_size = 4;
   T *kv_flat1, *kv_flat2;
   TestUtil::RandGenIntRecords(kv_flat1, unit_size, -10, 10, 0);
   TestUtil::RandGenIntRecords(kv_flat2, unit_size, -10, 10, unit_size * 2);
@@ -143,7 +143,7 @@ TEST(UtilsTest, AVX256MaskedMinMax8FloatTest) {
   // 4 32-bit key-value integers will fit in AVX2 register
   // This test is currently weak - only checks for sorted order
   using T = float;
-  int unit_size = 4;
+  unsigned int unit_size = 4;
   T *kv_flat1, *kv_flat2;
   TestUtil::RandGenFloatRecords(kv_flat1, unit_size, -10.0f, 10.0f, 0);
   TestUtil::RandGenFloatRecords(kv_flat2, unit_size, -10.0f, 10.0f, unit_size * 2);
@@ -174,7 +174,7 @@ TEST(UtilsTest, AVX256MaskedMinMax4Int64Test) {
   // 4 32-bit key-value integers will fit in AVX2 register
   // This test is currently weak - only checks for sorted order
   using T = int64_t;
-  int unit_size = 2;
+  unsigned int unit_size = 2;
   T *kv_flat1, *kv_flat2;
   TestUtil::RandGenIntRecords(kv_flat1, unit_size*2, -10ll, 10ll, 0);
   TestUtil::RandGenIntRecords(kv_flat2, unit_size*2, -10ll, 10ll, unit_size*2);
@@ -205,7 +205,7 @@ TEST(UtilsTest, AVX256MaskedMinMax4Float64Test) {
   // 4 32-bit key-value integers will fit in AVX2 register
   // This test is currently weak - only checks for sorted order
   using T = double;
-  int unit_size = 2;
+  unsigned int unit_size = 2;
   T *kv_flat1, *kv_flat2;
   TestUtil::RandGenFloatRecords(kv_flat1, unit_size*2, -10.0, 10.0, 0);
   TestUtil::RandGenFloatRecords(kv_flat2, unit_size*2, -10.0, 10.0, unit_size*2);
@@ -275,7 +275,7 @@ TEST(UtilsTest, AVX256BitonicSort8x8Float32BitTest) {
 TEST(UtilsTest, AVX256MaskedBitonicSort4x8Int32BitTest) {
   using T = int;
   T *arr;
-  int unit_size = 4;
+  unsigned int unit_size = 4;
   int num_cols = unit_size * 2;
   int num_rows = unit_size;
   TestUtil::RandGenIntRecords(arr, num_cols * num_rows, -10, 10);
@@ -308,7 +308,7 @@ TEST(UtilsTest, AVX256MaskedBitonicSort4x8Int32BitTest) {
 TEST(UtilsTest, AVX256MaskedBitonicSort8x8Float32BitTest) {
   using T = float;
   T *arr;
-  int unit_size = 4;
+  unsigned int unit_size = 4;
   int num_cols = unit_size * 2;
   int num_rows = unit_size;
   TestUtil::RandGenFloatRecords(arr, num_cols * num_rows, -10.0f, 10.0f);
