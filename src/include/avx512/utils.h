@@ -96,6 +96,8 @@ namespace avx512{
                     __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7);
   void Transpose8x8(__m512d &row0, __m512d &row1, __m512d &row2, __m512d &row3,
                     __m512d &row4, __m512d &row5, __m512d &row6, __m512d &row7);
+  void Transpose8x8(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
+                    __m512 &row4, __m512 &row5, __m512 &row6, __m512 &row7);
   void Transpose16x16(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
                       __m512i &row4, __m512i &row5, __m512i &row6, __m512i &row7,
                       __m512i &row8, __m512i &row9, __m512i &row10, __m512i &row11,
