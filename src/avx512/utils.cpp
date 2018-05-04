@@ -731,34 +731,79 @@ void MaskedIntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
 
 void IntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
   __m512d mina, maxa, minb, maxb;
+
+  print_arr((double *)&a8, 0, 8, "a8: ");
+  print_arr((double *)&b8, 0, 8, "b8: ");
+
   // phase 1
   MinMax8(a8, b8);
+
+  print_arr((double *)&a8, 0, 8, "min a8 b8: ");
+  print_arr((double *)&b8, 0, 8, "max a8 b8: ");
+
   auto a8_1 = _mm512_permutexvar_pd(EXCHANGE_HALF_8, a8);
   auto b8_1 = _mm512_permutexvar_pd(EXCHANGE_HALF_8, b8);
+
+    print_arr((double *)&a8_1, 0, 8, "a8_1: ");
+  print_arr((double *)&b8_1, 0, 8, "b8_1: ");
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
 
+
+  print_arr((double *)&mina, 0, 8, "8mina: ");
+  print_arr((double *)&maxa, 0, 8, "8maxa: ");
+  print_arr((double *)&minb, 0, 8, "8minb: ");
+  print_arr((double *)&maxb, 0, 8, "8maxb: ");
+
   auto a4 = _mm512_mask_blend_pd((__mmask8) (0xf0), mina, maxa);
   auto b4 = _mm512_mask_blend_pd((__mmask8) (0xf0), minb, maxb);
+
+
+  print_arr((double *)&a4, 0, 8, "a4: ");
+  print_arr((double *)&b4, 0, 8, "b4: ");
 
   auto a4_1 = _mm512_permutexvar_pd(EXCHANGE_QUARTER_8, a4);
   auto b4_1 = _mm512_permutexvar_pd(EXCHANGE_QUARTER_8, b4);
 
+    print_arr((double *)&a4_1, 0, 8, "a4_1: ");
+  print_arr((double *)&b4_1, 0, 8, "b4_1: ");
+
   MinMax8(a4, a4_1, mina, maxa);
   MinMax8(b4, b4_1, minb, maxb);
+
+    print_arr((double *)&mina, 0, 8, "4mina: ");
+  print_arr((double *)&maxa, 0, 8, "4maxa: ");
+  print_arr((double *)&minb, 0, 8, "4minb: ");
+  print_arr((double *)&maxb, 0, 8, "4maxb: ");
 
   auto a2 = _mm512_mask_blend_pd((__mmask8) (0xcc), mina, maxa);
   auto b2 = _mm512_mask_blend_pd((__mmask8) (0xcc), minb, maxb);
 
+    print_arr((double *)&a2, 0, 8, "a2: ");
+  print_arr((double *)&b2, 0, 8, "b2: ");
+
   auto a2_1 = _mm512_permutexvar_pd(EXCHANGE_EACH, a2);
   auto b2_1 = _mm512_permutexvar_pd(EXCHANGE_EACH, b2);
 
+
+  print_arr((double *)&a2_1, 0, 8, "a2_1: ");
+  print_arr((double *)&b2_1, 0, 8, "b2_1: ");
+
   MinMax8(a2, a2_1, mina, maxa);
   MinMax8(b2, b2_1, minb, maxb);
+
+
+  print_arr((double *)&mina, 0, 8, "2mina: ");
+  print_arr((double *)&maxa, 0, 8, "2maxa: ");
+  print_arr((double *)&minb, 0, 8, "2minb: ");
+  print_arr((double *)&maxb, 0, 8, "2maxb: ");
   
   a8 = _mm512_mask_blend_pd((__mmask8) (0xaa), mina, maxa);
   b8 = _mm512_mask_blend_pd((__mmask8) (0xaa), minb, maxb);
+  
+    print_arr((double *)&a8, 0, 8, "a8: ");
+  print_arr((double *)&b8, 0, 8, "b8: ");
 }
 
 void MaskedIntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
