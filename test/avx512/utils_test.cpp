@@ -426,8 +426,8 @@ TEST(UtilsTest, AVX512IntraRegisterSort8x8Float64BitTest) {
   std::sort(a, a + 8);
   std::sort(b, b + 8);
 
-  double check_arr[32];
-  for (int i = 0; i < 8; ++i) {
+  double check_arr[16];
+  for (int i = 0; i < 16; ++i) {
     check_arr[i] = i < 8 ? a[i] : b[i - 8];
   }
 
