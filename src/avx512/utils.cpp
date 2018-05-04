@@ -140,7 +140,7 @@ void MaskedMinMax8(const __m512i &a, const __m512i &b,
 
 void MaskedMinMax8(__m512d &a, __m512d &b) {
   auto c = a;
-  auto temp_cmp_mask = _mm512_mask_cmpgt_pd_mask((__mmask8) (0xaa), a, b);
+  auto temp_cmp_mask = _mm512_mask_cmp_pd_mask((__mmask8) (0xaa), a, b, _CMP_GT_OQ);
   auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
 
   a = _mm512_mask_blend_pd(cmp_mask, b, a);
@@ -149,7 +149,7 @@ void MaskedMinMax8(__m512d &a, __m512d &b) {
 
 void MaskedMinMax8(const __m512d &a, const __m512d &b,
                    __m512d &minab, __m512d &maxab) {
-  auto temp_cmp_mask = _mm512_mask_cmpgt_pd_mask((__mmask8) (0xaa), a, b);
+  auto temp_cmp_mask = _mm512_mask_cmp_pd_mask((__mmask8) (0xaa), a, b, _CMP_GT_OQ);
   auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
 
   minab = _mm512_mask_blend_pd(cmp_mask, b, a);
