@@ -192,22 +192,10 @@ void BitonicSort8x8(T &r0,
 }
 
 // 64 bit ints, doubles
-template void BitonicSort8x8<__m512i>(__m512i &,
-                                      __m512i &,
-                                      __m512i &,
-                                      __m512i &,
-                                      __m512i &,
-                                      __m512i &,
-                                      __m512i &,
-                                      __m512i &);
-template void BitonicSort8x8<__m512d>(__m512d &,
-                                      __m512d &,
-                                      __m512d &,
-                                      __m512d &,
-                                      __m512d &,
-                                      __m512d &,
-                                      __m512d &,
-                                      __m512d &);
+template void BitonicSort8x8<__m512i>(__m512i &, __m512i &, __m512i &, __m512i &,
+                                      __m512i &, __m512i &, __m512i &, __m512i &);
+template void BitonicSort8x8<__m512d>(__m512d &, __m512d &, __m512d &, __m512d &,
+                                      __m512d &, __m512d &, __m512d &, __m512d &);
 
 template<typename T>
 void BitonicSort16x16(T &r0, T &r1, T &r2, T &r3,
@@ -320,8 +308,10 @@ void MaskedBitonicSort8x16(T &r0, T &r1, T &r2, T &r3,
 }
 
 // 32 bit KV ints, floats
-template void MaskedBitonicSort8x16<__m256i>(__m256i &, __m256i &, __m256i &, __m256i &);
-template void MaskedBitonicSort8x16<__m256>(__m256 &, __m256 &, __m256 &, __m256 &);
+template void MaskedBitonicSort8x16<__m256i>(__m256i &, __m256i &, __m256i &, __m256i &,
+                                             __m256i &, __m256i &, __m256i &, __m256i &);
+template void MaskedBitonicSort8x16<__m256>(__m256i &, __m256i &, __m256i &, __m256i &,
+                                            __m256i &, __m256i &, __m256i &, __m256i &);
 
 template<typename T>
 void MaskedBitonicSort4x8(T &r0, T &r1, T &r2, T &r3) {
@@ -333,8 +323,8 @@ void MaskedBitonicSort4x8(T &r0, T &r1, T &r2, T &r3) {
 }
 
 // 64 bit KV ints, floats
-template void MaskedBitonicSort4x8<__m512i>(__m512i &, __m512i &);
-template void MaskedBitonicSort4x8<__m512d>(__m512d &, __m512d &);
+template void MaskedBitonicSort4x8<__m512i>(__m512i &, __m512i &, __m512i &, __m512i &);
+template void MaskedBitonicSort4x8<__m512d>(__m512d &, __m512d &, __m512d &, __m512d &);
 
 
 /**
@@ -917,7 +907,7 @@ void MaskedIntraRegisterSort16x16(__m512 &a16, __m512 &b16) {
 
 template<typename T>
 void BitonicMerge8(T &a, T &b) {
-  b = Reverse8(b);
+  Reverse8(b);
   IntraRegisterSort8x8(a, b);
 }
 
@@ -926,7 +916,7 @@ template void BitonicMerge8<__m512d>(__m512d &a, __m512d &b);
 
 template<typename T>
 void MaskedBitonicMerge8(T &a, T &b) {
-  b = MaskedReverse8(b);
+  MaskedReverse8(b);
   MaskedIntraRegisterSort8x8(a, b);
 }
 
@@ -935,7 +925,7 @@ template void MaskedBitonicMerge8<__m512d>(__m512d &a, __m512d &b);
 
 template<typename T>
 void BitonicMerge16(T &a, T &b) {
-  b = Reverse16(b);
+  Reverse16(b);
   IntraRegisterSort16x16(a, b);
 }
 
@@ -944,7 +934,7 @@ template void BitonicMerge16<__m512>(__m512 &a, __m512 &b);
 
 template<typename T>
 void MaskedBitonicMerge16(T &a, T &b) {
-  b = MaskedReverse16(b);
+  MaskedReverse16(b);
   MaskedIntraRegisterSort16x16(a, b);
 }
 

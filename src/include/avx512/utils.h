@@ -58,10 +58,18 @@ namespace avx512{
 
   // 32-bit Key-Value pairs
   void MaskedMinMax16(__m512i &a, __m512i &b);
+  void MaskedMinMax16(const __m512i& a, const __m512i& b,
+                      __m512i& minab, __m512i& maxab);
   void MaskedMinMax16(__m512 &a, __m512 &b);
+  void MaskedMinMax16(const __m512& a, const __m512& b,
+                      __m512& minab, __m512& maxab);
   // 64-bit Key-Value pairs
   void MaskedMinMax8(__m512i &a, __m512i &b);
+  void MaskedMinMax8(const __m512i &a, const __m512i &b,
+               __m512i& minab, __m512i& maxab);
   void MaskedMinMax8(__m512d &a, __m512d &b);
+  void MaskedMinMax8(const __m512d &a, const __m512d &b,
+               __m512d& minab, __m512d& maxab);
 
   // BitonicSort(Sorting Networks)
   template <typename T>
