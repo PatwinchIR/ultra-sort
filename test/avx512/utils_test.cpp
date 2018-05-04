@@ -186,7 +186,7 @@ TEST(UtilsTest, AVX512MaskedMinMax8Float64BitTest_Fixed) {
   aligned_init<double>(a, 8);
   aligned_init<double>(b, 8);
 
-  double temp_a[8] = {3.423,.423.423, 2.471, 2.423, 5.423, 9.423, 1.423, -1.423};
+  double temp_a[8] = {3.423, 0.423, 2.471, 2.423, 5.423, 9.423, 1.423, -1.423};
   double temp_b[8] = {1.471, 1.471, 2.423, 2.471, 7.471, 7.471, 0.471, 0.471};
 
 //  double temp_a[8] = {3, 3, 2, 2, 5, 5, 1, 1};
