@@ -10,8 +10,8 @@ TEST(SortUtilTest, AVX512SortBlock256Int32BitTest) {
   aligned_init<int>(arr, 256);
   TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
-  int *check_arr = (int *) malloc(256 * sizeof(int));
-  int *temp_arr = (int *) malloc(16 * sizeof(int));
+  auto check_arr = (int *) malloc(256 * sizeof(int));
+  auto temp_arr = (int *) malloc(16 * sizeof(int));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
@@ -60,5 +60,62 @@ TEST(SortUtilTest, AVX512SortBlock256Float32BitTest) {
   free(check_arr);
   free(temp_arr);
 }
+
+TEST(SortUtilTest, AVX512SortBlock64Int64BitTest) {
+  int64_t *arr;
+  aligned_init<int64_t>(arr, 64);
+  TestUtil::RandGenInt<int64_t>(arr, 64, -10, 10);
+
+  auto check_arr = (int64_t *) malloc(64 * sizeof(int64_t));
+  auto temp_arr = (int64_t *) malloc(8 * sizeof(int64_t));
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      check_arr[k * 8 + j] = temp_arr[j];
+    }
+  }
+
+  SortBlock64<int64_t, __m512i>(arr, 0);
+
+  for (int i = 0; i < 64; i++) {
+    EXPECT_EQ(check_arr[i], arr[i]);
+  }
+
+  delete[](arr);
+  free(check_arr);
+  free(temp_arr);
+}
+
+TEST(SortUtilTest, AVX512SortBlock64Float64BitTest) {
+  double *arr;
+  aligned_init<double>(arr, 64);
+  TestUtil::RandGenInt<double>(arr, 64, -10, 10);
+
+  auto check_arr = (double *) malloc(64 * sizeof(double));
+  auto temp_arr = (double *) malloc(8 * sizeof(double));
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      check_arr[k * 8 + j] = temp_arr[j];
+    }
+  }
+
+  SortBlock64<double, __m512d>(arr, 0);
+
+  for (int i = 0; i < 64; i++) {
+    EXPECT_EQ(check_arr[i], arr[i]);
+  }
+
+  delete[](arr);
+  free(check_arr);
+  free(temp_arr);
+}
+
 }
 #endif

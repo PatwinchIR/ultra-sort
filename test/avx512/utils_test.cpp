@@ -209,7 +209,7 @@ TEST(SortUtilTest, AVX512BitonicSort8x8Int64BitTest) {
     LoadReg(r[i], arr + i * 8);
   }
   BitonicSort8x8(r[0], r[1], r[2], r[3],
-                             r[4], r[5], r[6], r[7]);
+                 r[4], r[5], r[6], r[7]);
   for (int i = 0; i < 8; i++) {
     StoreReg(r[i], arr + i * 8);
   }
