@@ -186,8 +186,8 @@ TEST(UtilsTest, AVX512MaskedMinMax8Float64BitTest_Fixed) {
   aligned_init<double>(a, 8);
   aligned_init<double>(b, 8);
 
-  double temp_a[8] = {3, 0, 2, 2, 5, 9, 1, -1};
-  double temp_b[8] = {1, 1, 2, 2, 7, 7, 0, 0};
+  double temp_a[8] = {3.0, 0.0, 2.0, 2.0, 5.0, 9.0, 1.0, -1.0};
+  double temp_b[8] = {1.0, 1.0, 2.0, 2.0, 7.0, 7.0, 0.0, 0.0};
 
 //  double temp_a[8] = {3, 3, 2, 2, 5, 5, 1, 1};
 //  double temp_b[8] = {1, 1, 2, 2, 7, 7, 0, 0};
@@ -210,8 +210,8 @@ TEST(UtilsTest, AVX512MaskedMinMax8Float64BitTest_Fixed) {
   StoreReg(ra, a);
   StoreReg(rb, b);
 
-  double check_arr_min[16] = {1, 1, 2, 2, 5, 9, 0, 0};
-  double check_arr_max[16] = {3, 0, 2, 2, 7, 7, 1, -1};
+  double check_arr_min[8] = {1.0, 1.0, 2.0, 2.0, 5.0, 9.0, 0.0, 0.0};
+  double check_arr_max[8] = {3.0, 0.0, 2.0, 2.0, 7.0, 7.0, 1.0, -1.0};
 
   print_arr(a, 0, 8, "min: ");
   print_arr(check_arr_min, 0, 8, "check min: ");
