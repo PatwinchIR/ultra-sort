@@ -83,109 +83,77 @@ void MinMax8(const __m512d &a, const __m512d &b,
 }
 
 void MaskedMinMax16(__m512i &a, __m512i &b) {
-  auto keycopy_control = KEYCOPY_FLAG_32;
-  auto cmp_mask = _mm512_cmpgt_epi32_mask(a, b);
-  auto ra_max_mask = _mm512_permutexvar_epi32(keycopy_control, cmp_mask);
-  auto rabmaxa = _mm512_and_si512(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_si512(ra_max_mask, b);
-  auto rabmax = _mm512_or_si512(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_si512(ra_max_mask, a);
-  auto rabminb = _mm512_and_si512(ra_max_mask, b);
-  a = _mm512_or_si512(rabmina, rabminb);
-  b = rabmax;
+  auto c = a;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi32_mask((__mmask) (0xaaaa), a, b);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  a = _mm512_mask_blend_epi32(cmp_mask, b, a);
+  b = _mm512_mask_blend_epi32(cmp_mask, c, b);
 }
 
 void MaskedMinMax16(const __m512i &a, const __m512i &b,
                     __m512i &minab, __m512i &maxab) {
-  auto keycopy_control = KEYCOPY_FLAG_32;
-  auto cmp_mask = _mm512_cmpgt_epi32_mask(a, b);
-  auto ra_max_mask = _mm512_permutexvar_epi32(keycopy_control, cmp_mask);
-  auto rabmaxa = _mm512_and_si512(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_si512(ra_max_mask, b);
-  auto rabmax = _mm512_or_si512(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_si512(ra_max_mask, a);
-  auto rabminb = _mm512_and_si512(ra_max_mask, b);
-  minab = _mm512_or_si512(rabmina, rabminb);
-  maxab = rabmax;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi32_mask((__mmask) (0xaaaa), a, b);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  minab = _mm512_mask_blend_epi32(cmp_mask, b, a);
+  maxab = _mm512_mask_blend_epi32(cmp_mask, a, b);
 }
 
 void MaskedMinMax16(__m512 &a, __m512 &b) {
-  auto keycopy_control = KEYCOPY_FLAG_32;
-  auto cmp_mask = _mm512_cmp_ps_mask(a, b, _CMP_GT_OQ);
-  auto ra_max_mask = _mm512_permutexvar_ps(keycopy_control, cmp_mask);
-  auto rabmaxa = _mm512_and_ps(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_ps(ra_max_mask, b);
-  auto rabmax = _mm512_or_ps(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_ps(ra_max_mask, a);
-  auto rabminb = _mm512_and_ps(ra_max_mask, b);
-  a = _mm512_or_ps(rabmina, rabminb);
-  b = rabmax;
+  auto c = a;
+  auto temp_cmp_mask = _mm512_mask_cmp_ps_mask((__mmask) (0xaaaa), a, b, _CMP_GT_OQ);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  a = _mm512_mask_blend_ps(cmp_mask, b, a);
+  b = _mm512_mask_blend_ps(cmp_mask, c, b);
 }
 
 void MaskedMinMax16(const __m512 &a, const __m512 &b,
                     __m512 &minab, __m512 &maxab) {
-  auto keycopy_control = KEYCOPY_FLAG_32;
-  auto cmp_mask = _mm512_cmp_ps_mask(a, b, _CMP_GT_OQ);
-  auto ra_max_mask = _mm512_permutexvar_ps(keycopy_control, cmp_mask);
-  auto rabmaxa = _mm512_and_ps(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_ps(ra_max_mask, b);
-  auto rabmax = _mm512_or_ps(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_ps(ra_max_mask, a);
-  auto rabminb = _mm512_and_ps(ra_max_mask, b);
-  minab = _mm512_or_ps(rabmina, rabminb);
-  maxab = rabmax;
+  auto temp_cmp_mask = _mm512_mask_cmp_ps_mask((__mmask) (0xaaaa), a, b, _CMP_GT_OQ);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  minab = _mm512_mask_blend_ps(cmp_mask, b, a);
+  maxab = _mm512_mask_blend_ps(cmp_mask, a, b);
 }
 
 // 64-bit Key-Value pairs
 void MaskedMinMax8(__m512i &a, __m512i &b) {
-  auto cmp_mask = _mm512_cmpgt_epi64_mask(a, b);
-  auto ra_max_mask = _mm512_permutex_epi64(cmp_mask, _MM_SHUFFLE(2, 2, 0, 0));
-  auto rabmaxa = _mm512_and_si512(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_si512(ra_max_mask, b);
-  auto rabmax = _mm512_or_si512(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_si512(ra_max_mask, a);
-  auto rabminb = _mm512_and_si512(ra_max_mask, b);
-  a = _mm512_or_si512(rabmina, rabminb);
-  b = rabmax;
+  auto c = a;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi64_mask((__mmask) (0xaa), a, b);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  a = _mm512_mask_blend_epi64(cmp_mask, b, a);
+  b = _mm512_mask_blend_epi64(cmp_mask, c, b);
 }
 
 // 64-bit Key-Value pairs
 void MaskedMinMax8(const __m512i &a, const __m512i &b,
                    __m512i &minab, __m512i &maxab) {
-  auto cmp_mask = _mm512_cmpgt_epi64_mask(a, b);
-  auto ra_max_mask = _mm512_permutex_epi64(cmp_mask, _MM_SHUFFLE(2, 2, 0, 0));
-  auto rabmaxa = _mm512_and_si512(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_si512(ra_max_mask, b);
-  auto rabmax = _mm512_or_si512(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_si512(ra_max_mask, a);
-  auto rabminb = _mm512_and_si512(ra_max_mask, b);
-  minab = _mm512_or_si512(rabmina, rabminb);
-  maxab = rabmax;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi64_mask((__mmask) (0xaa), a, b);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  minab = _mm512_mask_blend_epi64(cmp_mask, b, a);
+  maxab = _mm512_mask_blend_epi64(cmp_mask, a, b);
 }
 
 void MaskedMinMax8(__m512d &a, __m512d &b) {
-  auto cmp_mask = _mm512_cmp_pd_mask(a, b, _CMP_GT_OQ);
-  auto ra_max_mask = _mm512_permutex_pd(cmp_mask, _MM_SHUFFLE(2, 2, 0, 0));
-  auto rabmaxa = _mm512_and_pd(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_pd(ra_max_mask, b);
-  auto rabmax = _mm512_or_pd(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_pd(ra_max_mask, a);
-  auto rabminb = _mm512_and_pd(ra_max_mask, b);
-  a = _mm512_or_pd(rabmina, rabminb);
-  b = rabmax;
+  auto c = a;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_pd_mask((__mmask) (0xaa), a, b);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  a = _mm512_mask_blend_pd(cmp_mask, b, a);
+  b = _mm512_mask_blend_pd(cmp_mask, c, b);
 }
 
 void MaskedMinMax8(const __m512d &a, const __m512d &b,
                    __m512d &minab, __m512d &maxab) {
-  auto cmp_mask = _mm512_cmp_pd_mask(a, b, _CMP_GT_OQ);
-  auto ra_max_mask = _mm512_permutex_pd(cmp_mask, _MM_SHUFFLE(2, 2, 0, 0));
-  auto rabmaxa = _mm512_and_pd(ra_max_mask, a);
-  auto rabmaxb = _mm512_andnot_pd(ra_max_mask, b);
-  auto rabmax = _mm512_or_pd(rabmaxa, rabmaxb);
-  auto rabmina = _mm512_andnot_pd(ra_max_mask, a);
-  auto rabminb = _mm512_and_pd(ra_max_mask, b);
-  minab = _mm512_or_pd(rabmina, rabminb);
-  maxab = rabmax;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_pd_mask((__mmask) (0xaa), a, b);
+  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+
+  minab = _mm512_mask_blend_pd(cmp_mask, b, a);
+  maxab = _mm512_mask_blend_pd(cmp_mask, a, b);
 }
 
 /**
@@ -352,8 +320,8 @@ void MaskedBitonicSort8x16(T &r0, T &r1, T &r2, T &r3,
 }
 
 // 32 bit KV ints, floats
-template void MaskedBitonicSort4x8<__m256i>(__m256i &, __m256i &, __m256i &, __m256i &);
-template void MaskedBitonicSort4x8<__m256>(__m256 &, __m256 &, __m256 &, __m256 &);
+template void MaskedBitonicSort8x16<__m256i>(__m256i &, __m256i &, __m256i &, __m256i &);
+template void MaskedBitonicSort8x16<__m256>(__m256 &, __m256 &, __m256 &, __m256 &);
 
 template<typename T>
 void MaskedBitonicSort4x8(T &r0, T &r1, T &r2, T &r3) {
