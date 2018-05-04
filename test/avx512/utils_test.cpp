@@ -180,7 +180,7 @@ TEST(SortUtilTest, AVX512BitonicSort16x16Int32BitTest) {
 TEST(SortUtilTest, AVX512BitonicSort16x16Float32BitTest) {
   float *arr;
   aligned_init<float>(arr, 256);
-  TestUtil::RandGenFloat<float>(arr, 256, -10, 10);
+  TestUtil::RandGenFloat<float>(arr, 256, -10.0, 10.0);
   __m512 r[16];
   for (int i = 0; i < 16; i++) {
     LoadReg(r[i], arr + i * 16);
@@ -224,7 +224,7 @@ TEST(SortUtilTest, AVX512BitonicSort8x8Int64BitTest) {
 TEST(SortUtilTest, AVX512BitonicSort8x8Float64BitTest) {
   double *arr;
   aligned_init<double>(arr, 64);
-  TestUtil::RandGenFloat<double>(arr, 64, -10, 10);
+  TestUtil::RandGenFloat<double>(arr, 64, -10.0, 10.0);
   __m512d r[8];
   for (int i = 0; i < 8; i++) {
     LoadReg(r[i], arr + i * 8);
