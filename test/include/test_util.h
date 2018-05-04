@@ -35,7 +35,7 @@ struct TestUtil{
   }
 
   template <typename T>
-  static void RandGenIntRecords(std::pair<T, T>* &arr, size_t N, T lo, T hi, int offset_start=0) {
+  static void RandGenIntRecords(std::pair<T, T>* &arr, size_t N, T lo, T hi, unsigned int offset_start=0) {
     aligned_init<std::pair<T, T>>(arr, N);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
@@ -47,7 +47,7 @@ struct TestUtil{
   }
 
   template <typename T>
-  static void RandGenIntRecords(T* &arr, size_t N, T lo, T hi, int offset_start=0) {
+  static void RandGenIntRecords(T* &arr, size_t N, T lo, T hi, unsigned int offset_start=0) {
     aligned_init<T>(arr, N*2);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
@@ -59,7 +59,7 @@ struct TestUtil{
   }
 
   template <typename T>
-  static void RandGenFloatRecords(std::pair<T, T>* &arr, size_t N, T lo, T hi, int offset_start=0) {
+  static void RandGenFloatRecords(std::pair<T, T>* &arr, size_t N, T lo, T hi, unsigned int offset_start=0) {
     aligned_init<std::pair<T, T>>(arr, N);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
@@ -71,7 +71,7 @@ struct TestUtil{
   }
 
   template <typename T>
-  static void RandGenFloatRecords(T* &arr, size_t N, T lo, T hi, int offset_start=0) {
+  static void RandGenFloatRecords(T* &arr, size_t N, T lo, T hi, unsigned int offset_start=0) {
     aligned_init<T>(arr, N*2);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
