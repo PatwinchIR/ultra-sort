@@ -344,23 +344,23 @@ TEST(UtilsTest, AVX512IntraRegisterSort16x16Float32BitTest) {
 TEST(UtilsTest, AVX512IntraRegisterSort8x8Int64BitTest) {
   int64_t *a;
   int64_t *b;
-  aligned_init<int64_t>(a, 16);
-  aligned_init<int64_t>(b, 16);
+  aligned_init<int64_t>(a, 8);
+  aligned_init<int64_t>(b, 8);
 
-  TestUtil::RandGenInt<int64_t>(a, 16, -10, 10);
-  TestUtil::RandGenInt<int64_t>(b, 16, -10, 10);
+  TestUtil::RandGenInt<int64_t>(a, 8, -10, 10);
+  TestUtil::RandGenInt<int64_t>(b, 8, -10, 10);
 
-  std::sort(a, a + 16);
-  std::sort(b, b + 16);
+  std::sort(a, a + 8);
+  std::sort(b, b + 8);
 
-  int64_t check_arr[32];
-  for (int i = 0; i < 32; ++i) {
-    check_arr[i] = i < 16 ? a[i] : b[i - 16];
+  int64_t check_arr[16];
+  for (int i = 0; i < 16; ++i) {
+    check_arr[i] = i < 8 ? a[i] : b[i - 8];
   }
 
-  std::sort(check_arr, check_arr + 32);
+  std::sort(check_arr, check_arr + 16);
 
-  std::reverse(b, b + 16);
+  std::reverse(b, b + 8);
 
   __m512i ra, rb;
   LoadReg(ra, a);
@@ -369,8 +369,45 @@ TEST(UtilsTest, AVX512IntraRegisterSort8x8Int64BitTest) {
   StoreReg(ra, a);
   StoreReg(rb, b);
 
-  for (int j = 0; j < 32; ++j) {
-    EXPECT_EQ(check_arr[j], j < 16 ? a[j] : b[j - 16]);
+  for (int j = 0; j < 16; ++j) {
+    EXPECT_EQ(check_arr[j], j < 8 ? a[j] : b[j - 8]);
+  }
+
+  delete[](a);
+  delete[](b);
+}
+
+TEST(UtilsTest, AVX512IntraRegisterSort8x8Int64BitTest_Fixed) {
+  int64_t *a;
+  int64_t *b;
+  aligned_init<int64_t>(a, 8);
+  aligned_init<int64_t>(b, 8);
+
+  int64_t temp_a = {1, 3, 5, 7, 9, 11, 13, 15};
+  int64_t temp_b = {14, 12, 10, 8, 6, 4, 2, 0};
+  
+  for (int i = 0; i < 8; i ++) {
+    a[i] = temp_a[i];
+  }
+  
+  for (int i = 0; i < 8; i ++) {
+    b[i] = temp_b[i];
+  }
+
+  int64_t check_arr[16];
+  for (int i = 0; i < 16; ++i) {
+    check_arr[i] = i;
+  }
+
+  __m512i ra, rb;
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  IntraRegisterSort8x8(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
+
+  for (int j = 0; j < 16; ++j) {
+    EXPECT_EQ(check_arr[j], j < 8 ? a[j] : b[j - 8]);
   }
 
   delete[](a);
@@ -380,23 +417,23 @@ TEST(UtilsTest, AVX512IntraRegisterSort8x8Int64BitTest) {
 TEST(UtilsTest, AVX512IntraRegisterSort8x8Float64BitTest) {
   double *a;
   double *b;
-  aligned_init<double>(a, 16);
-  aligned_init<double>(b, 16);
+  aligned_init<double>(a, 8);
+  aligned_init<double>(b, 8);
 
-  TestUtil::RandGenFloat<double>(a, 16, -10, 10);
-  TestUtil::RandGenFloat<double>(b, 16, -10, 10);
+  TestUtil::RandGenFloat<double>(a, 8, -10, 10);
+  TestUtil::RandGenFloat<double>(b, 8, -10, 10);
 
-  std::sort(a, a + 16);
-  std::sort(b, b + 16);
+  std::sort(a, a + 8);
+  std::sort(b, b + 8);
 
   double check_arr[32];
-  for (int i = 0; i < 32; ++i) {
-    check_arr[i] = i < 16 ? a[i] : b[i - 16];
+  for (int i = 0; i < 8; ++i) {
+    check_arr[i] = i < 8 ? a[i] : b[i - 8];
   }
 
-  std::sort(check_arr, check_arr + 32);
+  std::sort(check_arr, check_arr + 16);
 
-  std::reverse(b, b + 16);
+  std::reverse(b, b + 8);
 
   __m512d ra, rb;
   LoadReg(ra, a);
@@ -405,8 +442,8 @@ TEST(UtilsTest, AVX512IntraRegisterSort8x8Float64BitTest) {
   StoreReg(ra, a);
   StoreReg(rb, b);
 
-  for (int j = 0; j < 32; ++j) {
-    EXPECT_EQ(check_arr[j], j < 16 ? a[j] : b[j - 16]);
+  for (int j = 0; j < 16; ++j) {
+    EXPECT_EQ(check_arr[j], j < 8 ? a[j] : b[j - 8]);
   }
 
   delete[](a);
@@ -482,21 +519,21 @@ TEST(UtilsTest, AVX512BitonicMerge16Float32BitTest) {
 TEST(UtilsTest, AVX512BitonicMerge8Int64BitTest) {
   int64_t *a;
   int64_t *b;
-  aligned_init<int64_t>(a, 16);
-  aligned_init<int64_t>(b, 16);
+  aligned_init<int64_t>(a, 8);
+  aligned_init<int64_t>(b, 8);
 
-  TestUtil::RandGenInt<int64_t>(a, 16, -10, 10);
-  TestUtil::RandGenInt<int64_t>(b, 16, -10, 10);
+  TestUtil::RandGenInt<int64_t>(a, 8, -10, 10);
+  TestUtil::RandGenInt<int64_t>(b, 8, -10, 10);
 
-  std::sort(a, a + 16);
-  std::sort(b, b + 16);
+  std::sort(a, a + 8);
+  std::sort(b, b + 8);
 
-  int64_t check_arr[32];
-  for (int j = 0; j < 32; ++j) {
-    check_arr[j] = j < 16 ? a[j] : b[j - 16];
+  int64_t check_arr[16];
+  for (int j = 0; j < 16; ++j) {
+    check_arr[j] = j < 8 ? a[j] : b[j - 8];
   }
 
-  std::sort(check_arr, check_arr + 32);
+  std::sort(check_arr, check_arr + 16);
 
   __m512i ra, rb;
   LoadReg(ra, a);
@@ -505,8 +542,8 @@ TEST(UtilsTest, AVX512BitonicMerge8Int64BitTest) {
   StoreReg(ra, a);
   StoreReg(rb, b);
 
-  for (int i = 0; i < 32; i++) {
-    EXPECT_EQ(check_arr[i], i < 16 ? a[i] : b[i - 16]);
+  for (int i = 0; i < 16; i++) {
+    EXPECT_EQ(check_arr[i], i < 8 ? a[i] : b[i - 8]);
   }
   delete[](a);
   delete[](b);
@@ -515,21 +552,21 @@ TEST(UtilsTest, AVX512BitonicMerge8Int64BitTest) {
 TEST(UtilsTest, AVX512BitonicMerge8Float64BitTest) {
   double *a;
   double *b;
-  aligned_init<double>(a, 16);
-  aligned_init<double>(b, 16);
+  aligned_init<double>(a, 8);
+  aligned_init<double>(b, 8);
 
-  TestUtil::RandGenFloat<double>(a, 16, -10, 10);
-  TestUtil::RandGenFloat<double>(b, 16, -10, 10);
+  TestUtil::RandGenFloat<double>(a, 8, -10, 10);
+  TestUtil::RandGenFloat<double>(b, 8, -10, 10);
 
-  std::sort(a, a + 16);
-  std::sort(b, b + 16);
+  std::sort(a, a + 8);
+  std::sort(b, b + 8);
 
-  double check_arr[32];
-  for (int j = 0; j < 32; ++j) {
-    check_arr[j] = j < 16 ? a[j] : b[j - 16];
+  double check_arr[16];
+  for (int j = 0; j < 16; ++j) {
+    check_arr[j] = j < 8 ? a[j] : b[j - 8];
   }
 
-  std::sort(check_arr, check_arr + 32);
+  std::sort(check_arr, check_arr + 16);
 
   __m512d ra, rb;
   LoadReg(ra, a);
@@ -538,8 +575,8 @@ TEST(UtilsTest, AVX512BitonicMerge8Float64BitTest) {
   StoreReg(ra, a);
   StoreReg(rb, b);
 
-  for (int i = 0; i < 32; i++) {
-    EXPECT_EQ(check_arr[i], i < 16 ? a[i] : b[i - 16]);
+  for (int i = 0; i < 16; i++) {
+    EXPECT_EQ(check_arr[i], i < 8 ? a[i] : b[i - 8]);
   }
   delete[](a);
   delete[](b);
