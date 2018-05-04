@@ -161,7 +161,7 @@ TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
   StoreReg(rb, b);
 
   int check_arr_min[16] = {1, 1, 2, 2, 5, 9, 0, 0, 8, 7, 4, 3, 3, 3, 0, 9};
-  int check_arr_max[16] = {3, 0, 2, 2, 7, 7, 1, -1, 9, 9, 5, 5, 7, 7, 4, 4};
+  int check_arr_max[16] = {3, 0, 2, 2, 7, 7, 1, -1, 9, 9, 5, 5, 7, 4, 4, 4};
 
   print_arr(a, 0, 16, "min: ");
   print_arr(check_arr_min, 0, 16, "check min: ");
