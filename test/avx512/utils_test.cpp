@@ -550,6 +550,47 @@ TEST(UtilsTest, AVX512IntraRegisterSort8x8Float64BitTest) {
   delete[](b);
 }
 
+TEST(UtilsTest, AVX512MaskedIntraRegisterSort8x8Float64BitTest_Fixed) {
+  double *a;
+  double *b;
+  aligned_init<double>(a, 8);
+  aligned_init<double>(b, 8);
+
+  double temp_a[8] = {3.423, 0.423, 4.471, 2.423, 5.423, 9.423, 6.423, -1.423};
+  double temp_b[8] = {9.471, 1.471, 2.423, 2.471, -7.471, 1.471, -10.471, 5.471};
+
+  for (int i = 0; i < 8; i ++) {
+    a[i] = temp_a[i];
+  }
+
+  for (int i = 0; i < 8; i ++) {
+    b[i] = temp_b[i];
+  }
+
+  print_arr(a, 0, 8, "a: ");
+  print_arr(b, 0, 8, "b: ");
+
+  __m512d ra, rb;
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  MaskedIntraRegisterSort8x8(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
+
+  double check_arr[16] = {-10.471, 5.471, -7.471, 1.471, 2.423, 2.471, 3.423, 0.423, 4.471, 2.423, 5.423, 9.423, 6.423, -1.423, 9.471, 1.471};
+
+  print_arr(a, 0, 8, "a after: ");
+  print_arr(b, 0, 8, "b after: ");
+  print_arr(check_arr, 0, 16, "check: ");
+
+  for (int i = 0; i < 16; i++) {
+    EXPECT_EQ(check_arr[i], i < 8 ? a[i] : b[i - 8]);
+  }
+
+  delete[](a);
+  delete[](b);
+}
+
 TEST(UtilsTest, AVX512BitonicMerge16Int32BitTest) {
   int *a;
   int *b;
