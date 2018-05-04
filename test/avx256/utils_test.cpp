@@ -176,8 +176,10 @@ TEST(UtilsTest, AVX256MaskedMinMax4Int64Test) {
   using T = int64_t;
   unsigned int unit_size = 2;
   T *kv_flat1, *kv_flat2;
-  TestUtil::RandGenIntRecords(kv_flat1, unit_size*2, -10ll, 10ll, 0u);
-  TestUtil::RandGenIntRecords(kv_flat2, unit_size*2, -10ll, 10ll, unit_size*2u);
+  T lo = -10;
+  T hi = 10;
+  TestUtil::RandGenIntRecords(kv_flat1, unit_size*2, lo, hi, 0u);
+  TestUtil::RandGenIntRecords(kv_flat2, unit_size*2, lo, hi, unit_size*2u);
   std::map<T,T> kv_map;
   for (int i = 0; i < unit_size; ++i) {
     kv_map.insert(std::pair<T,T>(kv_flat1[2*i + 1], kv_flat1[2*i]));
