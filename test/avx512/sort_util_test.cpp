@@ -92,7 +92,7 @@ TEST(SortUtilTest, AVX512SortBlock64Int64BitTest) {
 TEST(SortUtilTest, AVX512SortBlock64Float64BitTest) {
   double *arr;
   aligned_init<double>(arr, 64);
-  TestUtil::RandGenInt<double>(arr, 64, -10, 10);
+  TestUtil::RandGenFloat<double>(arr, 64, -10, 10);
 
   auto check_arr = (double *) malloc(64 * sizeof(double));
   auto temp_arr = (double *) malloc(8 * sizeof(double));
