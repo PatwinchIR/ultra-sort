@@ -698,8 +698,8 @@ void IntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
   print_arr((int64_t *)&minb, 0, 8, "8minb: ");
   print_arr((int64_t *)&maxb, 0, 8, "8maxb: ");
 
-  auto a4 = _mm512_mask_blend_epi64((__mmask8) (0xf), mina, maxa);
-  auto b4 = _mm512_mask_blend_epi64((__mmask8) (0xf), minb, maxb);
+  auto a4 = _mm512_mask_blend_epi64((__mmask8) (0xf0), mina, maxa);
+  auto b4 = _mm512_mask_blend_epi64((__mmask8) (0xf0), minb, maxb);
 
   print_arr((int64_t *)&a4, 0, 8, "a4: ");
   print_arr((int64_t *)&b4, 0, 8, "b4: ");
