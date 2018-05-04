@@ -16,7 +16,6 @@ namespace avx512{
   void MaskedSortBlock8x16(InType *&arr, size_t offset);
   template <typename InType, typename RegType>
   void MaskedSortBlock4x8(InType *&arr, size_t offset);
-
 };
 
 #endif

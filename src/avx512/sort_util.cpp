@@ -3,7 +3,7 @@
 #ifdef AVX512
 namespace avx512 {
 template<typename InType, typename RegType>
-void SortBlock256(InType *&arr, int offset) {
+void SortBlock256(InType *&arr, size_t offset) {
   int ROW_SIZE = 16;
   // Put into registers
   RegType r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
@@ -49,11 +49,11 @@ void SortBlock256(InType *&arr, int offset) {
   StoreReg(r15, arr + offset + ROW_SIZE * 15);
 }
 
-template void SortBlock256<int, __m512i>(int *&arr, int offset);
-template void SortBlock256<float, __m512>(float *&arr, int offset);
+template void SortBlock256<int, __m512i>(int *&arr, size_t offset);
+template void SortBlock256<float, __m512>(float *&arr, size_t offset);
 
 template<typename InType, typename RegType>
-void MaskedSortBlock8x16(InType *&arr, int offset) {
+void MaskedSortBlock8x16(InType *&arr, size_t offset) {
   int ROW_SIZE = 16;
   // Put into registers
   RegType r0, r1, r2, r3, r4, r5, r6, r7;
@@ -84,11 +84,11 @@ void MaskedSortBlock8x16(InType *&arr, int offset) {
   StoreReg(r7, arr + offset + ROW_SIZE * 7);
 }
 
-template void MaskedSortBlock8x16<int, __m512i>(int *&arr, int offset);
-template void MaskedSortBlock8x16<float, __m512>(float *&arr, int offset);
+template void MaskedSortBlock8x16<int, __m512i>(int *&arr, size_t offset);
+template void MaskedSortBlock8x16<float, __m512>(float *&arr, size_t offset);
 
 template<typename InType, typename RegType>
-void SortBlock64(InType *&arr, int offset) {
+void SortBlock64(InType *&arr, size_t offset) {
   int ROW_SIZE = 8;
   // Put into registers
   RegType r0, r1, r2, r3, r4, r5, r6, r7;
@@ -118,8 +118,8 @@ void SortBlock64(InType *&arr, int offset) {
   StoreReg(r7, arr + offset + ROW_SIZE * 7);
 }
 
-template void SortBlock64<int64_t, __m512i>(int64_t *&arr, int offset);
-template void SortBlock64<double, __m512d>(double *&arr, int offset);
+template void SortBlock64<int64_t, __m512i>(int64_t *&arr, size_t offset);
+template void SortBlock64<double, __m512d>(double *&arr, size_t offset);
 
 template<typename InType, typename RegType>
 void MaskedSortBlock4x8(InType *&arr, size_t offset) {

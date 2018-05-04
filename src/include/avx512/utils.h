@@ -131,10 +131,10 @@ namespace avx512{
   void MaskedIntraRegisterSort16x16(__m512i &a16, __m512i &b16);
   void MaskedIntraRegisterSort16x16(__m512 &a16, __m512 &b16);
 
-  void BitonicMerge8(__m512i& a, __m512i& b);
-  void BitonicMerge8(__m512d& a, __m512d& b);
-  void BitonicMerge16(__m512i& a, __m512i& b);
-  void BitonicMerge16(__m512& a, __m512& b);
+  template <typename T>
+  void BitonicMerge8(T& a, T& b);
+  template <typename T>
+  void BitonicMerge16(T& a, T& b);
 
   template <typename T>
   void MaskedBitonicMerge16(T& a, T& b);
