@@ -33,8 +33,6 @@ template void print_arr<int64_t>(int64_t* arr, int i, int j, const std::string &
 template void print_arr<double>(double* arr, int i, int j, const std::string &tag);
 template void print_arr<float>(float* arr, int i, int j, const std::string &tag);
 
-
-
 void print_kvarr(std::pair<int,int> *arr, int i, int j, const std::string &tag) {
   printf("%s ", tag.c_str());
   for(int idx = i; idx < j; idx++) {
