@@ -224,6 +224,7 @@ TEST(UtilsTest, AVX512BitonicSort8x8Int64BitTest) {
 TEST(UtilsTest, AVX512Transpose8x8Int64BitTest) {
   int64_t *arr, *check_arr;
   aligned_init<int64_t>(arr, 64);
+  aligned_init<int64_t>(check_arr, 64);
   for (int i = 0; i < 64; i ++) {
     arr[i] = i;
     check_arr[i] = i % 8 + (i / 8) * 8;
@@ -244,7 +245,7 @@ TEST(UtilsTest, AVX512Transpose8x8Int64BitTest) {
   }
 
   delete[](arr);
-  free(check_arr);
+  delete[](check_arr);
 }
 
 TEST(UtilsTest, AVX512BitonicSort8x8Float64BitTest) {
