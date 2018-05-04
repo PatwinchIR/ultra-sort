@@ -306,7 +306,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntTest) {
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
-  ips4o::sort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
     return left.first < right.first;
   });
   end = currentSeconds();
@@ -385,7 +385,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueIntTest) {
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
-  ips4o::sort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
     return left.first < right.first;
   });
   end = currentSeconds();
@@ -464,7 +464,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueFloatTest) {
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
   start = currentSeconds();
-  ips4o::sort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
     return left.first < right.first;
   });
   end = currentSeconds();
