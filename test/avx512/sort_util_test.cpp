@@ -4,13 +4,14 @@
 #include "avx512/utils.h"
 
 #ifdef AVX512
+namespace avx512 {
 TEST(SortUtilTest, AVX512SortBlock256Int32BitTest) {
   int *arr;
   aligned_init<int>(arr, 256);
   TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
-  int *check_arr = (int *)malloc(256 * sizeof(int));
-  int *temp_arr = (int *)malloc(16 * sizeof(int));
+  int *check_arr = (int *) malloc(256 * sizeof(int));
+  int *temp_arr = (int *) malloc(16 * sizeof(int));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
@@ -21,9 +22,9 @@ TEST(SortUtilTest, AVX512SortBlock256Int32BitTest) {
     }
   }
 
-  AVX512SortUtil::SortBlock256<int, __m512i>(arr, 0);
+  SortBlock256<int, __m512i>(arr, 0);
 
-  for(int i = 0; i < 256; i++) {
+  for (int i = 0; i < 256; i++) {
     EXPECT_EQ(check_arr[i], arr[i]);
   }
 
@@ -37,8 +38,8 @@ TEST(SortUtilTest, AVX512SortBlock256Float32BitTest) {
   aligned_init<float>(arr, 256);
   TestUtil::RandGenFloat<float>(arr, 256, -10, 10);
 
-  auto *check_arr = (float *)malloc(256 * sizeof(float));
-  auto *temp_arr = (float *)malloc(16 * sizeof(float));
+  auto *check_arr = (float *) malloc(256 * sizeof(float));
+  auto *temp_arr = (float *) malloc(16 * sizeof(float));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
@@ -49,14 +50,15 @@ TEST(SortUtilTest, AVX512SortBlock256Float32BitTest) {
     }
   }
 
-  AVX512SortUtil::SortBlock256<float, __m512>(arr, 0);
+  SortBlock256<float, __m512>(arr, 0);
 
-  for(int i = 0; i < 256; i++) {
+  for (int i = 0; i < 256; i++) {
     EXPECT_EQ(check_arr[i], arr[i]);
   }
 
   delete[](arr);
   free(check_arr);
   free(temp_arr);
+}
 }
 #endif

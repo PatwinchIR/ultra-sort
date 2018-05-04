@@ -3,7 +3,7 @@
 #ifdef AVX2
 namespace avx2 {
 template<typename InType, typename RegType>
-void SortBlock64(InType *&arr, int offset) {
+void SortBlock64(InType *&arr, size_t offset) {
   int ROW_SIZE = 8;
   // Put into registers
   RegType r0, r1, r2, r3, r4, r5, r6, r7;
@@ -34,11 +34,11 @@ void SortBlock64(InType *&arr, int offset) {
   StoreReg(r7, arr + offset + ROW_SIZE * 7);
 }
 
-template void SortBlock64<int, __m256i>(int *&arr, int offset);
-template void SortBlock64<float, __m256>(float *&arr, int offset);
+template void SortBlock64<int, __m256i>(int *&arr, size_t offset);
+template void SortBlock64<float, __m256>(float *&arr, size_t offset);
 
 template<typename InType, typename RegType>
-void MaskedSortBlock4x8(InType *&arr, int offset) {
+void MaskedSortBlock4x8(InType *&arr, size_t offset) {
   int ROW_SIZE = 8;
   // Put into registers
   RegType r0, r1, r2, r3;
@@ -61,11 +61,11 @@ void MaskedSortBlock4x8(InType *&arr, int offset) {
   StoreReg(r3, arr + offset + ROW_SIZE * 3);
 }
 
-template void MaskedSortBlock4x8<int, __m256i>(int *&arr, int offset);
-template void MaskedSortBlock4x8<float, __m256>(float *&arr, int offset);
+template void MaskedSortBlock4x8<int, __m256i>(int *&arr, size_t offset);
+template void MaskedSortBlock4x8<float, __m256>(float *&arr, size_t offset);
 
 template<typename InType, typename RegType>
-void SortBlock16(InType *&arr, int offset) {
+void SortBlock16(InType *&arr, size_t offset) {
   int ROW_SIZE = 4;
   // Put into registers
   RegType r0, r1, r2, r3;
@@ -87,11 +87,11 @@ void SortBlock16(InType *&arr, int offset) {
   StoreReg(r3, arr + offset + ROW_SIZE * 3);
 }
 
-template void SortBlock16<int64_t, __m256i>(int64_t *&arr, int offset);
-template void SortBlock16<double, __m256d>(double *&arr, int offset);
+template void SortBlock16<int64_t, __m256i>(int64_t *&arr, size_t offset);
+template void SortBlock16<double, __m256d>(double *&arr, size_t offset);
 
 template<typename InType, typename RegType>
-void MaskedSortBlock2x4(InType *&arr, int offset) {
+void MaskedSortBlock2x4(InType *&arr, size_t offset) {
   int ROW_SIZE = 4;
   // Put into registers
   RegType r0, r1;
@@ -110,8 +110,8 @@ void MaskedSortBlock2x4(InType *&arr, int offset) {
   StoreReg(r1, arr + offset + ROW_SIZE);
 }
 
-template void MaskedSortBlock2x4<int64_t, __m256i>(int64_t *&arr, int offset);
-template void MaskedSortBlock2x4<double, __m256d>(double *&arr, int offset);
+template void MaskedSortBlock2x4<int64_t, __m256i>(int64_t *&arr, size_t offset);
+template void MaskedSortBlock2x4<double, __m256d>(double *&arr, size_t offset);
 }
 #endif
 

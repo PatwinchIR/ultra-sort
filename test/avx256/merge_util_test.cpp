@@ -301,4 +301,5 @@ TEST(MergeUtilsTest, AVX256MergePass4Float64BitTest) {
   free(check_arr);
   free(temp_arr);
 }
+
 }

@@ -31,7 +31,7 @@
  * @param alignment_size: alignment chunk size
  */
 template <typename T>
-void aligned_init(T* &ptr, int N, size_t alignment_size=64);
+void aligned_init(T* &ptr, size_t N, size_t alignment_size=64);
 
 template <typename T>
 void print_arr(T *arr, int i, int j, const std::string &tag="");

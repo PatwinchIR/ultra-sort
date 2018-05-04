@@ -9,7 +9,7 @@
 
 namespace avx2 {
 TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
-  int N = 65536;
+  size_t N = 65536;
   int lo = -10000;
   int hi = 10000;
   int *rand_arr;
@@ -25,7 +25,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
   start = currentSeconds();
   std::stable_sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -34,7 +34,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
   start = currentSeconds();
   std::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ ips4o::sort
@@ -43,7 +43,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
   start = currentSeconds();
   ips4o::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ pqd::sort
@@ -52,7 +52,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
   start = currentSeconds();
   pdqsort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // AVX256 Sort
@@ -67,13 +67,13 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitIntegerTest) {
   for (int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort32BitFloatTest) {
-  int N = 65536;
+  size_t N = 65536;
   float lo = -10000;
   float hi = 10000;
   float *rand_arr;
@@ -89,7 +89,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitFloatTest) {
   start = currentSeconds();
   std::stable_sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -98,7 +98,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitFloatTest) {
   start = currentSeconds();
   std::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ ips4o::sort
@@ -107,7 +107,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitFloatTest) {
   start = currentSeconds();
   ips4o::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ pqd::sort
@@ -116,7 +116,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitFloatTest) {
   start = currentSeconds();
   pdqsort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // AVX256 Sort
@@ -131,13 +131,13 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitFloatTest) {
   for (int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort64BitIntegerTest) {
-  int N = 65536;
+  size_t N = 65536;
   int lo = -10000;
   int hi = 10000;
   int64_t *rand_arr;
@@ -153,7 +153,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitIntegerTest) {
   start = currentSeconds();
   std::stable_sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -162,7 +162,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitIntegerTest) {
   start = currentSeconds();
   std::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ ips4o::sort
@@ -171,7 +171,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitIntegerTest) {
   start = currentSeconds();
   ips4o::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ pqd::sort
@@ -180,7 +180,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitIntegerTest) {
   start = currentSeconds();
   pdqsort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // AVX256 sort
@@ -194,13 +194,13 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitIntegerTest) {
   for (int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
-  int N = 65536;
+  size_t N = 65536;
   double lo = -10000;
   double hi = 10000;
   double *rand_arr;
@@ -216,7 +216,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
   start = currentSeconds();
   std::stable_sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -225,7 +225,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
   start = currentSeconds();
   std::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ ips4o::sort
@@ -234,7 +234,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
   start = currentSeconds();
   ips4o::sort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[ips4o::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ pqd::sort
@@ -243,7 +243,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
   start = currentSeconds();
   pdqsort(soln_arr, soln_arr + N);
   end = currentSeconds();
-  printf("[pdqsort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // AVX256 sort
@@ -257,14 +257,14 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitFloatTest) {
   for (int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntTest) {
   using T = int;
-  int N = 65536;
+  size_t N = 65536;
   T lo = -10000;
   T hi = 10000;
   std::pair<T, T> *rand_arr;
@@ -286,7 +286,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -297,10 +297,31 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // TODO(dee): Add ips4o and pdqsort benchmarks
+  // ips4o
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // pdqsort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
   // AVX256 sort
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
@@ -315,14 +336,14 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntTest) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueIntTest) {
   using T = int64_t;
-  int N = 65536;
+  size_t N = 65536;
   T lo = -10000;
   T hi = 10000;
   std::pair<T, T> *rand_arr;
@@ -344,7 +365,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueIntTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -355,10 +376,31 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueIntTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // TODO(dee): Add ips4o and pdqsort benchmarks
+  // ips4o::sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // pdqsort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
   // AVX256 sort
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
@@ -373,14 +415,14 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueIntTest) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueFloatTest) {
   using T = float;
-  int N = 65536;
+  size_t N = 65536;
   T lo = -10000.0f;
   T hi = 10000.0f;
   std::pair<T, T> *rand_arr;
@@ -402,7 +444,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueFloatTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -413,10 +455,31 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueFloatTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // TODO(dee): Add ips4o and pdqsort benchmarks
+  // ips4o::sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // pdqsort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
   // AVX256 sort
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
@@ -431,14 +494,14 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueFloatTest) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
 
 TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueFloatTest) {
   using T = double;
-  int N = 65536;
+  size_t N = 65536;
   T lo = -10000.0f;
   T hi = 10000.0f;
   std::pair<T, T> *rand_arr;
@@ -460,7 +523,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueFloatTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::stable_sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::stable_sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
   // C++ std::sort
@@ -471,10 +534,31 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueFloatTest) {
     return left.first < right.first;
   });
   end = currentSeconds();
-  printf("[std::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[std::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete soln_arr;
 
-  // TODO(dee): Add ips4o and pdqsort benchmarks
+  // ips4o::sort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  ips4o::sort(soln_arr, soln_arr + N, [](const std::pair<T, T> &left, const std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[ips4o::sort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
+  // pdqsort
+  aligned_init<std::pair<T, T>>(soln_arr, N);
+  std::copy(rand_arr, rand_arr + N, soln_arr);
+  start = currentSeconds();
+  pdqsort(soln_arr, soln_arr + N, [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  end = currentSeconds();
+  printf("[pdqsort] %lu elements: %.8f seconds\n", N, end - start);
+  delete soln_arr;
+
   // AVX256 sort
   aligned_init<std::pair<T, T>>(soln_arr, N);
   std::copy(rand_arr, rand_arr + N, soln_arr);
@@ -489,7 +573,7 @@ TEST(SIMDSortTests, AVX256SIMDSort64BitKeyValueFloatTest) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
-  printf("[avx256::sort] %d elements: %.8f seconds\n", N, end - start);
+  printf("[avx256::sort] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr;
 }
