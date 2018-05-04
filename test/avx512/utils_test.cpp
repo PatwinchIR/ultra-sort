@@ -227,7 +227,7 @@ TEST(UtilsTest, AVX512Transpose8x8Int64BitTest) {
   aligned_init<int64_t>(check_arr, 64);
   for (int i = 0; i < 64; i ++) {
     arr[i] = i;
-    check_arr[i] = i % 8 + (i / 8) * 8;
+    check_arr[i] = i / 8 + (i % 8) * 8;
   }
 
   __m512i r[8];
