@@ -7,9 +7,9 @@
 
 namespace avx512{
   template <typename InType, typename RegType>
-  void SortBlock256(InType *&arr, int offset);
+  void SortBlock256(InType *&arr, size_t offset);
   template <typename InType, typename RegType>
-  void SortBlock64(InType *&arr, int offset);
+  void SortBlock64(InType *&arr, size_t offset);
 
   // Masked
   template <typename InType, typename RegType>
