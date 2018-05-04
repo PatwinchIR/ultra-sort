@@ -531,7 +531,7 @@ TEST(UtilsTest, AVX512BitonicMerge8Float64BitTest) {
 
   std::sort(check_arr, check_arr + 32);
 
-  __m512i ra, rb;
+  __m512d ra, rb;
   LoadReg(ra, a);
   LoadReg(rb, b);
   BitonicMerge8(ra, rb);
