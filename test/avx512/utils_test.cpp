@@ -383,8 +383,8 @@ TEST(UtilsTest, AVX512IntraRegisterSort8x8Int64BitTest_Fixed) {
   aligned_init<int64_t>(a, 8);
   aligned_init<int64_t>(b, 8);
 
-  int64_t temp_a = {1, 3, 5, 7, 9, 11, 13, 15};
-  int64_t temp_b = {14, 12, 10, 8, 6, 4, 2, 0};
+  int64_t temp_a[8] = {1, 3, 5, 7, 9, 11, 13, 15};
+  int64_t temp_b[8] = {14, 12, 10, 8, 6, 4, 2, 0};
   
   for (int i = 0; i < 8; i ++) {
     a[i] = temp_a[i];
