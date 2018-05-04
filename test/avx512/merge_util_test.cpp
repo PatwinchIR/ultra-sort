@@ -108,7 +108,7 @@ TEST(MergeUtilsTest, AVX512MergeRuns8Int64BitTest) {
   free(temp_arr);
 }
 
-TEST(MergeUtilsTest, AVX512MergeRuns16Float32BitTest) {
+TEST(MergeUtilsTest, AVX512MergeRuns8Float64BitTest) {
   double *arr, *intermediate_arr;
   aligned_init<double>(arr, 64);
   aligned_init<double>(intermediate_arr, 64);
