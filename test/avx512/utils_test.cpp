@@ -130,6 +130,50 @@ TEST(UtilsTest, AVX512MinMax8Float64BitTest) {
   delete[](b);
 }
 
+TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
+  int *a;
+  int *b;
+  aligned_init<int>(a, 16);
+  aligned_init<int>(b, 16);
+
+  int temp_a[16] = {3, 0, 2, 1, 5, 9, 1, -1, 8, 7, 4, 3, 7, 4, 0, 9};
+  int temp_b[16] = {1, 1, 2, 2, 7, 7, 0, 0, 9, 9, 5, 5, 3, 3, 4, 4};
+
+  for (int i = 0; i < 16; i ++) {
+    a[i] = temp_a[i];
+  }
+
+  for (int i = 0; i < 16; i ++) {
+    b[i] = temp_b[i];
+  }
+
+  __m512i ra, rb;
+  LoadReg(ra, a);
+  LoadReg(rb, b);
+  MaskedMinMax16(ra, rb);
+  StoreReg(ra, a);
+  StoreReg(rb, b);
+
+  int check_arr_min[16] = {1, 1, 2, 1, 5, 9, 0, 0, 8, 7, 4, 3, 3, 3, 0, 9};
+  int check_arr_max[16] = {3, 0, 2, 2, 7, 7, 1, -1, 9, 9, 5, 5, 7, 4, 4, 4};
+
+  print_arr(a, 0, 16, "min: ");
+  print_arr(check_arr_min, 0, 16, "check min: ");
+  print_arr(b, 0, 16, "max: ");
+  print_arr(check_arr_max, 0, 16, "check max: ");
+
+  for (int i = 0; i < 16; i++) {
+    EXPECT_EQ(check_arr_min[i], a[i]);
+  }
+
+  for (int i = 0; i < 16; i++) {
+    EXPECT_EQ(check_arr_max[i], b[i]);
+  }
+
+  delete[](a);
+  delete[](b);
+}
+
 TEST(UtilsTest, AVX512Reverse16Int32BitTest) {
   int *a;
   aligned_init<int>(a, 16);
