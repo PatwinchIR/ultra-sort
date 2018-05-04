@@ -144,7 +144,7 @@ TEST(UtilsTest, AVX512Reverse16Int32BitTest) {
 
   __m512i ra;
   LoadReg(ra, a);
-  ra = Reverse16(ra);
+  Reverse16(ra);
   StoreReg(ra, a);
 
   for (int j = 0; j < 16; ++j) {

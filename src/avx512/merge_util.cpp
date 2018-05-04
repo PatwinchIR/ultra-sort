@@ -9,7 +9,7 @@ void MergeRuns16(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 16;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MergePass16<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
@@ -22,7 +22,7 @@ void MaskedMergeRuns16(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 16;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MaskedMergePass16<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
@@ -35,7 +35,7 @@ void MergeRuns8(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 8;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MergePass8<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
@@ -48,7 +48,7 @@ void MaskedMergeRuns8(InType *&arr, size_t N) {
   InType *buffer;
   int UNIT_RUN_SIZE = 8;
   aligned_init(buffer, N);
-  for (int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
+  for (unsigned int run_size = UNIT_RUN_SIZE; run_size < N; run_size *= 2) {
     MaskedMergePass8<InType, RegType>(arr, buffer, N, run_size);
     std::swap(arr, buffer);
   }
@@ -57,7 +57,7 @@ template void MaskedMergeRuns8<int64_t, __m512i>(int64_t *&arr, size_t N);
 template void MaskedMergeRuns8<double, __m512d>(double *&arr, size_t N);
 
 template<typename InType, typename RegType>
-void MergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
+void MergePass16(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 16;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -113,11 +113,11 @@ void MergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
   }
 }
 
-template void MergePass16<int, __m512i>(int *&arr, int *buffer, size_t N, int run_size);
-template void MergePass16<float, __m512>(float *&arr, float *buffer, size_t N, int run_size);
+template void MergePass16<int, __m512i>(int *&arr, int *buffer, size_t N, unsigned int run_size);
+template void MergePass16<float, __m512>(float *&arr, float *buffer, size_t N, unsigned int run_size);
 
 template<typename InType, typename RegType>
-void MaskedMergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
+void MaskedMergePass16(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 16;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -173,11 +173,11 @@ void MaskedMergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
   }
 }
 
-template void MaskedMergePass16<int, __m512i>(int *&arr, int *buffer, size_t N, int run_size);
-template void MaskedMergePass16<float, __m512>(float *&arr, float *buffer, size_t N, int run_size);
+template void MaskedMergePass16<int, __m512i>(int *&arr, int *buffer, size_t N, unsigned int run_size);
+template void MaskedMergePass16<float, __m512>(float *&arr, float *buffer, size_t N, unsigned int run_size);
 
 template<typename InType, typename RegType>
-void MergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
+void MergePass8(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 8;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -233,11 +233,11 @@ void MergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
   }
 }
 
-template void MergePass8<int64_t, __m512i>(int64_t *&arr, int64_t *buffer, size_t N, int run_size);
-template void MergePass8<double, __m512d>(double *&arr, double *buffer, size_t N, int run_size);
+template void MergePass8<int64_t, __m512i>(int64_t *&arr, int64_t *buffer, size_t N, unsigned int run_size);
+template void MergePass8<double, __m512d>(double *&arr, double *buffer, size_t N, unsigned int run_size);
 
 template<typename InType, typename RegType>
-void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
+void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, unsigned int run_size) {
   int UNIT_RUN_SIZE = 8;
   RegType ra, rb;
   int buffer_offset = 0;
@@ -292,8 +292,8 @@ void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
     buffer_offset += UNIT_RUN_SIZE;
   }
 }
-template void MaskedMergePass8<int64_t, __m512i>(int64_t *&arr, int64_t *buffer, size_t N, int run_size);
-template void MaskedMergePass8<double, __m512d>(double *&arr, double *buffer, size_t N, int run_size);
+template void MaskedMergePass8<int64_t, __m512i>(int64_t *&arr, int64_t *buffer, size_t N, unsigned int run_size);
+template void MaskedMergePass8<double, __m512d>(double *&arr, double *buffer, size_t N, unsigned int run_size);
 }
 
 #endif
