@@ -15,7 +15,7 @@ namespace avx512{
 
   const __m512i EXCHANGE_QUARTER_8 = _mm512_setr_epi64(2, 3, 0, 1, 6, 7, 4, 5);
 
-  const __m512i EXCHANGE_HALF_8 = _mm512_setr_epi64(3, 2, 1, 0, 7, 6, 5, 4);
+  const __m512i EXCHANGE_HALF_8 = _mm512_set_epi64(3, 2, 1, 0, 7, 6, 5, 4);
 
   const __m512i EXCHANGE_HALF_16 = _mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8);
 

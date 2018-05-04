@@ -342,8 +342,8 @@ void Transpose4x4(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3) {
   __t3 = _mm512_permutex2var_epi64(row2, BLEND_HI_128, row3);
   
   row0 = _mm512_permutex2var_epi64(__t0, BLEND_LO_256, __t2);
-  row1 = _mm512_permutex2var_epi64(__t0, BLEND_HI_256, __t2);
-  row2 = _mm512_permutex2var_epi64(__t1, BLEND_LO_256, __t3);
+  row2 = _mm512_permutex2var_epi64(__t0, BLEND_HI_256, __t2);
+  row1 = _mm512_permutex2var_epi64(__t1, BLEND_LO_256, __t3);
   row3 = _mm512_permutex2var_epi64(__t1, BLEND_HI_256, __t3);
 }
 
@@ -355,8 +355,8 @@ void Transpose4x4(__m512d &row0, __m512d &row1, __m512d &row2, __m512d &row3) {
   __t3 = _mm512_permutex2var_pd(row2, BLEND_HI_128, row3);
 
   row0 = _mm512_permutex2var_pd(__t0, BLEND_LO_256, __t2);
-  row1 = _mm512_permutex2var_pd(__t0, BLEND_HI_256, __t2);
-  row2 = _mm512_permutex2var_pd(__t1, BLEND_LO_256, __t3);
+  row2 = _mm512_permutex2var_pd(__t0, BLEND_HI_256, __t2);
+  row1 = _mm512_permutex2var_pd(__t1, BLEND_LO_256, __t3);
   row3 = _mm512_permutex2var_pd(__t1, BLEND_HI_256, __t3);
 }
 
@@ -394,12 +394,12 @@ void Transpose8x8(__m512i &row0, __m512i &row1, __m512i &row2, __m512i &row3,
   __tt7 = _mm512_permutex2var_epi64(__t5, BLEND_HALF_HI_128, __t7);
 
   row0 = _mm512_permutex2var_epi64(__tt0, BLEND_LO_256, __tt4);
-  row1 = _mm512_permutex2var_epi64(__tt1, BLEND_LO_256, __tt5);
-  row2 = _mm512_permutex2var_epi64(__tt0, BLEND_HI_256, __tt4);
-  row3 = _mm512_permutex2var_epi64(__tt1, BLEND_HI_256, __tt5);
-  row4 = _mm512_permutex2var_epi64(__tt2, BLEND_LO_256, __tt6);
-  row5 = _mm512_permutex2var_epi64(__tt3, BLEND_LO_256, __tt7);
-  row6 = _mm512_permutex2var_epi64(__tt2, BLEND_HI_256, __tt6);
+  row2 = _mm512_permutex2var_epi64(__tt1, BLEND_LO_256, __tt5);
+  row4 = _mm512_permutex2var_epi64(__tt0, BLEND_HI_256, __tt4);
+  row6 = _mm512_permutex2var_epi64(__tt1, BLEND_HI_256, __tt5);
+  row1 = _mm512_permutex2var_epi64(__tt2, BLEND_LO_256, __tt6);
+  row3 = _mm512_permutex2var_epi64(__tt3, BLEND_LO_256, __tt7);
+  row5 = _mm512_permutex2var_epi64(__tt2, BLEND_HI_256, __tt6);
   row7 = _mm512_permutex2var_epi64(__tt3, BLEND_HI_256, __tt7);
 }
 
@@ -437,12 +437,12 @@ void Transpose8x8(__m512d &row0, __m512d &row1, __m512d &row2, __m512d &row3,
   __tt7 = _mm512_permutex2var_pd(__t5, BLEND_HALF_HI_128, __t7);
 
   row0 = _mm512_permutex2var_pd(__tt0, BLEND_LO_256, __tt4);
-  row1 = _mm512_permutex2var_pd(__tt1, BLEND_LO_256, __tt5);
-  row2 = _mm512_permutex2var_pd(__tt0, BLEND_HI_256, __tt4);
-  row3 = _mm512_permutex2var_pd(__tt1, BLEND_HI_256, __tt5);
-  row4 = _mm512_permutex2var_pd(__tt2, BLEND_LO_256, __tt6);
-  row5 = _mm512_permutex2var_pd(__tt3, BLEND_LO_256, __tt7);
-  row6 = _mm512_permutex2var_pd(__tt2, BLEND_HI_256, __tt6);
+  row2 = _mm512_permutex2var_pd(__tt1, BLEND_LO_256, __tt5);
+  row4 = _mm512_permutex2var_pd(__tt0, BLEND_HI_256, __tt4);
+  row6 = _mm512_permutex2var_pd(__tt1, BLEND_HI_256, __tt5);
+  row1 = _mm512_permutex2var_pd(__tt2, BLEND_LO_256, __tt6);
+  row3 = _mm512_permutex2var_pd(__tt3, BLEND_LO_256, __tt7);
+  row5 = _mm512_permutex2var_pd(__tt2, BLEND_HI_256, __tt6);
   row7 = _mm512_permutex2var_pd(__tt3, BLEND_HI_256, __tt7);
 }
 
@@ -480,12 +480,12 @@ void Transpose8x8(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
   __tt7 = _mm512_permutex2var_pd(__t5, BLEND_HALF_HI_128, __t7);
 
   row0 = (__m512) _mm512_permutex2var_pd(__tt0, BLEND_LO_256, __tt4);
-  row1 = (__m512) _mm512_permutex2var_pd(__tt1, BLEND_LO_256, __tt5);
-  row2 = (__m512) _mm512_permutex2var_pd(__tt0, BLEND_HI_256, __tt4);
-  row3 = (__m512) _mm512_permutex2var_pd(__tt1, BLEND_HI_256, __tt5);
-  row4 = (__m512) _mm512_permutex2var_pd(__tt2, BLEND_LO_256, __tt6);
-  row5 = (__m512) _mm512_permutex2var_pd(__tt3, BLEND_LO_256, __tt7);
-  row6 = (__m512) _mm512_permutex2var_pd(__tt2, BLEND_HI_256, __tt6);
+  row2 = (__m512) _mm512_permutex2var_pd(__tt1, BLEND_LO_256, __tt5);
+  row4 = (__m512) _mm512_permutex2var_pd(__tt0, BLEND_HI_256, __tt4);
+  row6 = (__m512) _mm512_permutex2var_pd(__tt1, BLEND_HI_256, __tt5);
+  row1 = (__m512) _mm512_permutex2var_pd(__tt2, BLEND_LO_256, __tt6);
+  row3 = (__m512) _mm512_permutex2var_pd(__tt3, BLEND_LO_256, __tt7);
+  row5 = (__m512) _mm512_permutex2var_pd(__tt2, BLEND_HI_256, __tt6);
   row7 = (__m512) _mm512_permutex2var_pd(__tt3, BLEND_HI_256, __tt7);
 }
 
@@ -674,16 +674,18 @@ void MaskedReverse8(__m512d &v) {
 
 void IntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
   __m512i mina, maxa, minb, maxb;
+
   // phase 1
   MinMax8(a8, b8);
+
   auto a8_1 = _mm512_permutexvar_epi64(EXCHANGE_HALF_8, a8);
   auto b8_1 = _mm512_permutexvar_epi64(EXCHANGE_HALF_8, b8);
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
 
-  auto a4 = _mm512_mask_blend_epi64((__mmask8) (0xf), mina, maxa);
-  auto b4 = _mm512_mask_blend_epi64((__mmask8) (0xf), minb, maxb);
+  auto a4 = _mm512_mask_blend_epi64((__mmask8) (0xf0), mina, maxa);
+  auto b4 = _mm512_mask_blend_epi64((__mmask8) (0xf0), minb, maxb);
 
   auto a4_1 = _mm512_permutexvar_epi64(EXCHANGE_QUARTER_8, a4);
   auto b4_1 = _mm512_permutexvar_epi64(EXCHANGE_QUARTER_8, b4);
@@ -714,8 +716,8 @@ void MaskedIntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
   MaskedMinMax8(a8, a8_1, mina, maxa);
   MaskedMinMax8(b8, b8_1, minb, maxb);
 
-  auto a4 = _mm512_mask_blend_epi64((__mmask8) (0xf), mina, maxa);
-  auto b4 = _mm512_mask_blend_epi64((__mmask8) (0xf), minb, maxb);
+  auto a4 = _mm512_mask_blend_epi64((__mmask8) (0xf0), mina, maxa);
+  auto b4 = _mm512_mask_blend_epi64((__mmask8) (0xf0), minb, maxb);
 
   auto a4_1 = _mm512_permutexvar_epi64(EXCHANGE_QUARTER_8, a4);
   auto b4_1 = _mm512_permutexvar_epi64(EXCHANGE_QUARTER_8, b4);
@@ -729,16 +731,18 @@ void MaskedIntraRegisterSort8x8(__m512i &a8, __m512i &b8) {
 
 void IntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
   __m512d mina, maxa, minb, maxb;
+
   // phase 1
   MinMax8(a8, b8);
+
   auto a8_1 = _mm512_permutexvar_pd(EXCHANGE_HALF_8, a8);
   auto b8_1 = _mm512_permutexvar_pd(EXCHANGE_HALF_8, b8);
 
   MinMax8(a8, a8_1, mina, maxa);
   MinMax8(b8, b8_1, minb, maxb);
 
-  auto a4 = _mm512_mask_blend_pd((__mmask8) (0xf), mina, maxa);
-  auto b4 = _mm512_mask_blend_pd((__mmask8) (0xf), minb, maxb);
+  auto a4 = _mm512_mask_blend_pd((__mmask8) (0xf0), mina, maxa);
+  auto b4 = _mm512_mask_blend_pd((__mmask8) (0xf0), minb, maxb);
 
   auto a4_1 = _mm512_permutexvar_pd(EXCHANGE_QUARTER_8, a4);
   auto b4_1 = _mm512_permutexvar_pd(EXCHANGE_QUARTER_8, b4);
@@ -769,8 +773,8 @@ void MaskedIntraRegisterSort8x8(__m512d &a8, __m512d &b8) {
   MaskedMinMax8(a8, a8_1, mina, maxa);
   MaskedMinMax8(b8, b8_1, minb, maxb);
 
-  auto a4 = _mm512_mask_blend_pd((__mmask8) (0xf), mina, maxa);
-  auto b4 = _mm512_mask_blend_pd((__mmask8) (0xf), minb, maxb);
+  auto a4 = _mm512_mask_blend_pd((__mmask8) (0xf0), mina, maxa);
+  auto b4 = _mm512_mask_blend_pd((__mmask8) (0xf0), minb, maxb);
 
   auto a4_1 = _mm512_permutexvar_pd(EXCHANGE_QUARTER_8, a4);
   auto b4_1 = _mm512_permutexvar_pd(EXCHANGE_QUARTER_8, b4);

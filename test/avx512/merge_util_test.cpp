@@ -13,8 +13,8 @@ TEST(MergeUtilsTest, AVX512MergeRuns16Int32BitTest) {
 
   TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
-  int *check_arr = (int *) malloc(256 * sizeof(int));
-  int *temp_arr = (int *) malloc(16 * sizeof(int));
+  auto check_arr = (int *) malloc(256 * sizeof(int));
+  auto temp_arr = (int *) malloc(16 * sizeof(int));
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
       temp_arr[i] = arr[i * 16 + k];
@@ -74,6 +74,74 @@ TEST(MergeUtilsTest, AVX512MergeRuns16Float32BitTest) {
   free(temp_arr);
 }
 
+TEST(MergeUtilsTest, AVX512MergeRuns8Int64BitTest) {
+  int64_t *arr, *intermediate_arr;
+  aligned_init<int64_t>(arr, 64);
+  aligned_init<int64_t>(intermediate_arr, 64);
+
+  TestUtil::RandGenInt<int64_t>(arr, 64, -10, 10);
+
+  auto check_arr = (int64_t *) malloc(64 * sizeof(int64_t));
+  auto temp_arr = (int64_t *) malloc(8 * sizeof(int64_t));
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      intermediate_arr[k * 8 + j] = temp_arr[j];
+      check_arr[k * 8 + j] = temp_arr[j];
+    }
+  }
+
+  std::sort(check_arr, check_arr + 64);
+
+  MergeRuns8<int64_t, __m512i>(intermediate_arr, 64);
+
+  for (int l = 0; l < 64; ++l) {
+    EXPECT_EQ(check_arr[l], intermediate_arr[l]);
+  }
+
+  delete[](arr);
+  delete[](intermediate_arr);
+  free(check_arr);
+  free(temp_arr);
+}
+
+TEST(MergeUtilsTest, AVX512MergeRuns8Float64BitTest) {
+  double *arr, *intermediate_arr;
+  aligned_init<double>(arr, 64);
+  aligned_init<double>(intermediate_arr, 64);
+
+  TestUtil::RandGenFloat<double>(arr, 64, -10, 10);
+
+  auto check_arr = (double *) malloc(64 * sizeof(double));
+  auto temp_arr = (double *) malloc(8 * sizeof(double));
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      intermediate_arr[k * 8 + j] = temp_arr[j];
+      check_arr[k * 8 + j] = temp_arr[j];
+    }
+  }
+
+  std::sort(check_arr, check_arr + 64);
+
+  MergeRuns8<double, __m512d>(intermediate_arr, 64);
+
+  for (int l = 0; l < 64; ++l) {
+    EXPECT_EQ(check_arr[l], intermediate_arr[l]);
+  }
+
+  delete[](arr);
+  delete[](intermediate_arr);
+  free(check_arr);
+  free(temp_arr);
+}
+
 TEST(MergeUtilsTest, AVX512MergePass16Int32BitTest) {
   int *arr, *intermediate_arr;
   aligned_init<int>(arr, 256);
@@ -81,8 +149,8 @@ TEST(MergeUtilsTest, AVX512MergePass16Int32BitTest) {
 
   TestUtil::RandGenInt<int>(arr, 256, -10, 10);
 
-  int *check_arr = (int *) malloc(256 * sizeof(int));
-  int *temp_arr = (int *) malloc(16 * sizeof(int));
+  auto check_arr = (int *) malloc(256 * sizeof(int));
+  auto temp_arr = (int *) malloc(16 * sizeof(int));
 
   for (int k = 0; k < 16; k++) {
     for (int i = 0; i < 16; ++i) {
@@ -104,6 +172,86 @@ TEST(MergeUtilsTest, AVX512MergePass16Int32BitTest) {
   MergePass16<int, __m512i>(intermediate_arr, buffer, 256, 16);
 
   for (int m = 0; m < 256; ++m) {
+    EXPECT_EQ(check_arr[m], buffer[m]);
+  }
+
+  delete[](arr);
+  delete[](intermediate_arr);
+  delete[](buffer);
+  free(check_arr);
+  free(temp_arr);
+}
+
+TEST(MergeUtilsTest, AVX512MergePass8Int64BitTest) {
+  int64_t *arr, *intermediate_arr;
+  aligned_init<int64_t>(arr, 64);
+  aligned_init<int64_t>(intermediate_arr, 64);
+
+  TestUtil::RandGenInt<int64_t>(arr, 64, -10, 10);
+
+  auto check_arr = (int64_t *) malloc(64 * sizeof(int64_t));
+  auto temp_arr = (int64_t *) malloc(8 * sizeof(int64_t));
+
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      intermediate_arr[k * 8 + j] = temp_arr[j];
+      check_arr[k * 8 + j] = temp_arr[j];
+    }
+  }
+
+  for (int l = 0; l < 4; ++l) {
+    std::sort(check_arr + l * 16, check_arr + l * 16 + 16);
+  }
+
+  int64_t *buffer;
+  aligned_init<int64_t>(buffer, 64);
+  MergePass8<int64_t, __m512i>(intermediate_arr, buffer, 64, 8);
+
+  for (int m = 0; m < 64; ++m) {
+    EXPECT_EQ(check_arr[m], buffer[m]);
+  }
+
+  delete[](arr);
+  delete[](intermediate_arr);
+  delete[](buffer);
+  free(check_arr);
+  free(temp_arr);
+}
+
+TEST(MergeUtilsTest, AVX512MergePass8Float64BitTest) {
+  double *arr, *intermediate_arr;
+  aligned_init<double>(arr, 64);
+  aligned_init<double>(intermediate_arr, 64);
+
+  TestUtil::RandGenFloat<double>(arr, 64, -10, 10);
+
+  auto check_arr = (double *) malloc(64 * sizeof(double));
+  auto temp_arr = (double *) malloc(8 * sizeof(double));
+
+  for (int k = 0; k < 8; k++) {
+    for (int i = 0; i < 8; ++i) {
+      temp_arr[i] = arr[i * 8 + k];
+    }
+    std::sort(temp_arr, temp_arr + 8);
+    for (int j = 0; j < 8; ++j) {
+      intermediate_arr[k * 8 + j] = temp_arr[j];
+      check_arr[k * 8 + j] = temp_arr[j];
+    }
+  }
+
+  for (int l = 0; l < 4; ++l) {
+    std::sort(check_arr + l * 16, check_arr + l * 16 + 16);
+  }
+
+  double *buffer;
+  aligned_init<double>(buffer, 64);
+  MergePass8<double, __m512d>(intermediate_arr, buffer, 64, 8);
+
+  for (int m = 0; m < 64; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
   }
 
