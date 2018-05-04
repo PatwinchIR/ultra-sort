@@ -66,7 +66,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
   // First perform a correctness check
-  for (int i = 0; i < N; i++) {
+  for (unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
   printf("[avx512::sort] %lu elements: %.8f seconds\n", N, end - start);
@@ -130,7 +130,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitFloatTest) {
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
   // First perform a correctness check
-  for (int i = 0; i < N; i++) {
+  for (unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
   printf("[avx512::sort] %lu elements: %.8f seconds\n", N, end - start);
@@ -193,7 +193,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitIntegerTest) {
   SIMDSort(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
-  for(int i = 0; i < N; i++) {
+  for(unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
   printf("[avx512::sort] %lu elements: %.8f seconds\n", N, end - start);
@@ -256,7 +256,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitFloatTest) {
   SIMDSort(N, soln_arr);
   end = currentSeconds();
   std::sort(check_arr.begin(), check_arr.end());
-  for(int i = 0; i < N; i++) {
+  for(unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i], soln_arr[i]);
   }
   printf("[avx512::sort] %lu elements: %.8f seconds\n", N, end - start);
@@ -276,7 +276,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntTest) {
   // Initialization
   TestUtil::RandGenIntRecords(rand_arr, N, lo, hi);
   std::map<T, T> kv_map;
-  for (int i = 0; i < N; ++i) {
+  for (unsigned int i = 0; i < N; ++i) {
     kv_map.insert(std::pair<T, T>(rand_arr[i].second, rand_arr[i].first));
   }
 
@@ -334,7 +334,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntTest) {
   std::sort(check_arr.begin(), check_arr.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
     return left.first < right.first;
   });
-  for (int i = 0; i < N; i++) {
+  for (unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
@@ -355,7 +355,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueIntTest) {
   // Initialization
   TestUtil::RandGenIntRecords(rand_arr, N, lo, hi);
   std::map<T, T> kv_map;
-  for (int i = 0; i < N; ++i) {
+  for (unsigned int i = 0; i < N; ++i) {
     kv_map.insert(std::pair<T, T>(rand_arr[i].second, rand_arr[i].first));
   }
 
@@ -413,7 +413,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueIntTest) {
   std::sort(check_arr.begin(), check_arr.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
     return left.first < right.first;
   });
-  for (int i = 0; i < N; i++) {
+  for (unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
@@ -434,7 +434,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueFloatTest) {
   // Initialization
   TestUtil::RandGenFloatRecords(rand_arr, N, lo, hi);
   std::map<T, T> kv_map;
-  for (int i = 0; i < N; ++i) {
+  for (unsigned int i = 0; i < N; ++i) {
     kv_map.insert(std::pair<T, T>(rand_arr[i].second, rand_arr[i].first));
   }
 
@@ -492,7 +492,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueFloatTest) {
   std::sort(check_arr.begin(), check_arr.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
     return left.first < right.first;
   });
-  for (int i = 0; i < N; i++) {
+  for (unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }
@@ -513,7 +513,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueFloatTest) {
   // Initialization
   TestUtil::RandGenFloatRecords(rand_arr, N, lo, hi);
   std::map<T, T> kv_map;
-  for (int i = 0; i < N; ++i) {
+  for (unsigned int i = 0; i < N; ++i) {
     kv_map.insert(std::pair<T, T>(rand_arr[i].second, rand_arr[i].first));
   }
 
@@ -571,7 +571,7 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueFloatTest) {
   std::sort(check_arr.begin(), check_arr.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
     return left.first < right.first;
   });
-  for (int i = 0; i < N; i++) {
+  for (unsigned int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr[i].first, soln_arr[i].first);
     EXPECT_EQ(kv_map[soln_arr[i].second], soln_arr[i].first);
   }

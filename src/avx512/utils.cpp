@@ -872,8 +872,8 @@ void IntraRegisterSort16x16(__m512 &a16, __m512 &b16) {
 
   // phase 1
   MinMax16(a16, b16);
-  auto a16_1 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), a16);
-  auto b16_1 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), b16);
+  auto a16_1 = _mm512_permutexvar_ps(EXCHANGE_HALF_16, a16);
+  auto b16_1 = _mm512_permutexvar_ps(EXCHANGE_HALF_16, b16);
 
   MinMax16(a16, a16_1, mina, maxa);
   MinMax16(b16, b16_1, minb, maxb);
@@ -917,8 +917,8 @@ void MaskedIntraRegisterSort16x16(__m512 &a16, __m512 &b16) {
 
   // phase 1
   MaskedMinMax16(a16, b16);
-  auto a16_1 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), a16);
-  auto b16_1 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8), b16);
+  auto a16_1 = _mm512_permutexvar_ps(EXCHANGE_HALF_16, a16);
+  auto b16_1 = _mm512_permutexvar_ps(EXCHANGE_HALF_16, b16);
 
   MaskedMinMax16(a16, a16_1, mina, maxa);
   MaskedMinMax16(b16, b16_1, minb, maxb);

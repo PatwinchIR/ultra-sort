@@ -6,8 +6,6 @@
 
 namespace avx512{
   // Relevant consts
-  const __m512i KEYCOPY_FLAG_32 = _mm512_setr_epi32(0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14);
-
   const __m512i REVERSE_FLAG_32 = _mm512_setr_epi32(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
   const __m512i REVERSE_FLAG_64 = _mm512_setr_epi64(7, 6, 5, 4, 3, 2, 1, 0);
   const __m512i MASK_REVERSE_FLAG_32 = _mm512_setr_epi32(14, 15, 12, 13, 10, 11, 8, 9, 6, 7, 4, 5, 2, 3, 0, 1);

@@ -63,7 +63,7 @@ struct TestUtil{
     aligned_init<std::pair<T, T>>(arr, N);
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_int_distribution<T> dis(lo, hi);
+    std::uniform_real_distribution<T> dis(lo, hi);
     for(size_t i = 0; i < N; i++) {
       arr[i].first = dis(gen);
       arr[i].second = offset_start++;
