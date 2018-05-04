@@ -136,7 +136,10 @@ TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
   aligned_init<int>(a, 16);
   aligned_init<int>(b, 16);
 
-  int temp_a[16] = {3, 0, 2, 1, 5, 9, 1, -1, 8, 7, 4, 3, 7, 4, 0, 9};
+//  int temp_a[16] = {3, 0, 2, 1, 5, 9, 1, -1, 8, 7, 4, 3, 7, 4, 0, 9};
+//  int temp_b[16] = {1, 1, 2, 2, 7, 7, 0, 0, 9, 9, 5, 5, 3, 3, 4, 4};
+
+  int temp_a[16] = {3, 3, 2, 2, 5, 5, 1, 1, 8, 8, 4, 4, 7, 7, 0, 0};
   int temp_b[16] = {1, 1, 2, 2, 7, 7, 0, 0, 9, 9, 5, 5, 3, 3, 4, 4};
 
   for (int i = 0; i < 16; i ++) {
@@ -157,8 +160,8 @@ TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
   StoreReg(ra, a);
   StoreReg(rb, b);
 
-  int check_arr_min[16] = {1, 1, 2, 1, 5, 9, 0, 0, 8, 7, 4, 3, 3, 3, 0, 9};
-  int check_arr_max[16] = {3, 0, 2, 2, 7, 7, 1, -1, 9, 9, 5, 5, 7, 4, 4, 4};
+  int check_arr_min[16] = {1, 1, 2, 2, 5, 5, 0, 0, 8, 8, 4, 4, 3, 3, 0, 0};
+  int check_arr_max[16] = {3, 3, 2, 2, 7, 7, 1, 1, 9, 9, 5, 5, 7, 7, 4, 4};
 
   print_arr(a, 0, 16, "min: ");
   print_arr(check_arr_min, 0, 16, "check min: ");
