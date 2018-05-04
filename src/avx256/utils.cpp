@@ -74,13 +74,14 @@ void MinMax8(const __m256 &a, const __m256 &b, __m256 &minab, __m256 &maxab) {
 }
 
 void MinMax4(__m256i &a, __m256i &b) {
-  __m256d a_d = Int64ToDoubleReg(a);
-  __m256d b_d = Int64ToDoubleReg(b);
-  __m256d c_d = a_d;
-  a_d = _mm256_min_pd(a_d, b_d);
-  b_d = _mm256_max_pd(c_d, b_d);
-  a = DoubleToInt64Reg(a_d);
-  b = DoubleToInt64Reg(b_d);
+  auto a_gt_mask = _mm256_cmpgt_epi64(a, b);
+  auto rabmaxa = _mm256_and_si256(a_gt_mask, a);
+  auto rabmaxb = _mm256_andnot_si256(a_gt_mask, b);
+  auto rabmax = _mm256_or_si256(rabmaxa, rabmaxb);
+  auto rabmina = _mm256_andnot_si256(a_gt_mask, a);
+  auto rabminb = _mm256_and_si256(a_gt_mask, b);
+  a = _mm256_or_si256(rabmina, rabminb);
+  b = rabmax;
 }
 
 void MinMax4(__m256d &a, __m256d &b) {
