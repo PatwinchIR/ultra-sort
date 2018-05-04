@@ -221,6 +221,32 @@ TEST(UtilsTest, AVX512BitonicSort8x8Int64BitTest) {
   delete[](arr);
 }
 
+TEST(UtilsTest, AVX512Transpose8x8Int64BitTest) {
+  int64_t *arr, *check_arr;
+  aligned_init<int64_t>(arr, 64);
+  for (int i = 0; i < 64; i ++) {
+    arr[i] = i;
+    check_arr[i] = i % 8 + (i / 8) * 8;
+  }
+
+  __m512i r[8];
+  for (int i = 0; i < 8; i++) {
+    LoadReg(r[i], arr + i * 8);
+  }
+  Transpose8x8(r[0], r[1], r[2], r[3],
+               r[4], r[5], r[6], r[7]);
+  for (int i = 0; i < 8; i++) {
+    StoreReg(r[i], arr + i * 8);
+  }
+
+  for (int i = 0; i < 64; i ++) {
+    EXPECT_EQ(check_arr[i], arr[i]);
+  }
+
+  delete[](arr);
+  free(check_arr);
+}
+
 TEST(UtilsTest, AVX512BitonicSort8x8Float64BitTest) {
   double *arr;
   aligned_init<double>(arr, 64);
