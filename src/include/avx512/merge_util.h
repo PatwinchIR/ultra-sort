@@ -17,7 +17,11 @@ namespace avx512{
   template <typename InType, typename RegType>
   void MergePass16(InType *&arr, InType *buffer, size_t N, int run_size);
   template <typename InType, typename RegType>
+  void MaskedMergePass16(InType *&arr, InType *buffer, size_t N, int run_size);
+  template <typename InType, typename RegType>
   void MergePass8(InType *&arr, InType *buffer, size_t N, int run_size);
+  template <typename InType, typename RegType>
+  void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, int run_size);
 };
 
 #endif

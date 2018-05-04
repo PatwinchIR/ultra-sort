@@ -53,8 +53,8 @@ void MaskedMergeRuns8(InType *&arr, size_t N) {
     std::swap(arr, buffer);
   }
 }
-template void MaskedMergeRuns8<int64_t, __m256i>(int64_t *&arr, size_t N);
-template void MaskedMergeRuns8<double, __m256d>(double *&arr, size_t N);
+template void MaskedMergeRuns8<int64_t, __m512i>(int64_t *&arr, size_t N);
+template void MaskedMergeRuns8<double, __m512d>(double *&arr, size_t N);
 
 template<typename InType, typename RegType>
 void MergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
@@ -292,8 +292,8 @@ void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
     buffer_offset += UNIT_RUN_SIZE;
   }
 }
-template void MaskedMergePass8<int64_t, __m256i>(int64_t *&arr, int64_t *buffer, size_t N, int run_size);
-template void MaskedMergePass8<double, __m256d>(double *&arr, double *buffer, size_t N, int run_size);
+template void MaskedMergePass8<int64_t, __m512i>(int64_t *&arr, int64_t *buffer, size_t N, int run_size);
+template void MaskedMergePass8<double, __m512d>(double *&arr, double *buffer, size_t N, int run_size);
 }
 
 #endif
