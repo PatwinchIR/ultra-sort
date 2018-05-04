@@ -147,6 +147,9 @@ TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
     b[i] = temp_b[i];
   }
 
+  print_arr(a, 0, 16, "a: ");
+  print_arr(b, 0, 16, "b: ");
+
   __m512i ra, rb;
   LoadReg(ra, a);
   LoadReg(rb, b);
