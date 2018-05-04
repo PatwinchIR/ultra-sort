@@ -84,76 +84,76 @@ void MinMax8(const __m512d &a, const __m512d &b,
 
 void MaskedMinMax16(__m512i &a, __m512i &b) {
   auto c = a;
-  auto temp_cmp_mask = _mm512_mask_cmpgt_epi32_mask((__mmask16) (0xaaaa), a, b);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi32_mask((__mmask16) (0x5555), a, b);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  a = _mm512_mask_blend_epi32(cmp_mask, b, a);
-  b = _mm512_mask_blend_epi32(cmp_mask, c, b);
+  a = _mm512_mask_blend_epi32(cmp_mask, a, b);
+  b = _mm512_mask_blend_epi32(cmp_mask, b, c);
 }
 
 void MaskedMinMax16(const __m512i &a, const __m512i &b,
                     __m512i &minab, __m512i &maxab) {
-  auto temp_cmp_mask = _mm512_mask_cmpgt_epi32_mask((__mmask16) (0xaaaa), a, b);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi32_mask((__mmask16) (0x5555), a, b);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  minab = _mm512_mask_blend_epi32(cmp_mask, b, a);
-  maxab = _mm512_mask_blend_epi32(cmp_mask, a, b);
+  minab = _mm512_mask_blend_epi32(cmp_mask, a, b);
+  maxab = _mm512_mask_blend_epi32(cmp_mask, b, a);
 }
 
 void MaskedMinMax16(__m512 &a, __m512 &b) {
   auto c = a;
-  auto temp_cmp_mask = _mm512_mask_cmp_ps_mask((__mmask16) (0xaaaa), a, b, _CMP_GT_OQ);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmp_ps_mask((__mmask16) (0x5555), a, b, _CMP_GT_OQ);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  a = _mm512_mask_blend_ps(cmp_mask, b, a);
-  b = _mm512_mask_blend_ps(cmp_mask, c, b);
+  a = _mm512_mask_blend_ps(cmp_mask, a, b);
+  b = _mm512_mask_blend_ps(cmp_mask, b, c);
 }
 
 void MaskedMinMax16(const __m512 &a, const __m512 &b,
                     __m512 &minab, __m512 &maxab) {
-  auto temp_cmp_mask = _mm512_mask_cmp_ps_mask((__mmask16) (0xaaaa), a, b, _CMP_GT_OQ);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmp_ps_mask((__mmask16) (0x5555), a, b, _CMP_GT_OQ);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  minab = _mm512_mask_blend_ps(cmp_mask, b, a);
-  maxab = _mm512_mask_blend_ps(cmp_mask, a, b);
+  minab = _mm512_mask_blend_ps(cmp_mask, a, b);
+  maxab = _mm512_mask_blend_ps(cmp_mask, b, a);
 }
 
 // 64-bit Key-Value pairs
 void MaskedMinMax8(__m512i &a, __m512i &b) {
   auto c = a;
-  auto temp_cmp_mask = _mm512_mask_cmpgt_epi64_mask((__mmask8) (0xaa), a, b);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi64_mask((__mmask8) (0x55), a, b);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  a = _mm512_mask_blend_epi64(cmp_mask, b, a);
-  b = _mm512_mask_blend_epi64(cmp_mask, c, b);
+  a = _mm512_mask_blend_epi64(cmp_mask, a, b);
+  b = _mm512_mask_blend_epi64(cmp_mask, b, c);
 }
 
 // 64-bit Key-Value pairs
 void MaskedMinMax8(const __m512i &a, const __m512i &b,
                    __m512i &minab, __m512i &maxab) {
-  auto temp_cmp_mask = _mm512_mask_cmpgt_epi64_mask((__mmask8) (0xaa), a, b);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmpgt_epi64_mask((__mmask8) (0x55), a, b);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  minab = _mm512_mask_blend_epi64(cmp_mask, b, a);
-  maxab = _mm512_mask_blend_epi64(cmp_mask, a, b);
+  minab = _mm512_mask_blend_epi64(cmp_mask, a, b);
+  maxab = _mm512_mask_blend_epi64(cmp_mask, b, a);
 }
 
 void MaskedMinMax8(__m512d &a, __m512d &b) {
   auto c = a;
-  auto temp_cmp_mask = _mm512_mask_cmp_pd_mask((__mmask8) (0xaa), a, b, _CMP_GT_OQ);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmp_pd_mask((__mmask8) (0x55), a, b, _CMP_GT_OQ);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  a = _mm512_mask_blend_pd(cmp_mask, b, a);
-  b = _mm512_mask_blend_pd(cmp_mask, c, b);
+  a = _mm512_mask_blend_pd(cmp_mask, a, b);
+  b = _mm512_mask_blend_pd(cmp_mask, b, c);
 }
 
 void MaskedMinMax8(const __m512d &a, const __m512d &b,
                    __m512d &minab, __m512d &maxab) {
-  auto temp_cmp_mask = _mm512_mask_cmp_pd_mask((__mmask8) (0xaa), a, b, _CMP_GT_OQ);
-  auto cmp_mask = (temp_cmp_mask >> 1) | temp_cmp_mask;
+  auto temp_cmp_mask = _mm512_mask_cmp_pd_mask((__mmask8) (0x55), a, b, _CMP_GT_OQ);
+  auto cmp_mask = (temp_cmp_mask << 1) | temp_cmp_mask;
 
-  minab = _mm512_mask_blend_pd(cmp_mask, b, a);
-  maxab = _mm512_mask_blend_pd(cmp_mask, a, b);
+  minab = _mm512_mask_blend_pd(cmp_mask, a, b);
+  maxab = _mm512_mask_blend_pd(cmp_mask, b, a);
 }
 
 /**
