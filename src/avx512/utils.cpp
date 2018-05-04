@@ -450,14 +450,14 @@ void Transpose8x8(__m512 &row0, __m512 &row1, __m512 &row2, __m512 &row3,
                   __m512 &row4, __m512 &row5, __m512 &row6, __m512 &row7) {
   __m512d __t0, __t1, __t2, __t3, __t4, __t5, __t6, __t7;
   __m512d __tt0, __tt1, __tt2, __tt3, __tt4, __tt5, __tt6, __tt7;
-  __t0 = _mm512_unpacklo_pd((__mm512d) row0, (__mm512d) row1);
-  __t1 = _mm512_unpackhi_pd((__mm512d) row0, (__mm512d) row1);
-  __t2 = _mm512_unpacklo_pd((__mm512d) row2, (__mm512d) row3);
-  __t3 = _mm512_unpackhi_pd((__mm512d) row2, (__mm512d) row3);
-  __t4 = _mm512_unpacklo_pd((__mm512d) row4, (__mm512d) row5);
-  __t5 = _mm512_unpackhi_pd((__mm512d) row4, (__mm512d) row5);
-  __t6 = _mm512_unpacklo_pd((__mm512d) row6, (__mm512d) row7);
-  __t7 = _mm512_unpackhi_pd((__mm512d) row6, (__mm512d) row7);
+  __t0 = _mm512_unpacklo_pd((__m512d) row0, (__m512d) row1);
+  __t1 = _mm512_unpackhi_pd((__m512d) row0, (__m512d) row1);
+  __t2 = _mm512_unpacklo_pd((__m512d) row2, (__m512d) row3);
+  __t3 = _mm512_unpackhi_pd((__m512d) row2, (__m512d) row3);
+  __t4 = _mm512_unpacklo_pd((__m512d) row4, (__m512d) row5);
+  __t5 = _mm512_unpackhi_pd((__m512d) row4, (__m512d) row5);
+  __t6 = _mm512_unpacklo_pd((__m512d) row6, (__m512d) row7);
+  __t7 = _mm512_unpackhi_pd((__m512d) row6, (__m512d) row7);
 
 //  auto mask1 = (__mmask16) 0x33;
 //  auto mask2 = (__mmask16) 0xcc;
