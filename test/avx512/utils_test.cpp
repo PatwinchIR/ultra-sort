@@ -150,9 +150,6 @@ TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
     b[i] = temp_b[i];
   }
 
-  print_arr(a, 0, 16, "a: ");
-  print_arr(b, 0, 16, "b: ");
-
   __m512i ra, rb;
   LoadReg(ra, a);
   LoadReg(rb, b);
@@ -162,11 +159,6 @@ TEST(UtilsTest, AVX512MaskedMinMax16Int32BitTest_Fixed) {
 
   int check_arr_min[16] = {1, 1, 2, 2, 5, 9, 0, 0, 8, 7, 4, 3, 3, 3, 0, 9};
   int check_arr_max[16] = {3, 0, 2, 2, 7, 7, 1, -1, 9, 9, 5, 5, 7, 4, 4, 4};
-
-  print_arr(a, 0, 16, "min: ");
-  print_arr(check_arr_min, 0, 16, "check min: ");
-  print_arr(b, 0, 16, "max: ");
-  print_arr(check_arr_max, 0, 16, "check max: ");
 
   for (int i = 0; i < 16; i++) {
     EXPECT_EQ(check_arr_min[i], a[i]);
@@ -200,9 +192,6 @@ TEST(UtilsTest, AVX512MaskedMinMax8Float64BitTest_Fixed) {
     b[i] = temp_b[i];
   }
 
-  print_arr(a, 0, 8, "a: ");
-  print_arr(b, 0, 8, "b: ");
-
   __m512d ra, rb;
   LoadReg(ra, a);
   LoadReg(rb, b);
@@ -212,11 +201,6 @@ TEST(UtilsTest, AVX512MaskedMinMax8Float64BitTest_Fixed) {
 
   double check_arr_min[8] = {1.471, 1.471, 2.423, 2.471, 5.423, 9.423, 0.471, 0.471};
   double check_arr_max[8] = {3.423, 0.423, 2.471, 2.423, 7.471, 7.471, 1.423, -1.423};
-
-  print_arr(a, 0, 8, "min: ");
-  print_arr(check_arr_min, 0, 8, "check min: ");
-  print_arr(b, 0, 8, "max: ");
-  print_arr(check_arr_max, 0, 8, "check max: ");
 
   for (int i = 0; i < 8; i++) {
     EXPECT_EQ(check_arr_min[i], a[i]);
@@ -567,9 +551,6 @@ TEST(UtilsTest, AVX512MaskedIntraRegisterSort8x8Float64BitTest_Fixed) {
     b[i] = temp_b[i];
   }
 
-  print_arr(a, 0, 8, "a: ");
-  print_arr(b, 0, 8, "b: ");
-
   __m512d ra, rb;
   LoadReg(ra, a);
   LoadReg(rb, b);
@@ -578,10 +559,6 @@ TEST(UtilsTest, AVX512MaskedIntraRegisterSort8x8Float64BitTest_Fixed) {
   StoreReg(rb, b);
 
   double check_arr[16] = {-10.471, 5.471, -7.471, 1.471, 2.423, 2.471, 3.423, 0.423, 4.471, 2.423, 5.423, 9.423, 6.423, -1.423, 9.471, 1.471};
-
-  print_arr(a, 0, 8, "a after: ");
-  print_arr(b, 0, 8, "b after: ");
-  print_arr(check_arr, 0, 16, "check: ");
 
   for (int i = 0; i < 16; i++) {
     EXPECT_EQ(check_arr[i], i < 8 ? a[i] : b[i - 8]);
