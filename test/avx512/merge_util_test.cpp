@@ -140,8 +140,8 @@ TEST(MergeUtilsTest, AVX512MergePass8Int64BitTest) {
   }
 
   int64_t *buffer;
-  aligned_init(buffer, 64);
-  MergePass8<int, __m512i>(intermediate_arr, buffer, 64, 8);
+  aligned_init<int64_t>(buffer, 64);
+  MergePass8<int64_t, __m512i>(intermediate_arr, buffer, 64, 8);
 
   for (int m = 0; m < 64; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
@@ -180,8 +180,8 @@ TEST(MergeUtilsTest, AVX512MergePass8Float64BitTest) {
   }
 
   double *buffer;
-  aligned_init(buffer, 64);
-  MergePass8<int, __m512i>(intermediate_arr, buffer, 64, 8);
+  aligned_init<double>(buffer, 64);
+  MergePass8<double, __m512d>(intermediate_arr, buffer, 64, 8);
 
   for (int m = 0; m < 64; ++m) {
     EXPECT_EQ(check_arr[m], buffer[m]);
