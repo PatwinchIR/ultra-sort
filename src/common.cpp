@@ -19,7 +19,6 @@ template void aligned_init<std::pair<int,int>>(std::pair<int,int>* &ptr, size_t 
 template void aligned_init<std::pair<int64_t,int64_t>>(std::pair<int64_t,int64_t>* &ptr, size_t N, size_t alignment_size);
 template void aligned_init<std::pair<float,float>>(std::pair<float,float>* &ptr, size_t N, size_t alignment_size);
 template void aligned_init<std::pair<double,double>>(std::pair<double,double>* &ptr, size_t N, size_t alignment_size);
-template void aligned_init<std::tuple<int, float, int64_t, double>>(std::tuple<int, float, int64_t, double>* &ptr, size_t N, size_t alignment_size);
 
 template <typename T>
 void print_arr(T *arr, int i, int j, const std::string &tag) {
@@ -50,4 +49,3 @@ void print_kvarr(int64_t *arr, int i, int j, const std::string &tag) {
   }
   printf("\n");
 }
-

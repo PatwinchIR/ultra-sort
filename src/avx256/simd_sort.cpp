@@ -135,13 +135,5 @@ void SIMDSort(size_t N, std::pair<double, double> *&arr) {
     arr[i].second = kv_arr[2 * i + 1];
   }
 }
-
-void SIMDSort(size_t N, std::tuple<int, float, int64_t, double> *&arr, int *order_by) {
-  // Fill this in
-  // Sort by 'order_by' idxs which should just be tuple indexes
-  // Use std::get<index> to get the relevant field
-  // If doing the order by stuff is hard first do without order by
-  // just sorting by field 0, then 1 ... onward
-}
 }
 #endif
