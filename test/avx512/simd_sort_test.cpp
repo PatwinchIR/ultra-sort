@@ -7,13 +7,17 @@
 #include "ips4o.hpp"
 #include "pdqsort.h"
 
+#define LO -10000
+#define HI 10000
+#define NNUM 65536
+
 #ifdef AVX512
 
 namespace avx512 {
 TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
-  size_t N = 65536;
-  int lo = -10000;
-  int hi = 10000;
+  size_t N = NNUM;
+  int lo = LO;
+  int hi = HI;
   int *rand_arr;
   int *soln_arr;
   double start, end;
@@ -75,9 +79,9 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitIntegerTest) {
 }
 
 TEST(SIMDSortTests, AVX512SIMDSort32BitFloatTest) {
-  size_t N = 65536;
-  float lo = -10000;
-  float hi = 10000;
+  size_t N = NNUM;
+  float lo = LO;
+  float hi = HI;
   float *rand_arr;
   float *soln_arr;
   double start, end;
@@ -139,9 +143,9 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitFloatTest) {
 }
 
 TEST(SIMDSortTests, AVX512SIMDSort64BitIntegerTest) {
-  size_t N = 65536;
-  int lo = -10000;
-  int hi = 10000;
+  size_t N = NNUM;
+  int lo = LO;
+  int hi = HI;
   int64_t *rand_arr;
   int64_t *soln_arr;
   double start, end;
@@ -202,9 +206,9 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitIntegerTest) {
 }
 
 TEST(SIMDSortTests, AVX512SIMDSort64BitFloatTest) {
-  size_t N = 65536;
-  double lo = -10000;
-  double hi = 10000;
+  size_t N = NNUM;
+  double lo = LO;
+  double hi = HI;
   double *rand_arr;
   double *soln_arr;
   double start, end;
@@ -266,9 +270,9 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitFloatTest) {
 
 TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntTest) {
   using T = int;
-  size_t N = 65536;
-  T lo = -10000;
-  T hi = 10000;
+  size_t N = NNUM;
+  T lo = LO;
+  T hi = HI;
   std::pair<T, T> *rand_arr;
   std::pair<T, T> *soln_arr;
   double start, end;
@@ -345,9 +349,9 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntTest) {
 
 TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueIntTest) {
   using T = int64_t;
-  size_t N = 65536;
-  T lo = -10000;
-  T hi = 10000;
+  size_t N = NNUM;
+  T lo = LO;
+  T hi = HI;
   std::pair<T, T> *rand_arr;
   std::pair<T, T> *soln_arr;
   double start, end;
@@ -424,9 +428,9 @@ TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueIntTest) {
 
 TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueFloatTest) {
   using T = float;
-  size_t N = 65536;
-  T lo = -10000.0f;
-  T hi = 10000.0f;
+  size_t N = NNUM;
+  T lo = LO;
+  T hi = HI;
   std::pair<T, T> *rand_arr;
   std::pair<T, T> *soln_arr;
   double start, end;
@@ -503,9 +507,9 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueFloatTest) {
 
 TEST(SIMDSortTests, AVX512SIMDSort64BitKeyValueFloatTest) {
   using T = double;
-  size_t N = 65536;
-  T lo = -10000.0f;
-  T hi = 10000.0f;
+  size_t N = NNUM;
+  T lo = LO;
+  T hi = HI;
   std::pair<T, T> *rand_arr;
   std::pair<T, T> *soln_arr;
   double start, end;
