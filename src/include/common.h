@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdint>
 #include <cassert>
+#include <omp.h>
 
 /**
  * Common definitions

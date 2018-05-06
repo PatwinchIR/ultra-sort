@@ -59,12 +59,13 @@ template void MaskedMergeRuns8<double, __m512d>(double *&arr, size_t N);
 template<typename InType, typename RegType>
 void MergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
   int UNIT_RUN_SIZE = 16;
-  RegType ra, rb;
-  int buffer_offset = 0;
+#pragma omp parallel for
   for (int i = 0; i < N; i += 2 * run_size) {
     int start = i;
     int mid = i + run_size;
     int end = i + 2 * run_size;
+    int buffer_offset = start;
+    RegType ra, rb;
     int p1_ptr = start;
     int p2_ptr = mid;
     LoadReg(ra, &arr[p1_ptr]);
@@ -119,12 +120,13 @@ template void MergePass16<float, __m512>(float *&arr, float *buffer, size_t N, i
 template<typename InType, typename RegType>
 void MaskedMergePass16(InType *&arr, InType *buffer, size_t N, int run_size) {
   int UNIT_RUN_SIZE = 16;
-  RegType ra, rb;
-  int buffer_offset = 0;
+#pragma omp parallel for
   for (int i = 0; i < N; i += 2 * run_size) {
     int start = i;
     int mid = i + run_size;
     int end = i + 2 * run_size;
+    int buffer_offset = start;
+    RegType ra, rb;
     int p1_ptr = start;
     int p2_ptr = mid;
     LoadReg(ra, &arr[p1_ptr]);
@@ -179,12 +181,13 @@ template void MaskedMergePass16<float, __m512>(float *&arr, float *buffer, size_
 template<typename InType, typename RegType>
 void MergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
   int UNIT_RUN_SIZE = 8;
-  RegType ra, rb;
-  int buffer_offset = 0;
+#pragma omp parallel for
   for (int i = 0; i < N; i += 2 * run_size) {
     int start = i;
     int mid = i + run_size;
     int end = i + 2 * run_size;
+    int buffer_offset = start;
+    RegType ra, rb;
     int p1_ptr = start;
     int p2_ptr = mid;
     LoadReg(ra, &arr[p1_ptr]);
@@ -239,12 +242,13 @@ template void MergePass8<double, __m512d>(double *&arr, double *buffer, size_t N
 template<typename InType, typename RegType>
 void MaskedMergePass8(InType *&arr, InType *buffer, size_t N, int run_size) {
   int UNIT_RUN_SIZE = 8;
-  RegType ra, rb;
-  int buffer_offset = 0;
+#pragma omp parallel for
   for (int i = 0; i < N; i += 2 * run_size) {
     int start = i;
     int mid = i + run_size;
     int end = i + 2 * run_size;
+    int buffer_offset = start;
+    RegType ra, rb;
     int p1_ptr = start;
     int p2_ptr = mid;
     LoadReg(ra, &arr[p1_ptr]);

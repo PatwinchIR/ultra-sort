@@ -69,6 +69,21 @@ void SIMDSort(size_t N, std::pair<int, int> *&arr) {
   }
 }
 
+void SIMDOrderBy(std::pair<int, int> *&result_arr, size_t N, std::pair<int, int> *arr, int order_by) {
+  int64_t *kv_arr;
+  aligned_init<int64_t>(kv_arr, N);
+  aligned_init<std::pair<int, int>>(result_arr, N);
+  for (int i = 0; i < N; ++i) {
+    auto value = (int64_t) (order_by == 0 ? arr[i].first : arr[i].second);
+    kv_arr[i] = (((value) << 32) | (0x00000000ffffffff & i));
+  }
+  SIMDSort(N, kv_arr);
+  for (int j = 0; j < N; ++j) {
+    auto index = 0x00000000ffffffff & kv_arr[j];
+    result_arr[j] = arr[index];
+  }
+}
+
 void SIMDSort(size_t N, std::pair<float, float> *&arr) {
   float *kv_arr;
   size_t Nkv = N * 2;
