@@ -7,10 +7,6 @@
 #include "ips4o.hpp"
 #include "pdqsort.h"
 
-#define LO -10000
-#define HI 10000
-#define NNUM 65536
-
 #ifdef AVX512
 
 namespace avx512 {

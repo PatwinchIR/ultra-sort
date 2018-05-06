@@ -3,6 +3,10 @@
 #include "common.h"
 #include <random>
 
+#define LO -10000
+#define HI 10000
+#define NNUM 65536
+
 struct TestUtil{
   template <typename T>
   static void PopulateSeqArray(T *&arr, int start, int end, int step=1) {
