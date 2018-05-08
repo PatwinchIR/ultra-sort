@@ -1,0 +1,23 @@
+# Ultra-Sort
+Extremely Parallelized SIMD Sorting Algorithm.
+(All references are in the report.)
+
+## Speedup achieved sorting 2^20 elements
+Compared with `std::stable_sort`, `std::sort`, [`ips4o::sort`](https://github.com/SaschaWitt/ips4o), [`pdqsort`](https://github.com/orlp/pdqsort).
+
+
+
+# Usage:
+1. Compile from `CMakelist.txt`
+2. Due to integration with [`OpenMP`](http://www.openmp.org), run the executable after build using the command below:
+```bash
+export OMP_NUM_THREADS=1; ./ultrasort
+```
+By default, this will run all unit tests set up using [`GTest`](https://github.com/google/googletest).
+To use this library in other projects simply include the header files:
+```c++
+#include "avx512/simd_sort.h"
+
+SIMD_Sort(...);
+```
+The number of elements to sort is required to be a power of 2. More examples can be found at `test/avx512/simd_sort_test.cpp`.
