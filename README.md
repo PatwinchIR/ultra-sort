@@ -4,7 +4,7 @@ Extremely Parallelized SIMD Sorting Algorithm.
 
 ## Speedup achieved sorting 2^20 elements
 Compared with `std::stable_sort`, `std::sort`, [`ips4o::sort`](https://github.com/SaschaWitt/ips4o), [`pdqsort`](https://github.com/orlp/pdqsort).
-
+![](https://ibb.co/ekEz17)
 
 
 # Usage:
@@ -18,6 +18,6 @@ To use this library in other projects simply include the header files:
 ```c++
 #include "avx512/simd_sort.h"
 
-SIMD_Sort(...);
+avx512::SIMD_Sort(...); // avx256::... for AVX2 version.
 ```
 The number of elements to sort is required to be a power of 2. More examples can be found at `test/avx512/simd_sort_test.cpp`.
