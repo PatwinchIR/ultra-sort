@@ -4,7 +4,8 @@ Extremely Parallelized SIMD Sorting Algorithm.
 
 ## Speedup achieved sorting 2^20 elements
 Compared with `std::stable_sort`, `std::sort`, [`ips4o::sort`](https://github.com/SaschaWitt/ips4o), [`pdqsort`](https://github.com/orlp/pdqsort).
-![](https://ibb.co/ekEz17)
+
+![](https://image.ibb.co/fnygES/analysis_AVX512_speedup.png)
 
 
 # Usage:
