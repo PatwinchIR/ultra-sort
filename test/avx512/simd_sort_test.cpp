@@ -343,7 +343,7 @@ TEST(SIMDSortTests, AVX512SIMDSort32BitKeyValueIntTest) {
   delete soln_arr;
 }
 
-TEST(SIMDSortTests, AVX256SIMDOrderBy32BitIntTest) {
+TEST(SIMDSortTests, AVX512SIMDOrderBy32BitIntTest) {
   using T = int;
   size_t N = NNUM;
   T lo = LO;
@@ -380,7 +380,7 @@ TEST(SIMDSortTests, AVX256SIMDOrderBy32BitIntTest) {
   for (int i = 0; i < N; i++) {
     EXPECT_EQ(check_arr2[i].second, soln_arr2[i].second);
   }
-  printf("[avx256::orderby] %lu elements: %.8f seconds\n", N, end - start);
+  printf("[avx512::orderby] %lu elements: %.8f seconds\n", N, end - start);
   delete rand_arr;
   delete soln_arr1;
   delete soln_arr2;
