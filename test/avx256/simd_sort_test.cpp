@@ -341,7 +341,7 @@ TEST(SIMDSortTests, AVX256SIMDSort32BitKeyValueIntTest) {
   delete soln_arr;
 }
 
-TEST(SIMDSortTests, AVX256SIMDOrderBy32BitIntTest) {
+TEST(SIMDSortTests, AVX256SIMDOrderBy3232BitIntTest) {
   using T = int;
   size_t N = NNUM;
   T lo = LO;
@@ -358,7 +358,7 @@ TEST(SIMDSortTests, AVX256SIMDOrderBy32BitIntTest) {
   std::copy(rand_arr, rand_arr + N, input_arr1);
   std::vector<std::pair<T, T>> check_arr1(rand_arr, rand_arr + N);
   start = currentSeconds();
-  SIMDOrderBy(soln_arr1, N, input_arr1);
+  SIMDOrderBy32(soln_arr1, N, input_arr1);
   end = currentSeconds();
   std::sort(check_arr1.begin(), check_arr1.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
     return left.first < right.first;
@@ -371,7 +371,50 @@ TEST(SIMDSortTests, AVX256SIMDOrderBy32BitIntTest) {
   aligned_init<std::pair<T, T>>(soln_arr2, N);
   std::copy(rand_arr, rand_arr + N, input_arr2);
   std::vector<std::pair<T, T>> check_arr2(rand_arr, rand_arr + N);
-  SIMDOrderBy(soln_arr2, N, input_arr2, 1);
+  SIMDOrderBy32(soln_arr2, N, input_arr2, 1);
+  std::sort(check_arr2.begin(), check_arr2.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.second < right.second;
+  });
+  for (int i = 0; i < N; i++) {
+    EXPECT_EQ(check_arr2[i].second, soln_arr2[i].second);
+  }
+  printf("[avx256::orderby] %lu elements: %.8f seconds\n", N, end - start);
+  delete rand_arr;
+  delete soln_arr1;
+  delete soln_arr2;
+}
+
+TEST(SIMDSortTests, AVX256SIMDOrderBy6432BitIntTest) {
+  using T = int;
+  size_t N = NNUM;
+  T lo = LO;
+  T hi = HI;
+  std::pair<T, T> *rand_arr;
+  std::pair<T, T> *soln_arr1, *soln_arr2, *input_arr1, *input_arr2;
+  double start, end;
+
+  // Initialization
+  TestUtil::RandGenIntEntries(rand_arr, N, lo, hi);
+
+  aligned_init<std::pair<T, T>>(input_arr1, N);
+  aligned_init<std::pair<T, T>>(soln_arr1, N);
+  std::copy(rand_arr, rand_arr + N, input_arr1);
+  std::vector<std::pair<T, T>> check_arr1(rand_arr, rand_arr + N);
+  start = currentSeconds();
+  SIMDOrderBy64(soln_arr1, N, input_arr1);
+  end = currentSeconds();
+  std::sort(check_arr1.begin(), check_arr1.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
+    return left.first < right.first;
+  });
+  for (int i = 0; i < N; i++) {
+    EXPECT_EQ(check_arr1[i].first, soln_arr1[i].first);
+  }
+
+  aligned_init<std::pair<T, T>>(input_arr2, N);
+  aligned_init<std::pair<T, T>>(soln_arr2, N);
+  std::copy(rand_arr, rand_arr + N, input_arr2);
+  std::vector<std::pair<T, T>> check_arr2(rand_arr, rand_arr + N);
+  SIMDOrderBy64(soln_arr2, N, input_arr2, 1);
   std::sort(check_arr2.begin(), check_arr2.end(), [](std::pair<T, T> &left, std::pair<T, T> &right) {
     return left.second < right.second;
   });

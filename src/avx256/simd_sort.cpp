@@ -69,7 +69,34 @@ void SIMDSort(size_t N, std::pair<int, int> *&arr) {
   }
 }
 
-void SIMDOrderBy(std::pair<int, int> *&result_arr, size_t N, std::pair<int, int> *arr, int order_by) {
+void SIMDOrderBy32(std::pair<int, int> *&result_arr, size_t N, std::pair<int, int> *arr, int order_by) {
+  aligned_init<std::pair<int, int>>(result_arr, N);
+  int *kv_arr;
+  size_t Nkv = N * 2;
+  aligned_init(kv_arr, Nkv);
+  for (int i = 0; i < N; i++) {
+    kv_arr[2 * i] = order_by == 0 ? arr[i].first : arr[i].second;
+    kv_arr[2 * i + 1] = i;
+  }
+
+  // 4 rows of 4 K-V(8 total) pairs = 32 values
+  int BLOCK_SIZE = 32;
+  assert(Nkv % BLOCK_SIZE == 0);
+  for (int i = 0; i < Nkv; i += BLOCK_SIZE) {
+    MaskedSortBlock4x8<int, __m256i>(kv_arr, i);
+  }
+
+  // Merge sorted runs
+  MaskedMergeRuns8<int, __m256i>(kv_arr, Nkv);
+
+  for (int j = 0; j < N; ++j) {
+    auto index = 0x00000000ffffffff & kv_arr[j];
+    result_arr[j] = arr[index];
+  }
+}
+
+
+void SIMDOrderBy64(std::pair<int, int> *&result_arr, size_t N, std::pair<int, int> *arr, int order_by) {
   int64_t *kv_arr;
   aligned_init<int64_t>(kv_arr, N);
   aligned_init<std::pair<int, int>>(result_arr, N);
