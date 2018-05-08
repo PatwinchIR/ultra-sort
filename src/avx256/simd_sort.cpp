@@ -70,10 +70,10 @@ void SIMDSort(size_t N, std::pair<int, int> *&arr) {
 }
 
 void SIMDOrderBy32(std::pair<int, int> *&result_arr, size_t N, std::pair<int, int> *arr, int order_by) {
-  aligned_init<std::pair<int, int>>(result_arr, N);
   int *kv_arr;
   size_t Nkv = N * 2;
   aligned_init(kv_arr, Nkv);
+  aligned_init<std::pair<int, int>>(result_arr, N);
   for (int i = 0; i < N; i++) {
     kv_arr[2 * i] = order_by == 0 ? arr[i].first : arr[i].second;
     kv_arr[2 * i + 1] = i;
@@ -90,7 +90,7 @@ void SIMDOrderBy32(std::pair<int, int> *&result_arr, size_t N, std::pair<int, in
   MaskedMergeRuns8<int, __m256i>(kv_arr, Nkv);
 
   for (int j = 0; j < N; ++j) {
-    auto index = 0x00000000ffffffff & kv_arr[j];
+    auto index = 0x00000000ffffffff & kv_arr[2 * j + 1];
     result_arr[j] = arr[index];
   }
 }
