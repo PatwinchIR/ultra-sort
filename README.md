@@ -1,5 +1,5 @@
-# Ultra-Sort
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# Ultra-Sort [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Extremely Parallelized SIMD Sorting Algorithm.
 (All references are in the report.)
 
